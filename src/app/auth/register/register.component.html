@@ -27,6 +27,11 @@
                     <mat-error *ngIf="registerForm.get('tel')?.hasError('required')">
                         Phone Number is required
                     </mat-error>
+
+                    <mat-error *ngIf="registerForm.get('tel')?.hasError('minlength')">
+                        Phone Number must be at least 10 digits long
+                    </mat-error>
+
                     <mat-error *ngIf="registerForm.get('tel')?.hasError('pattern')">
                         Please enter a valid phone number
                     </mat-error>
