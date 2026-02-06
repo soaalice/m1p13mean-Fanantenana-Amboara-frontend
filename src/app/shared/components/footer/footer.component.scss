@@ -1,0 +1,21 @@
+footer {
+    width: 100%;
+    margin-top: auto;
+
+    .footer-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+    }
+
+    p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 0.875rem;
+        text-align: center;
+    }
+}
+

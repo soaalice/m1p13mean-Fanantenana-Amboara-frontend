@@ -1,0 +1,21 @@
+<mat-drawer-container class="layout-container" autosize>
+  <mat-drawer #drawer class="layout-sidenav" mode="side" [opened]="isSidebarOpen">
+    <app-sidebar></app-sidebar>
+  </mat-drawer>
+
+  <mat-drawer-content class="layout-content">
+    <mat-toolbar color="primary" class="layout-toolbar">
+      <button mat-icon-button (click)="toggleSidebar()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">MEAN-APP</span>
+      <span class="spacer"></span>
+    </mat-toolbar>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+  </mat-drawer-content>
+</mat-drawer-container>
