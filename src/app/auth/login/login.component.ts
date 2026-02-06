@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { UserRole } from '../../shared/models/user';
 
 @Component({
   selector: 'app-login',
@@ -46,7 +47,22 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value.login, this.loginForm.value.password).subscribe({
         next: (response) => {
           console.log('Login successful:', response);
-          console.log('Auth Token stored in localStorage:', localStorage.getItem('authToken'));
+          const role = this.authService.getRoleFromToken();
+
+          switch (role) {
+            case UserRole.ADMIN:
+              this.router.navigate(['/admin/users']);
+              break;
+            case UserRole.BOUTIQUE:
+              this.router.navigate(['/boutique/dashboard']);
+              break;
+            case UserRole.ACHETEUR:
+              this.router.navigate(['/acheteur/home']);
+              break;
+            default:
+              this.router.navigate(['/login']);
+              break;
+          }
         },
         error: (error) => {
           console.error('Login error:', error);
