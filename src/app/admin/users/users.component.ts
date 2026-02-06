@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { User } from '../../shared/models/user';
+import { User, UsersResponse } from '../../shared/models/user';
 import { UsersService } from '../../core/services/users.service';
 
 @Component({
@@ -14,6 +14,10 @@ export class UsersComponent implements OnInit {
   users: User[] = [];
   isLoading = false;
   loadError = '';
+  page = 1;
+  limit = 10;
+  total = 0;
+  pages = 1;
 
   constructor(private usersService: UsersService) {}
 
@@ -21,13 +25,13 @@ export class UsersComponent implements OnInit {
     this.fetchUsers();
   }
 
-  fetchUsers(): void {
+  fetchUsers(page = this.page): void {
     this.isLoading = true;
     this.loadError = '';
 
-    this.usersService.getUsers().subscribe({
-      next: users => {
-        this.users = users;
+    this.usersService.getUsers(page, this.limit).subscribe({
+      next: response => {
+        this.applyResponse(response);
         this.isLoading = false;
       },
       error: () => {
@@ -35,6 +39,38 @@ export class UsersComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private applyResponse(response: UsersResponse): void {
+    this.users = response.data ?? [];
+    this.page = response.pagination?.page ?? this.page;
+    this.limit = response.pagination?.limit ?? this.limit;
+    this.total = response.pagination?.total ?? this.users.length;
+    this.pages = response.pagination?.pages ?? 1;
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.pages || page === this.page) {
+      return;
+    }
+
+    this.fetchUsers(page);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.page - 1);
+  }
+
+  nextPage(): void {
+    this.goToPage(this.page + 1);
+  }
+
+  get canGoPrevious(): boolean {
+    return this.page > 1 && !this.isLoading;
+  }
+
+  get canGoNext(): boolean {
+    return this.page < this.pages && !this.isLoading;
   }
 
   trackById(index: number, user: User): string | number {

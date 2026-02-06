@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, UsersResponse } from '../../shared/models/user';
 
@@ -10,9 +10,11 @@ import { User, UsersResponse } from '../../shared/models/user';
 export class UsersService {
   constructor (private http: HttpClient) { }
 
-  getUsers(): Observable<User[]> {
-    return this.http
-      .get<UsersResponse>(`${environment.apiUrl}/users`)
-      .pipe(map(response => response.data ?? []));
+  getUsers(page = 1, limit = 10): Observable<UsersResponse> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    return this.http.get<UsersResponse>(`${environment.apiUrl}/users`, { params });
   }
 }
