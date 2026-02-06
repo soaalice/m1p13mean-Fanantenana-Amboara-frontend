@@ -1,1 +1,44 @@
-<p>users works!</p>
+<section class="users-page">
+	<div class="header">
+		<div>
+			<h1>Users</h1>
+			<p class="subtitle">Manage access and accounts</p>
+		</div>
+		<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+	</div>
+
+	<div class="state" *ngIf="isLoading">Loading users...</div>
+	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+	<div class="table-wrap" *ngIf="!isLoading && !loadError">
+		<table>
+			<thead>
+				<tr>
+					<th>Full name</th>
+					<th>Role</th>
+					<th>Login</th>
+					<th>Phone</th>
+					<th>Status</th>
+                    <th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let user of users; trackBy: trackById">
+					<td>{{ user.profile?.fullName || '-' }}</td>
+					<td>{{ user.role }}</td>
+					<td>{{ user.login }}</td>
+					<td>{{ user.profile?.tel || '-' }}</td>
+					<td>
+						<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
+					</td>
+                    <td>
+                        TODO: actions (change status)
+                    </td>
+				</tr>
+				<tr *ngIf="users.length === 0">
+					<td colspan="6" class="empty">No users found.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
