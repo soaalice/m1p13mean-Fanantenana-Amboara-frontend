@@ -17,6 +17,6 @@ export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => {
       return true;
     }
 
-    return router.parseUrl('/login');
+    return router.parseUrl('/403');
   };
 };

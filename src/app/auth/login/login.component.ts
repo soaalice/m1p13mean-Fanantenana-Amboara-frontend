@@ -51,13 +51,13 @@ export class LoginComponent {
 
           switch (role) {
             case UserRole.ADMIN:
-              this.router.navigate(['/admin/users']);
+              this.router.navigate(['/admin']);
               break;
             case UserRole.BOUTIQUE:
-              this.router.navigate(['/boutique/dashboard']);
+              this.router.navigate(['/boutique']);
               break;
             case UserRole.ACHETEUR:
-              this.router.navigate(['/acheteur/home']);
+              this.router.navigate(['/acheteur']);
               break;
             default:
               this.router.navigate(['/login']);
