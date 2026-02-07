@@ -4,7 +4,10 @@
 			<h1>Users</h1>
 			<p class="subtitle">Manage access and accounts</p>
 		</div>
-		<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+		<div class="actions">
+			<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+			<button class="add-user" type="button" (click)="openModal()">Add User</button>
+		</div>
 	</div>
 
 	<div class="state" *ngIf="isLoading">Loading users...</div>
@@ -24,10 +27,10 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let user of users; trackBy: trackById">
-					<td>{{ user.profile?.fullName || '-' }}</td>
+					<td>{{ user.profile.fullName || '-' }}</td>
 					<td>{{ user.role }}</td>
 					<td>{{ user.login }}</td>
-					<td>{{ user.profile?.tel || '-' }}</td>
+					<td>{{ user.profile.tel || '-' }}</td>
 					<td>
 						<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
 					</td>
@@ -58,3 +61,41 @@
 		</div>
 	</div>
 </section>
+
+<app-modal-forms [isOpen]="isModalOpen" title="Add user" (close)="closeModal()">
+	<form [formGroup]="userForm" (ngSubmit)="submitUser()">
+		<div class="form-grid">
+			<label>
+				Full name
+				<input type="text" formControlName="fullName" placeholder="Jane Doe" />
+			</label>
+			<label>
+				Login
+				<input type="text" formControlName="login" placeholder="jane.doe" />
+			</label>
+			<label>
+				Password
+				<input type="password" formControlName="password" placeholder="******" />
+			</label>
+			<label>
+				Phone
+				<input type="text" formControlName="tel" placeholder="+221 77 000 00 00" />
+			</label>
+			<label>
+				Role
+				<select formControlName="role">
+					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+				</select>
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+
+		<div class="modal-actions">
+			<button type="button" class="ghost" (click)="closeModal()">Cancel</button>
+			<button type="submit" [disabled]="userForm.invalid || isSubmitting">
+				{{ isSubmitting ? 'Creating...' : 'Create user' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>

@@ -17,4 +17,8 @@ export class UsersService {
 
     return this.http.get<UsersResponse>(`${environment.apiUrl}/users`, { params });
   }
+
+  createUser(payload: Partial<User>): Observable<User> {
+    return this.http.post<User>(`${environment.apiUrl}/users`, payload);
+  }
 }

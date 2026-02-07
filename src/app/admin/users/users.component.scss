@@ -20,18 +20,43 @@ h1 {
 	color: rgba(15, 23, 42, 0.7);
 }
 
-.refresh {
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.actions button {
 	border: none;
 	background: #0f172a;
 	color: #fff;
 	padding: 10px 18px;
-	border-radius: 999px;
 	cursor: pointer;
 	font-weight: 600;
+	border-radius: 999px;
+	letter-spacing: 0.2px;
+	box-shadow: 0 10px 18px rgba(15, 23, 42, 0.18);
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.refresh:hover {
+.actions button:hover {
 	background: #1f2a44;
+	transform: translateY(-1px);
+	box-shadow: 0 12px 22px rgba(15, 23, 42, 0.2);
+}
+
+.actions button:active {
+	transform: translateY(0);
+	box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+}
+
+.refresh {
+	background: #0f172a;
+}
+
+.add-user {
+	background: linear-gradient(135deg, #0f172a, #1f2937 55%, #2563eb);
 }
 
 .state {
@@ -166,6 +191,10 @@ tbody tr:hover {
 	td {
 		padding: 12px 10px;
 	}
+
+	.actions button {
+		padding: 9px 16px;
+	}
 }
 
 @media (max-width: 720px) {
@@ -175,5 +204,77 @@ tbody tr:hover {
 
 	table {
 		min-width: 720px;
+	}
+
+	.actions {
+		width: 100%;
+		justify-content: flex-start;
+	}
+
+	.actions button {
+		flex: 1 1 140px;
+		padding: 10px 14px;
+	}
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.form-grid label {
+	display: grid;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: rgba(15, 23, 42, 0.8);
+}
+
+.form-grid input,
+.form-grid select {
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-size: 14px;
+}
+
+.form-error {
+	margin-top: 12px;
+	color: #b91c1c;
+	font-weight: 600;
+}
+
+.modal-actions {
+	margin-top: 20px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.modal-actions button {
+	border: none;
+	background: #0f172a;
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.modal-actions button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.modal-actions .ghost {
+	background: #fff;
+	color: #0f172a;
+	border: 1px solid #e2e8f0;
+}
+
+@media (max-width: 720px) {
+	.form-grid {
+		grid-template-columns: 1fr;
 	}
 }
