@@ -86,10 +86,6 @@ export class UsersComponent implements OnInit {
     this.goToPage(this.page + 1);
   }
 
-  onFilterChange(): void {
-    this.fetchUsers(1);
-  }
-
   get canGoPrevious(): boolean {
     return this.page > 1 && !this.isLoading;
   }

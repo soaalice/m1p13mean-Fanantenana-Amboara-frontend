@@ -13,7 +13,7 @@
 		<div class="filters">
 			<label>
 				Status:
-				<select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+				<select [(ngModel)]="statusFilter">
 					<option value="">All</option>
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
@@ -21,7 +21,7 @@
 
 			<label>
 				Role:
-				<select [(ngModel)]="roleFilter" (ngModelChange)="onFilterChange()">
+				<select [(ngModel)]="roleFilter">
 					<option value="">All</option>
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
