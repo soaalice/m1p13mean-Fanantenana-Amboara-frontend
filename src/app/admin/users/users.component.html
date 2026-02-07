@@ -1,60 +1,152 @@
 <section class="users-page">
 	<div class="header">
-		<div>
-			<h1>Users</h1>
-			<p class="subtitle">Manage access and accounts</p>
+		<div class="header-main">
+			<div>
+				<h1>Users</h1>
+				<p class="subtitle">Manage access and accounts</p>
+			</div>
+			<div class="actions">
+				<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+				<button class="add-user" type="button" (click)="openUserModal()">Add User</button>
+			</div>
 		</div>
-		<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+		<div class="filters">
+			<label>
+				Status:
+				<select [(ngModel)]="statusFilter">
+					<option value="">All</option>
+					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+				</select>
+			</label>
+
+			<label>
+				Role:
+				<select [(ngModel)]="roleFilter">
+					<option value="">All</option>
+					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+				</select>
+			</label>
+		</div>
 	</div>
 
 	<div class="state" *ngIf="isLoading">Loading users...</div>
 	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
 	<div class="table-wrap" *ngIf="!isLoading && !loadError">
-		<table>
-			<thead>
-				<tr>
-					<th>Full name</th>
-					<th>Role</th>
-					<th>Login</th>
-					<th>Phone</th>
-					<th>Status</th>
-                    <th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let user of users; trackBy: trackById">
-					<td>{{ user.profile?.fullName || '-' }}</td>
-					<td>{{ user.role }}</td>
-					<td>{{ user.login }}</td>
-					<td>{{ user.profile?.tel || '-' }}</td>
-					<td>
-						<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
-					</td>
-                    <td>
-                        TODO: actions (change status)
-                    </td>
-				</tr>
-				<tr *ngIf="users.length === 0">
-					<td colspan="6" class="empty">No users found.</td>
-				</tr>
-			</tbody>
+		<table mat-table [dataSource]="users" class="users-table">
+			<ng-container matColumnDef="fullName">
+				<th mat-header-cell *matHeaderCellDef>Full name</th>
+				<td mat-cell *matCellDef="let user">{{ user.profile.fullName || '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="role">
+				<th mat-header-cell *matHeaderCellDef>Role</th>
+				<td mat-cell *matCellDef="let user">{{ user.role }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="login">
+				<th mat-header-cell *matHeaderCellDef>Login</th>
+				<td mat-cell *matCellDef="let user">{{ user.login }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="phone">
+				<th mat-header-cell *matHeaderCellDef>Phone</th>
+				<td mat-cell *matCellDef="let user">{{ user.profile.tel || '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="status">
+				<th mat-header-cell *matHeaderCellDef>Status</th>
+				<td mat-cell *matCellDef="let user">
+					<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef>Actions</th>
+				<td mat-cell *matCellDef="let user">
+					<button mat-stroked-button color="primary" type="button" (click)="openStatusModal(user)">
+						Change status
+					</button>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 		</table>
 
-		<div class="pagination">
-			<div class="pagination-info">
-				Page {{ page }} / {{ pages }}
-				<span class="divider">•</span>
-				Total {{ total }} users
-			</div>
-			<div class="pagination-actions">
-				<button type="button" (click)="previousPage()" [disabled]="!canGoPrevious">
-					Previous
-				</button>
-				<button type="button" (click)="nextPage()" [disabled]="!canGoNext">
-					Next
-				</button>
-			</div>
-		</div>
+		<div class="empty" *ngIf="users.length === 0">No users found.</div>
+
+		<mat-paginator
+			class="paginator"
+			[length]="total"
+			[pageIndex]="page - 1"
+			[pageSize]="limit"
+			[pageSizeOptions]="pageSizeOptions"
+			(page)="onPageChange($event)">
+		</mat-paginator>
 	</div>
 </section>
+
+<app-modal-forms [isOpen]="isModalOpen" title="Add user" (close)="closeUserModal()">
+	<form [formGroup]="userForm" (ngSubmit)="submitUser()">
+		<div class="form-grid">
+			<label>
+				Full name
+				<input type="text" formControlName="fullName" placeholder="Jane Doe" />
+			</label>
+			<label>
+				Login
+				<input type="text" formControlName="login" placeholder="jane.doe" />
+			</label>
+			<label>
+				Password
+				<input type="password" formControlName="password" placeholder="******" />
+			</label>
+			<label>
+				Phone
+				<input type="text" formControlName="tel" placeholder="+221 77 000 00 00" />
+			</label>
+			<label>
+				Role
+				<select formControlName="role">
+					<option *ngFor="let role of rolesForm" [value]="role">{{ role }}</option>
+				</select>
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+
+		<div class="modal-actions">
+			<button type="button" class="ghost" (click)="closeUserModal()">Cancel</button>
+			<button type="submit" [disabled]="userForm.invalid || isSubmitting">
+				{{ isSubmitting ? 'Creating...' : 'Create user' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>
+
+<app-modal-forms [isOpen]="isStatusModalOpen" title="Change status" (close)="closeStatusModal()">
+	<form [formGroup]="statusForm" (ngSubmit)="submitStatusChange()">
+		<div class="form-grid">
+			<label>
+				User
+				<input type="text" [value]="selectedUser?.profile?.fullName || selectedUser?.login || ''" disabled />
+			</label>
+			<label>
+				Status
+				<select formControlName="status">
+					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+				</select>
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="statusError">{{ statusError }}</div>
+
+		<div class="modal-actions">
+			<button type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
+			<button type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
+				{{ isStatusSubmitting ? 'Updating...' : 'Update status' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>
