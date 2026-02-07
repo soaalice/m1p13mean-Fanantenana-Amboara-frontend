@@ -53,9 +53,11 @@
 					<td>
 						<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
 					</td>
-                    <td>
-                        TODO: actions (change status)
-                    </td>
+					<td>
+						<button class="action-button" type="button" (click)="openStatusModal(user)">
+							Change status
+						</button>
+					</td>
 				</tr>
 				<tr *ngIf="users.length === 0">
 					<td colspan="6" class="empty">No users found.</td>
@@ -114,6 +116,32 @@
 			<button type="button" class="ghost" (click)="closeModal()">Cancel</button>
 			<button type="submit" [disabled]="userForm.invalid || isSubmitting">
 				{{ isSubmitting ? 'Creating...' : 'Create user' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>
+
+<app-modal-forms [isOpen]="isStatusModalOpen" title="Change status" (close)="closeStatusModal()">
+	<form [formGroup]="statusForm" (ngSubmit)="submitStatusChange()">
+		<div class="form-grid">
+			<label>
+				User
+				<input type="text" [value]="selectedUser?.profile?.fullName || selectedUser?.login || ''" disabled />
+			</label>
+			<label>
+				Status
+				<select formControlName="status">
+					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+				</select>
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="statusError">{{ statusError }}</div>
+
+		<div class="modal-actions">
+			<button type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
+			<button type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
+				{{ isStatusSubmitting ? 'Updating...' : 'Update status' }}
 			</button>
 		</div>
 	</form>

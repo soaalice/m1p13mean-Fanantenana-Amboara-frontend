@@ -21,13 +21,17 @@ export class UsersComponent implements OnInit {
   total = 0;
   pages = 1;
   isModalOpen = false;
+  isStatusModalOpen = false;
   isSubmitting = false;
+  isStatusSubmitting = false;
   submitError = '';
+  statusError = '';
   roles = [UserRole.ADMIN, UserRole.BOUTIQUE, UserRole.ACHETEUR];
   rolesForm = [UserRole.ADMIN, UserRole.BOUTIQUE];
   statusOptions = ['ACTIVE', 'INACTIVE'];
   statusFilter = '';
   roleFilter = '';
+  selectedUser: User | null = null;
 
   userForm = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -35,6 +39,10 @@ export class UsersComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(6)]],
     tel: [''],
     role: [UserRole.ADMIN, Validators.required]
+  });
+
+  statusForm = this.fb.group({
+    status: ['ACTIVE', Validators.required]
   });
 
   constructor(private usersService: UsersService, private fb: FormBuilder) {}
@@ -148,6 +156,47 @@ export class UsersComponent implements OnInit {
       error: () => {
         this.isSubmitting = false;
         this.submitError = 'Failed to create user.';
+      }
+    });
+  }
+
+  openStatusModal(user: User): void {
+    this.selectedUser = user;
+    this.isStatusModalOpen = true;
+    this.isStatusSubmitting = false;
+    this.statusError = '';
+    this.statusForm.setValue({
+      status: user.status ?? 'ACTIVE'
+    });
+  }
+
+  closeStatusModal(): void {
+    this.isStatusModalOpen = false;
+    this.isStatusSubmitting = false;
+    this.statusError = '';
+    this.selectedUser = null;
+  }
+
+  submitStatusChange(): void {
+    if (!this.selectedUser?._id || this.statusForm.invalid || this.isStatusSubmitting) {
+      this.statusForm.markAllAsTouched();
+      return;
+    }
+
+    this.isStatusSubmitting = true;
+    this.statusError = '';
+
+    const status = this.statusForm.getRawValue().status ?? 'ACTIVE';
+
+    this.usersService.updateUserStatus(this.selectedUser._id, status).subscribe({
+      next: () => {
+        this.isStatusSubmitting = false;
+        this.closeStatusModal();
+        this.fetchUsers(this.page);
+      },
+      error: () => {
+        this.isStatusSubmitting = false;
+        this.statusError = 'Failed to update status.';
       }
     });
   }

@@ -36,4 +36,8 @@ export class UsersService {
   createUser(payload: Partial<User>): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/users`, payload);
   }
+
+  updateUserStatus(userId: string, status: string): Observable<User> {
+    return this.http.patch<User>(`${environment.apiUrl}/users/${userId}/status`, { status });
+  }
 }
