@@ -1,12 +1,31 @@
 <section class="users-page">
 	<div class="header">
-		<div>
-			<h1>Users</h1>
-			<p class="subtitle">Manage access and accounts</p>
+		<div class="header-main">
+			<div>
+				<h1>Users</h1>
+				<p class="subtitle">Manage access and accounts</p>
+			</div>
+			<div class="actions">
+				<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
+				<button class="add-user" type="button" (click)="openModal()">Add User</button>
+			</div>
 		</div>
-		<div class="actions">
-			<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
-			<button class="add-user" type="button" (click)="openModal()">Add User</button>
+		<div class="filters">
+			<label>
+				Status:
+				<select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+					<option value="">All</option>
+					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+				</select>
+			</label>
+
+			<label>
+				Role:
+				<select [(ngModel)]="roleFilter" (ngModelChange)="onFilterChange()">
+					<option value="">All</option>
+					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+				</select>
+			</label>
 		</div>
 	</div>
 
@@ -84,7 +103,7 @@
 			<label>
 				Role
 				<select formControlName="role">
-					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+					<option *ngFor="let role of rolesForm" [value]="role">{{ role }}</option>
 				</select>
 			</label>
 		</div>

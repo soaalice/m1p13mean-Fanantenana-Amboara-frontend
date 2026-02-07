@@ -10,10 +10,25 @@ import { User, UsersResponse } from '../../shared/models/user';
 export class UsersService {
   constructor (private http: HttpClient) { }
 
-  getUsers(page = 1, limit = 10): Observable<UsersResponse> {
-    const params = new HttpParams()
+  getUsers(
+    page = 1,
+    limit = 10,
+    filters?: {
+      role?: string;
+      status?: string;
+    }
+  ): Observable<UsersResponse> {
+    let params = new HttpParams()
       .set('page', page)
       .set('limit', limit);
+
+    if (filters?.role) {
+      params = params.set('role', filters.role);
+    }
+
+    if (filters?.status) {
+      params = params.set('status', filters.status);
+    }
 
     return this.http.get<UsersResponse>(`${environment.apiUrl}/users`, { params });
   }

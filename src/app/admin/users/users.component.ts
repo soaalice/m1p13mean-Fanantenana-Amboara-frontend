@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User, UserRole, UsersResponse } from '../../shared/models/user';
 import { UsersService } from '../../core/services/users.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
@@ -8,7 +8,7 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ModalFormsComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalFormsComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -23,7 +23,11 @@ export class UsersComponent implements OnInit {
   isModalOpen = false;
   isSubmitting = false;
   submitError = '';
-  roles = [UserRole.ADMIN, UserRole.BOUTIQUE];
+  roles = [UserRole.ADMIN, UserRole.BOUTIQUE, UserRole.ACHETEUR];
+  rolesForm = [UserRole.ADMIN, UserRole.BOUTIQUE];
+  statusOptions = ['ACTIVE', 'INACTIVE'];
+  statusFilter = '';
+  roleFilter = '';
 
   userForm = this.fb.group({
     fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -43,7 +47,10 @@ export class UsersComponent implements OnInit {
     this.isLoading = true;
     this.loadError = '';
 
-    this.usersService.getUsers(page, this.limit).subscribe({
+    this.usersService.getUsers(page, this.limit, {
+      status: this.statusFilter || undefined,
+      role: this.roleFilter || undefined
+    }).subscribe({
       next: response => {
         this.applyResponse(response);
         this.isLoading = false;
@@ -77,6 +84,10 @@ export class UsersComponent implements OnInit {
 
   nextPage(): void {
     this.goToPage(this.page + 1);
+  }
+
+  onFilterChange(): void {
+    this.fetchUsers(1);
   }
 
   get canGoPrevious(): boolean {
