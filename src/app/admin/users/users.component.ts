@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 import { User, UserRole, UsersResponse } from '../../shared/models/user';
 import { UsersService } from '../../core/services/users.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
@@ -8,7 +11,7 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalFormsComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalFormsComponent, MatTableModule, MatPaginatorModule, MatButtonModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -29,6 +32,8 @@ export class UsersComponent implements OnInit {
   roles = [UserRole.ADMIN, UserRole.BOUTIQUE, UserRole.ACHETEUR];
   rolesForm = [UserRole.ADMIN, UserRole.BOUTIQUE];
   statusOptions = ['ACTIVE', 'INACTIVE'];
+  displayedColumns = ['fullName', 'role', 'login', 'phone', 'status', 'actions'];
+  pageSizeOptions = [5, 10, 25];
   statusFilter = '';
   roleFilter = '';
   selectedUser: User | null = null;
@@ -94,6 +99,11 @@ export class UsersComponent implements OnInit {
     this.goToPage(this.page + 1);
   }
 
+  onPageChange(event: PageEvent): void {
+    this.limit = event.pageSize;
+    this.fetchUsers(event.pageIndex + 1);
+  }
+
   get canGoPrevious(): boolean {
     return this.page > 1 && !this.isLoading;
   }
@@ -114,12 +124,12 @@ export class UsersComponent implements OnInit {
     return `status ${status.toLowerCase()}`;
   }
 
-  openModal(): void {
+  openUserModal(): void {
     this.isModalOpen = true;
     this.submitError = '';
   }
 
-  closeModal(): void {
+  closeUserModal(): void {
     this.isModalOpen = false;
     this.isSubmitting = false;
     this.submitError = '';
@@ -150,7 +160,7 @@ export class UsersComponent implements OnInit {
     this.usersService.createUser(payload).subscribe({
       next: () => {
         this.isSubmitting = false;
-        this.closeModal();
+        this.closeUserModal();
         this.fetchUsers(1);
       },
       error: () => {
