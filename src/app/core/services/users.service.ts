@@ -4,6 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, UsersResponse } from '../../shared/models/user';
 
+export interface UserSoldeResponse {
+  success: boolean;
+  message: string;
+  data: User;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -39,5 +45,12 @@ export class UsersService {
 
   updateUserStatus(userId: string, status: string): Observable<User> {
     return this.http.patch<User>(`${environment.apiUrl}/users/${userId}/status`, { status });
+  }
+
+  rechargeUserSolde(userId: string, amount: number): Observable<UserSoldeResponse> {
+    return this.http.patch<UserSoldeResponse>(`${environment.apiUrl}/users/${userId}/solde`, {
+      amount,
+      type: 'RECHARGE'
+    });
   }
 }

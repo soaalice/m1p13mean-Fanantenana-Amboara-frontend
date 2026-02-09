@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -7,7 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, MatButtonModule],
   templateUrl: './modal-forms.component.html',
-  styleUrl: './modal-forms.component.scss'
+  styleUrl: './modal-forms.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class ModalFormsComponent {
   @Input() isOpen = false;
