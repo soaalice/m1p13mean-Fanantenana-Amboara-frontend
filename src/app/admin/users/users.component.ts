@@ -6,6 +6,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { User, UserRole, UsersResponse } from '../../shared/models/user';
 import { UsersService } from '../../core/services/users.service';
+import { SidebarService } from '../../core/services/sidebar.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 
 @Component({
@@ -50,7 +51,11 @@ export class UsersComponent implements OnInit {
     status: ['ACTIVE', Validators.required]
   });
 
-  constructor(private usersService: UsersService, private fb: FormBuilder) {}
+  constructor(
+    private usersService: UsersService,
+    private sidebarService: SidebarService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -125,6 +130,7 @@ export class UsersComponent implements OnInit {
   }
 
   openUserModal(): void {
+    this.sidebarService.requestCloseSidebar();
     this.isModalOpen = true;
     this.submitError = '';
   }
@@ -171,6 +177,7 @@ export class UsersComponent implements OnInit {
   }
 
   openStatusModal(user: User): void {
+    this.sidebarService.requestCloseSidebar();
     this.selectedUser = user;
     this.isStatusModalOpen = true;
     this.isStatusSubmitting = false;

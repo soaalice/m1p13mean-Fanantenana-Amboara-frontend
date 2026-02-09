@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../core/services/auth.service';
 import { UsersService } from '../../core/services/users.service';
+import { SidebarService } from '../../core/services/sidebar.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { User } from '../../shared/models/user';
 
@@ -38,6 +39,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
+    private sidebarService: SidebarService,
     private fb: FormBuilder
   ) {}
 
@@ -46,6 +48,7 @@ export class DashboardComponent implements OnInit {
   }
 
   openRechargeModal(): void {
+    this.sidebarService.requestCloseSidebar();
     this.isRechargeModalOpen = true;
     this.rechargeError = '';
     this.rechargeForm.reset({ amount: null });
