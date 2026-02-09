@@ -15,17 +15,23 @@ export class AuthService {
     return this.http.post<User>(`${environment.apiUrl}/users`, user);
   }
 
-  login( login: string, password: string ): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${environment.apiUrl}/users/login`, { login, password })
+  login( login: string, password: string ): Observable<{ token: string, user: User }> {
+    return this.http.post<{ token: string, user: User }>(`${environment.apiUrl}/users/login`, { login, password })
       .pipe(
         tap(response => {
           localStorage.setItem('authToken', response.token);
+          localStorage.setItem('currentUser', JSON.stringify(response.user));
         })
       );
   }
 
   getToken(): string | null {
     return localStorage.getItem('authToken');
+  }
+  
+  getCurrentUser(): User | null {
+    const userJson = localStorage.getItem('currentUser');
+    return userJson ? JSON.parse(userJson) as User : null;
   }
 
   getRoleFromToken(): UserRole | null {
@@ -69,5 +75,6 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
   }
 }

@@ -1,0 +1,59 @@
+<div class="home-page" *ngIf="user">
+	<section class="welcome-section">
+		<div class="welcome-content">
+			<span class="eyebrow">Buyer Dashboard</span>
+			<h1>Welcome, {{ user.profile.fullName || 'Acheteur' }}</h1>
+			<p class="subtitle">
+				Track your balance, manage your information, and quickly access essential actions.
+			</p>
+		</div>
+	</section>
+
+	<section class="cards-grid">
+		<mat-card class="card balance-card">
+			<mat-card-header>
+				<mat-card-title>Your balance</mat-card-title>
+				<mat-card-subtitle>Quick and secure recharge</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<div class="balance-amount">
+					{{ (user.profile.solde || 0) | number:'1.0-0' }}
+					<span>MGA</span>
+				</div>
+			</mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-raised-button color="primary" type="button">
+                    <mat-icon>add</mat-icon>
+                    Recharge
+                </button>
+            </mat-card-actions>
+		</mat-card>
+
+		<mat-card class="card profile-card">
+			<mat-card-header>
+				<mat-card-title>Profile Details</mat-card-title>
+				<mat-card-subtitle>Your main information</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<div class="details-grid">
+					<div class="detail-item">
+						<span class="label">Full Name</span>
+						<span class="value">{{ user.profile.fullName || '-' }}</span>
+					</div>
+					<div class="detail-item">
+						<span class="label">Phone</span>
+						<span class="value">{{ user.profile.tel || 'Not provided' }}</span>
+					</div>
+					<div class="detail-item">
+						<span class="label">Login</span>
+						<span class="value">{{ user.login || '-' }}</span>
+					</div>
+					<div class="detail-item">
+						<span class="label">Role</span>
+						<span class="value">{{ user.role || 'ACHETEUR' }}</span>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</section>
+</div>

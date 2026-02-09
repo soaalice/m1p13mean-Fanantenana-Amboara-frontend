@@ -68,12 +68,12 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'home',
+                redirectTo: 'dashboard',
                 pathMatch: 'full'
             },
             {
-                path: 'home',
-                loadComponent: () => import('./acheteur/home/home.component').then(m => m.HomeComponent)
+                path: 'dashboard',
+                loadComponent: () => import('./acheteur/dashboard/dashboard.component').then(m => m.DashboardComponent)
             }
         ]
     },
