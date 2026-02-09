@@ -12,7 +12,15 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ModalFormsComponent, MatTableModule, MatPaginatorModule, MatButtonModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    ReactiveFormsModule, 
+    ModalFormsComponent, 
+    MatTableModule, 
+    MatPaginatorModule, 
+    MatButtonModule
+  ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
