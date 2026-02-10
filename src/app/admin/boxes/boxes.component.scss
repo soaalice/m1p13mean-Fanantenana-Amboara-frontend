@@ -1,0 +1,60 @@
+// === ÉTATS DES BOXES ===
+.available { color: #4caf50; font-weight: 600; }
+.rented { color: #ff9800; font-weight: 600; }
+.repair { color: #f44336; font-weight: 600; }
+
+// === HEADER ===
+.boxes-page .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 { margin: 0; font-size: 1.8rem; font-weight: 500; color: #333; }
+  .subtitle { margin: 0; font-size: 0.9rem; color: #757575; }
+
+  .refresh {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(25,118,210,0.85);
+      box-shadow: 0 2px 8px rgba(25,118,210,0.3);
+    }
+  }
+}
+
+// === TABLE ===
+.mat-table {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mat-cell { padding: 12px; font-size: 0.95rem; }
+.mat-row:nth-child(even) { background-color: #f3f6ff; }
+.mat-row:hover { background-color: #e3f2fd; }
+
+// === HEADER DE LA TABLE ===
+::ng-deep .mat-header-row,
+::ng-deep .mat-mdc-header-cell {
+  background-color: var(--primary-color) !important;
+  color: white;
+  font-weight: bold;
+}
+
+// === PAGINATOR ===
+::ng-deep .mat-paginator {
+  background-color: rgba(25,118,210,0.08); // version légère
+  color: var(--primary-color);
+
+  .mat-icon-button { color: var(--primary-color); }
+  .mat-paginator-range-label { color: var(--primary-color); font-weight: 500; }
+}
