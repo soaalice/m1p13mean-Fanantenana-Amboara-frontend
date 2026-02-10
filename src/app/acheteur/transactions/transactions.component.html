@@ -6,7 +6,27 @@
 				<p class="subtitle">History of your account activity</p>
 			</div>
 			<div class="actions">
-				<button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+				<button mat-stroked-button type="button" (click)="applyFilters()">Refresh</button>
+			</div>
+		</div>
+
+		<div class="filters">
+			<label class="filter-item">
+				<span>Type</span>
+				<select [(ngModel)]="filterType">
+					<option *ngFor="let type of typeOptions" [value]="type">{{ type || 'All' }}</option>
+				</select>
+			</label>
+			<label class="filter-item">
+				<span>Start date</span>
+				<input type="date" [(ngModel)]="startDate" />
+			</label>
+			<label class="filter-item">
+				<span>End date</span>
+				<input type="date" [(ngModel)]="endDate" />
+			</label>
+			<div class="filter-actions">
+				<button mat-stroked-button type="button" (click)="resetFilters()">Reset</button>
 			</div>
 		</div>
 	</div>

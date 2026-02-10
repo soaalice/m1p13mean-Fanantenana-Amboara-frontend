@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { Transaction } from '../../shared/models/transaction';
+import { Transaction, TransactionType } from '../../shared/models/transaction';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
@@ -14,6 +15,7 @@ import { PaginatedComponent } from '../../shared/base/paginated.component';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -29,6 +31,11 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
   get transactions(): Transaction[] {
     return this.items;
   }
+
+  filterType = '';
+  startDate = '';
+  endDate = '';
+  typeOptions = ['', TransactionType.PURCHASE, TransactionType.RECHARGE, TransactionType.RENT];
 
   displayedColumns = ['type', 'amount', 'date'];
 
@@ -54,7 +61,11 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
       return;
     }
 
-    this.transactionsService.getTransactions(page, this.limit, this.userId).subscribe({
+    this.transactionsService.getTransactions(page, this.limit, this.userId, {
+      type: this.filterType || undefined,
+      startDate: this.startDate || undefined,
+      endDate: this.endDate || undefined
+    }).subscribe({
       next: (response) => {
         this.applyResponse(response);
         this.isLoading = false;
@@ -64,5 +75,16 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
         this.isLoading = false;
       }
     });
+  }
+
+  applyFilters(): void {
+    this.fetchData(1);
+  }
+
+  resetFilters(): void {
+    this.filterType = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.fetchData(1);
   }
 }

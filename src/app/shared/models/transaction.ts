@@ -1,6 +1,7 @@
 export enum TransactionType {
     RECHARGE = 'RECHARGE',
-    PURCHASE = 'ACHAT'
+    PURCHASE = 'ACHAT',
+    RENT = 'LOYER'
 }
 
 export interface Transaction {
