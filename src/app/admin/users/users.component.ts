@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { User, UserRole } from '../../shared/models/user';
-import { PageResult } from '../../shared/models/shared.model';
 import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { PaginatedComponent } from '../../shared/base/paginated.component';
 
 @Component({
   selector: 'app-users',
@@ -25,14 +25,12 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
-export class UsersComponent implements OnInit {
-  users: User[] = [];
-  isLoading = false;
-  loadError = '';
-  page = 1;
-  limit = 10;
-  total = 0;
-  pages = 1;
+export class UsersComponent extends PaginatedComponent<User> {
+  // Alias pour items du parent
+  get users(): User[] {
+    return this.items;
+  }
+
   isModalOpen = false;
   isStatusModalOpen = false;
   isSubmitting = false;
@@ -43,7 +41,6 @@ export class UsersComponent implements OnInit {
   rolesForm = [UserRole.ADMIN, UserRole.BOUTIQUE];
   statusOptions = ['ACTIVE', 'INACTIVE'];
   displayedColumns = ['fullName', 'role', 'login', 'phone', 'status', 'actions'];
-  pageSizeOptions = [5, 10, 25];
   statusFilter = '';
   roleFilter = '';
   selectedUser: User | null = null;
@@ -64,13 +61,11 @@ export class UsersComponent implements OnInit {
     private usersService: UsersService,
     private sidebarService: SidebarService,
     private fb: FormBuilder
-  ) {}
-
-  ngOnInit(): void {
-    this.fetchUsers();
+  ) {
+    super();
   }
 
-  fetchUsers(page = this.page): void {
+  protected fetchData(page = this.page): void {
     this.isLoading = true;
     this.loadError = '';
 
@@ -87,47 +82,6 @@ export class UsersComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  private applyResponse(response: PageResult<User>): void {
-    this.users = response.data ?? [];
-    this.page = response.pagination?.page ?? this.page;
-    this.limit = response.pagination?.limit ?? this.limit;
-    this.total = response.pagination?.total ?? this.users.length;
-    this.pages = response.pagination?.pages ?? 1;
-  }
-
-  goToPage(page: number): void {
-    if (page < 1 || page > this.pages || page === this.page) {
-      return;
-    }
-
-    this.fetchUsers(page);
-  }
-
-  previousPage(): void {
-    this.goToPage(this.page - 1);
-  }
-
-  nextPage(): void {
-    this.goToPage(this.page + 1);
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.limit = event.pageSize;
-    this.fetchUsers(event.pageIndex + 1);
-  }
-
-  get canGoPrevious(): boolean {
-    return this.page > 1 && !this.isLoading;
-  }
-
-  get canGoNext(): boolean {
-    return this.page < this.pages && !this.isLoading;
-  }
-
-  trackById(index: number, user: User): string | number {
-    return user._id ?? index;
   }
 
   getStatusClass(status?: string): string {
@@ -176,7 +130,7 @@ export class UsersComponent implements OnInit {
       next: () => {
         this.isSubmitting = false;
         this.closeUserModal();
-        this.fetchUsers(1);
+        this.fetchData(1);
       },
       error: () => {
         this.isSubmitting = false;
@@ -218,7 +172,7 @@ export class UsersComponent implements OnInit {
       next: () => {
         this.isStatusSubmitting = false;
         this.closeStatusModal();
-        this.fetchUsers(this.page);
+        this.fetchData(this.page);
       },
       error: () => {
         this.isStatusSubmitting = false;

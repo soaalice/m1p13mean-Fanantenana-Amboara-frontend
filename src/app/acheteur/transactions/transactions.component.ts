@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { Transaction } from '../../shared/models/transaction';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
-import { PageResult } from '../../shared/models/shared.model';
+import { PaginatedComponent } from '../../shared/base/paginated.component';
 
 @Component({
   selector: 'app-transactions',
@@ -22,28 +22,29 @@ import { PageResult } from '../../shared/models/shared.model';
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss'
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent extends PaginatedComponent<Transaction> {
   userId: string | null = null;
-  transactions: Transaction[] = [];
-  isLoading = false;
-  loadError = '';
 
-  page = 1;
-  limit = 10;
-  total = 0;
-  pages = 1;
-
-  displayedColumns = ['type', 'amount', 'date'];
-  pageSizeOptions = [5, 10, 25];
-
-  constructor(private transactionsService: TransactionsService, private authService: AuthService) {}
-
-  ngOnInit(): void {
-    this.userId = this.authService.getCurrentUser()?._id ?? null;
-    this.loadTransactions();
+  // Alias pour items du parent
+  get transactions(): Transaction[] {
+    return this.items;
   }
 
-  loadTransactions(page = this.page): void {
+  displayedColumns = ['type', 'amount', 'date'];
+
+  constructor(
+    private transactionsService: TransactionsService, 
+    private authService: AuthService
+  ) {
+    super();
+  }
+
+  override ngOnInit(): void {
+    this.userId = this.authService.getCurrentUser()?._id ?? null;
+    super.ngOnInit();
+  }
+
+  protected fetchData(page = this.page): void {
     this.isLoading = true;
     this.loadError = '';
 
@@ -63,22 +64,5 @@ export class TransactionsComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  private applyResponse(response: PageResult<Transaction>): void {
-    this.transactions = response.data ?? [];
-    this.page = response.pagination?.page ?? this.page;
-    this.limit = response.pagination?.limit ?? this.limit;
-    this.total = response.pagination?.total ?? this.transactions.length;
-    this.pages = response.pagination?.pages ?? 1;
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.limit = event.pageSize;
-    this.loadTransactions(event.pageIndex + 1);
-  }
-
-  trackById(index: number, transaction: Transaction): string | number {
-    return transaction._id ?? index;
   }
 }

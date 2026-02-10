@@ -6,14 +6,14 @@
 				<p class="subtitle">Manage access and accounts</p>
 			</div>
 			<div class="actions">
-				<button mat-stroked-button type="button" (click)="fetchUsers()">Refresh</button>
+				<button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
 				<button mat-raised-button color="primary" type="button" (click)="openUserModal()">Add User</button>
 			</div>
 		</div>
 		<div class="filters">
 			<label>
 				Status:
-				<select [(ngModel)]="statusFilter">
+				<select [(ngModel)]="statusFilter" (change)="fetchData()">
 					<option value="">All</option>
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
@@ -21,7 +21,7 @@
 
 			<label>
 				Role:
-				<select [(ngModel)]="roleFilter">
+				<select [(ngModel)]="roleFilter" (change)="fetchData()">
 					<option value="">All</option>
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
