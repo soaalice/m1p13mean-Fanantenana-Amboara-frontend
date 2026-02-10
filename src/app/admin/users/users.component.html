@@ -6,27 +6,27 @@
 				<p class="subtitle">Manage access and accounts</p>
 			</div>
 			<div class="actions">
-				<button class="refresh" type="button" (click)="fetchUsers()">Refresh</button>
-				<button class="add-user" type="button" (click)="openUserModal()">Add User</button>
+				<button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+				<button mat-raised-button color="primary" type="button" (click)="openUserModal()">Add User</button>
 			</div>
 		</div>
-		<div class="filters">
-			<label>
-				Status:
+		<app-list-filters [showApply]="false" (reset)="resetFilters()">
+			<label class="filter-item">
+				<span>Status</span>
 				<select [(ngModel)]="statusFilter">
 					<option value="">All</option>
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
 			</label>
 
-			<label>
-				Role:
+			<label class="filter-item">
+				<span>Role</span>
 				<select [(ngModel)]="roleFilter">
 					<option value="">All</option>
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
 			</label>
-		</div>
+		</app-list-filters>
 	</div>
 
 	<div class="state" *ngIf="isLoading">Loading users...</div>
@@ -117,8 +117,8 @@
 		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
 
 		<div class="modal-actions">
-			<button type="button" class="ghost" (click)="closeUserModal()">Cancel</button>
-			<button type="submit" [disabled]="userForm.invalid || isSubmitting">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeUserModal()">Cancel</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || isSubmitting">
 				{{ isSubmitting ? 'Creating...' : 'Create user' }}
 			</button>
 		</div>
@@ -143,8 +143,8 @@
 		<div class="form-error" *ngIf="statusError">{{ statusError }}</div>
 
 		<div class="modal-actions">
-			<button type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
-			<button type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
 				{{ isStatusSubmitting ? 'Updating...' : 'Update status' }}
 			</button>
 		</div>

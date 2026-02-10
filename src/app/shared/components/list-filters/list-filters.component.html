@@ -1,0 +1,20 @@
+<div class="filters">
+  <ng-content></ng-content>
+  <div class="filter-actions" *ngIf="showApply || showReset">
+    <button
+      *ngIf="showApply"
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="apply.emit()">
+      {{ applyLabel }}
+    </button>
+    <button
+      *ngIf="showReset"
+      mat-stroked-button
+      type="button"
+      (click)="reset.emit()">
+      {{ resetLabel }}
+    </button>
+  </div>
+</div>

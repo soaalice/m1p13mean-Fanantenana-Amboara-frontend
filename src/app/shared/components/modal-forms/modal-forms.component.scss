@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  z-index: 50;
+  z-index: 1000;
 }
 
 .modal {
@@ -35,4 +35,70 @@
   color: rgba(15, 23, 42, 0.7);
   font-weight: 600;
   cursor: pointer;
+}
+
+// Modal Content Styles
+
+.modal {
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .form-grid label {
+    display: grid;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(15, 23, 42, 0.8);
+  }
+
+  .form-grid input,
+  .form-grid select {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .form-error {
+    margin-top: 12px;
+    color: #b91c1c;
+    font-weight: 600;
+  }
+
+  .modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .modal-actions button {
+    border: none;
+    background: #0f172a;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .modal-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .modal-actions .ghost {
+    background: #fff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+  }
+
+  @media (max-width: 720px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 }

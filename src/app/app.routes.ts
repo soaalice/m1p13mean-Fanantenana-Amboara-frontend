@@ -40,6 +40,10 @@ export const routes: Routes = [
             {
                 path: 'users',
                 loadComponent: () => import('./admin/users/users.component').then(m => m.UsersComponent)
+            },
+            {
+                path: 'boxes',
+                loadComponent: () => import('./admin/boxes/boxes.component').then(m => m.BoxesComponent)
             }
         ]
     },
@@ -68,12 +72,16 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'home',
+                redirectTo: 'dashboard',
                 pathMatch: 'full'
             },
             {
-                path: 'home',
-                loadComponent: () => import('./acheteur/home/home.component').then(m => m.HomeComponent)
+                path: 'dashboard',
+                loadComponent: () => import('./acheteur/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'transactions',
+                loadComponent: () => import('./acheteur/transactions/transactions.component').then(m => m.TransactionsComponent)
             }
         ]
     },
