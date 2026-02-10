@@ -4,7 +4,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { User, UserRole, UsersResponse } from '../../shared/models/user';
+import { User, UserRole } from '../../shared/models/user';
+import { PageResult } from '../../shared/models/shared.model';
 import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
@@ -88,7 +89,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  private applyResponse(response: UsersResponse): void {
+  private applyResponse(response: PageResult<User>): void {
     this.users = response.data ?? [];
     this.page = response.pagination?.page ?? this.page;
     this.limit = response.pagination?.limit ?? this.limit;

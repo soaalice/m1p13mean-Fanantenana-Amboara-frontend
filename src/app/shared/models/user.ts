@@ -24,14 +24,3 @@ export interface User {
     status ?: UserStatus;
     createdAt ?: string | Date;
 }
-
-export interface UsersResponse {
-    success: boolean;
-    data: User[];
-    pagination?: {
-        page: number;
-        limit: number;
-        total: number;
-        pages: number;
-    };
-}

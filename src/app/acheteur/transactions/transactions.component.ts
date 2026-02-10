@@ -7,6 +7,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Transaction } from '../../shared/models/transaction';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
+import { PageResult } from '../../shared/models/shared.model';
 
 @Component({
   selector: 'app-transactions',
@@ -54,11 +55,7 @@ export class TransactionsComponent implements OnInit {
 
     this.transactionsService.getTransactions(page, this.limit, this.userId).subscribe({
       next: (response) => {
-        this.transactions = response.data ?? [];
-        this.page = response.pagination?.page ?? page;
-        this.limit = response.pagination?.limit ?? this.limit;
-        this.total = response.pagination?.total ?? this.transactions.length;
-        this.pages = response.pagination?.pages ?? 1;
+        this.applyResponse(response);
         this.isLoading = false;
       },
       error: () => {
@@ -66,6 +63,14 @@ export class TransactionsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  private applyResponse(response: PageResult<Transaction>): void {
+    this.transactions = response.data ?? [];
+    this.page = response.pagination?.page ?? this.page;
+    this.limit = response.pagination?.limit ?? this.limit;
+    this.total = response.pagination?.total ?? this.transactions.length;
+    this.pages = response.pagination?.pages ?? 1;
   }
 
   onPageChange(event: PageEvent): void {

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { User, UsersResponse } from '../../shared/models/user';
+import { User } from '../../shared/models/user';
+import { PageResult } from '../../shared/models/shared.model';
 
 export interface UserSoldeResponse {
   success: boolean;
@@ -23,7 +24,7 @@ export class UsersService {
       role?: string;
       status?: string;
     }
-  ): Observable<UsersResponse> {
+  ): Observable<PageResult<User>> {
     let params = new HttpParams()
       .set('page', page)
       .set('limit', limit);
@@ -36,7 +37,7 @@ export class UsersService {
       params = params.set('status', filters.status);
     }
 
-    return this.http.get<UsersResponse>(`${environment.apiUrl}/users`, { params });
+    return this.http.get<PageResult<User>>(`${environment.apiUrl}/users`, { params });
   }
 
   createUser(payload: Partial<User>): Observable<User> {
