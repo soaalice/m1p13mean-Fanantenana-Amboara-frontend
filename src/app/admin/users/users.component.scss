@@ -35,34 +35,6 @@ h1 {
 	flex-wrap: wrap;
 }
 
-.filters {
-	display: flex;
-	align-items: center;
-	gap: 16px;
-	flex-wrap: wrap;
-	width: 100%;
-	padding: 12px 14px;
-	border-radius: 14px;
-}
-
-.filters label {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font-size: 13px;
-	font-weight: 600;
-	color: rgba(15, 23, 42, 0.8);
-}
-
-.filters select {
-	border: 1px solid #e2e8f0;
-	border-radius: 999px;
-	padding: 8px 14px;
-	font-size: 13px;
-	background: #fff;
-	min-width: 140px;
-}
-
 
 .state {
 	padding: 12px 16px;
@@ -156,19 +128,5 @@ h1 {
 
 	.actions .mat-mdc-button-base {
 		flex: 1 1 140px;
-	}
-
-	.filters {
-		width: 100%;
-	}
-
-	.filters label {
-		width: 100%;
-		justify-content: space-between;
-	}
-
-	.filters select {
-		flex: 1 1 auto;
-		min-width: 0;
 	}
 }

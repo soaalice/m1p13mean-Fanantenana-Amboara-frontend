@@ -10,23 +10,23 @@
 				<button mat-raised-button color="primary" type="button" (click)="openUserModal()">Add User</button>
 			</div>
 		</div>
-		<div class="filters">
-			<label>
-				Status:
-				<select [(ngModel)]="statusFilter" (change)="fetchData()">
+		<app-list-filters [showApply]="false" (reset)="resetFilters()">
+			<label class="filter-item">
+				<span>Status</span>
+				<select [(ngModel)]="statusFilter">
 					<option value="">All</option>
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
 			</label>
 
-			<label>
-				Role:
-				<select [(ngModel)]="roleFilter" (change)="fetchData()">
+			<label class="filter-item">
+				<span>Role</span>
+				<select [(ngModel)]="roleFilter">
 					<option value="">All</option>
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
 			</label>
-		</div>
+		</app-list-filters>
 	</div>
 
 	<div class="state" *ngIf="isLoading">Loading users...</div>

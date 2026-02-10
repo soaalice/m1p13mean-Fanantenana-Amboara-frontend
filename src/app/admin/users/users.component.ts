@@ -9,6 +9,7 @@ import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
+import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
 
 @Component({
   selector: 'app-users',
@@ -20,7 +21,8 @@ import { PaginatedComponent } from '../../shared/base/paginated.component';
     ModalFormsComponent, 
     MatTableModule, 
     MatPaginatorModule, 
-    MatButtonModule
+    MatButtonModule,
+    ListFiltersComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -90,6 +92,12 @@ export class UsersComponent extends PaginatedComponent<User> {
     }
 
     return `status ${status.toLowerCase()}`;
+  }
+
+  resetFilters(): void {
+    this.statusFilter = '';
+    this.roleFilter = '';
+    this.fetchData(1);
   }
 
   openUserModal(): void {
