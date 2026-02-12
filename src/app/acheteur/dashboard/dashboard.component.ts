@@ -5,11 +5,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { TransactionsService } from '../../core/services/transactions.service';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { User } from '../../shared/models/user';
+import { Transaction } from '../../shared/models/transaction';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +25,8 @@ import { User } from '../../shared/models/user';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MatListModule,
+    RouterModule,
     ModalFormsComponent
   ],
   templateUrl: './dashboard.component.html',
@@ -28,6 +34,7 @@ import { User } from '../../shared/models/user';
 })
 export class DashboardComponent implements OnInit {
   user: User | null = null;
+  transactions: Transaction[] = [];
   isRechargeModalOpen = false;
   isRecharging = false;
   rechargeError = '';
@@ -40,11 +47,27 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private usersService: UsersService,
     private sidebarService: SidebarService,
+    private transactionsService: TransactionsService,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.user = this.authService.getCurrentUser();
+    if (this.user?._id) {
+      this.loadRecentTransactions();
+    }
+  }
+
+  private loadRecentTransactions(): void {
+    if (!this.user?._id) return;
+    this.transactionsService.getTransactions(1, 3, this.user._id).subscribe({
+      next: res => {
+        this.transactions = res.data || [];
+      },
+      error: () => {
+        this.transactions = [];
+      }
+    });
   }
 
   openRechargeModal(): void {
@@ -82,6 +105,7 @@ export class DashboardComponent implements OnInit {
         localStorage.setItem('currentUser', JSON.stringify(response.data));
         this.isRecharging = false;
         this.closeRechargeModal();
+        this.loadRecentTransactions();
       },
       error: () => {
         this.isRecharging = false;

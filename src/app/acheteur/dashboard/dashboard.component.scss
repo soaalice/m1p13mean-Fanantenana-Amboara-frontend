@@ -31,7 +31,6 @@
 	width: 220px;
 	height: 220px;
 	border-radius: 50%;
-	background: radial-gradient(circle, rgba(236, 72, 153, 0.25), transparent 70%);
 	pointer-events: none;
 	z-index: 0;
 }
@@ -158,5 +157,53 @@
 
 	.details-grid {
 		grid-template-columns: 1fr;
+	}
+}
+
+.recent-transactions {
+	.card.transactions-card {		
+		.mat-card-header {
+			padding-bottom: 6px;
+		}
+		.mat-card-content {
+			padding-top: 6px;
+		}
+		.mat-list-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10px 12px;
+			border-radius: 10px;
+			transition: background .12s ease;
+		}
+		.mat-list-item:hover {
+			background: rgba(15,23,42,0.03);
+		}
+		.tx-main {
+			display: flex;
+			width: 100%;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.tx-left {
+			display: flex;
+			flex-direction: column;
+		}
+		.tx-type {
+			font-weight: 700;
+			color: #0f172a;
+		}
+		.tx-date {
+			font-size: 0.85rem;
+			color: #64748b;
+		}
+		.tx-amount {
+			font-weight: 700;
+			color: #0f172a;
+		}
+		.empty {
+			padding: 12px 6px;
+			color: #64748b;
+		}
 	}
 }

@@ -56,6 +56,35 @@
 			</mat-card-content>
 		</mat-card>
 	</section>
+
+	<section class="recent-transactions">
+		<mat-card class="card transactions-card">
+			<mat-card-header>
+				<mat-card-title>Latest transactions</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<mat-list *ngIf="transactions?.length; else noTx">
+					<mat-list-item *ngFor="let t of transactions">
+						<div class="tx-main">
+							<div class="tx-left">
+								<span class="tx-type">{{ t.type }}</span>
+								<span class="tx-date">{{ t.date | date:'short' }}</span>
+							</div>
+							<div class="tx-right">
+								<span class="tx-amount">{{ t.total | number:'1.0-0' }} MGA</span>
+							</div>
+						</div>
+					</mat-list-item>
+				</mat-list>
+				<ng-template #noTx>
+					<div class="empty">No recent transactions.</div>
+				</ng-template>
+			</mat-card-content>
+			<mat-card-actions align="end">
+				<button mat-stroked-button color="primary" routerLink="/acheteur/transactions">View All</button>
+			</mat-card-actions>
+		</mat-card>
+	</section>
 </div>
 
 <app-modal-forms [isOpen]="isRechargeModalOpen" title="Recharge balance" (close)="closeRechargeModal()">
