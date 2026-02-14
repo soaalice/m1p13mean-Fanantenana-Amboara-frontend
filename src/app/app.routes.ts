@@ -44,6 +44,10 @@ export const routes: Routes = [
             {
                 path: 'boxes',
                 loadComponent: () => import('./admin/boxes/boxes.component').then(m => m.BoxesComponent)
+            },
+            {
+                path: 'product-types',
+                loadComponent: () => import('./admin/product-types/product-types.component').then(m => m.ProductTypesComponent)
             }
         ]
     },
