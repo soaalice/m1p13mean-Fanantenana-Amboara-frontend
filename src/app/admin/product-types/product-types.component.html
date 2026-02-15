@@ -17,6 +17,11 @@
 
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
         <table mat-table [dataSource]="productTypes" class="product-types-table">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let productType">{{ productType._id }}</td>
+            </ng-container>
+
             <ng-container matColumnDef="label">
                 <th mat-header-cell *matHeaderCellDef>Label</th>
                 <td mat-cell *matCellDef="let productType">{{ productType.label }}</td>
@@ -25,7 +30,19 @@
             <ng-container matColumnDef="attributes">
                 <th mat-header-cell *matHeaderCellDef>Attributes</th>
                 <td mat-cell *matCellDef="let productType" class="attributes-cell">
-                    {{ formatAttributes(productType) }}
+                    <div class="attributes-badges">
+                        <span
+                            class="attribute-badge"
+                            *ngFor="let badge of getAttributeBadges(productType)"
+                            [class.badge-enum]="badge.type === 'ENUM'"
+                            [class.badge-number]="badge.type === 'NUMBER'"
+                            [class.badge-string]="badge.type === 'STRING'"
+                            [class.badge-boolean]="badge.type === 'BOOLEAN'"
+                            [class.badge-date]="badge.type === 'DATE'"
+                            [class.badge-empty]="badge.type === 'NONE'">
+                            {{ badge.label }}
+                        </span>
+                    </div>
                 </td>
             </ng-container>
 
@@ -70,14 +87,14 @@
         <div class="form-grid">
             <label>
                 Id
-                <input type="text" formControlName="_id" placeholder="PT-001" [disabled]="isEditMode" />
                 <span class="field-error" *ngIf="productTypeForm.get('_id')?.hasError('required')">Id is required</span>
+                <input type="text" formControlName="_id" placeholder="PT-001" [disabled]="isEditMode" />
             </label>
 
             <label>
                 Label
-                <input type="text" formControlName="label" placeholder="Fresh vegetables" />
                 <span class="field-error" *ngIf="productTypeForm.get('label')?.hasError('required')">Label is required</span>
+                <input type="text" formControlName="label" placeholder="Fresh vegetables" />
             </label>
         </div>
 
@@ -91,34 +108,34 @@
                 <div class="attribute-grid">
                     <label>
                         Code
-                        <input type="text" formControlName="code" placeholder="COLOR" />
                         <span class="field-error" *ngIf="attribute.get('code')?.hasError('required')">Code is required</span>
+                        <input type="text" formControlName="code" placeholder="COLOR" />
                     </label>
 
                     <label>
                         Type
+                        <span class="field-error" *ngIf="attribute.get('type')?.hasError('required')">Type is required</span>
                         <select formControlName="type">
                             <option *ngFor="let type of attributeTypes" [value]="type">{{ type }}</option>
                         </select>
-                        <span class="field-error" *ngIf="attribute.get('type')?.hasError('required')">Type is required</span>
                     </label>
 
                     <label class="attribute-wide" *ngIf="attribute.get('type')?.value === 'ENUM'">
                         Values (comma separated)
-                        <textarea rows="2" formControlName="valuesText" placeholder="RED, GREEN, BLUE"></textarea>
                         <span class="field-error" *ngIf="attribute.get('valuesText')?.hasError('required')">Values are required for ENUM</span>
+                        <textarea rows="2" formControlName="valuesText" placeholder="RED, GREEN, BLUE"></textarea>
                     </label>
 
                     <label *ngIf="attribute.get('type')?.value === 'NUMBER'">
                         Min
-                        <input type="number" formControlName="min" placeholder="0" />
                         <span class="field-error" *ngIf="attribute.get('min')?.hasError('required')">Min is required for NUMBER</span>
+                        <input type="number" formControlName="min" placeholder="0" />
                     </label>
 
                     <label *ngIf="attribute.get('type')?.value === 'NUMBER'">
                         Max
-                        <input type="number" formControlName="max" placeholder="100" />
                         <span class="field-error" *ngIf="attribute.get('max')?.hasError('required')">Max is required for NUMBER</span>
+                        <input type="number" formControlName="max" placeholder="100" />
                     </label>
                 </div>
 

@@ -56,17 +56,84 @@ h1 {
 	line-height: 1.4;
 }
 
+.attributes-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.attribute-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	border: 1px solid #e2e8f0;
+	background: #f8fafc;
+	color: #0f172a;
+}
+
+.attribute-badge.badge-enum {
+	background: #e0f2fe;
+	border-color: #bae6fd;
+	color: #0c4a6e;
+}
+
+.attribute-badge.badge-number {
+	background: #fee2e2;
+	border-color: #fecaca;
+	color: #991b1b;
+}
+
+.attribute-badge.badge-string {
+	background: #ecfccb;
+	border-color: #d9f99d;
+	color: #3f6212;
+}
+
+.attribute-badge.badge-boolean {
+	background: #ede9fe;
+	border-color: #ddd6fe;
+	color: #4c1d95;
+}
+
+.attribute-badge.badge-date {
+	background: #fef9c3;
+	border-color: #fde047;
+	color: #854d0e;
+}
+
+.attribute-badge.badge-empty {
+	background: #f1f5f9;
+	border-color: #e2e8f0;
+	color: #475569;
+}
+
 .product-type-modal {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 }
 
+.product-type-modal label {
+	display: grid;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: rgba(15, 23, 42, 0.8);
+}
+
+.product-type-modal input,
+.product-type-modal select,
 .product-type-modal textarea {
 	border: 1px solid #e2e8f0;
 	border-radius: 10px;
 	padding: 10px 12px;
 	font-size: 14px;
+}
+
+.product-type-modal textarea {
 	resize: vertical;
 }
 

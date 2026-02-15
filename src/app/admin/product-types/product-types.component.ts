@@ -29,7 +29,7 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
   styleUrl: './product-types.component.scss'
 })
 export class ProductTypesComponent extends PaginatedComponent<ProductType> {
-  displayedColumns = ['label', 'attributes', 'actions'];
+  displayedColumns = ['id', 'label', 'attributes', 'actions'];
   attributeTypes: ProductTypeAttribute['type'][] = ['ENUM', 'NUMBER', 'STRING', 'BOOLEAN', 'DATE'];
   productTypeForm: FormGroup;
   submitError = '';
@@ -70,6 +70,39 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
         return `${code} (${type})`;
       })
       .join(' | ');
+  }
+
+  getAttributeBadges(productType: ProductType): Array<{ label: string; type: ProductTypeAttribute['type'] | 'NONE' }> {
+    if (!productType.attributes || productType.attributes.length === 0) {
+      return [{ label: 'No attributes', type: 'NONE' }];
+    }
+
+    return productType.attributes.map(attribute => {
+      const code = attribute.code || '-';
+      const type = attribute.type || 'STRING';
+
+      if (type === 'ENUM') {
+        const values = (attribute.values ?? []).join(', ');
+        return {
+          label: `${code}: ${values || '-'}`,
+          type
+        };
+      }
+
+      if (type === 'NUMBER') {
+        const min = attribute.min ?? '-';
+        const max = attribute.max ?? '-';
+        return {
+          label: `${code}: ${min} - ${max}`,
+          type
+        };
+      }
+
+      return {
+        label: `${code}: ${type}`,
+        type
+      };
+    });
   }
 
   constructor(
