@@ -119,7 +119,7 @@
 		<div class="modal-actions">
 			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeUserModal()">Cancel</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || isSubmitting">
-				{{ isSubmitting ? 'Creating...' : 'Create user' }}
+				{{ isSubmitting ? 'Creating...' : 'Create' }}
 			</button>
 		</div>
 	</form>
@@ -145,7 +145,7 @@
 		<div class="modal-actions">
 			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
-				{{ isStatusSubmitting ? 'Updating...' : 'Update status' }}
+				{{ isStatusSubmitting ? 'Updating...' : 'Update' }}
 			</button>
 		</div>
 	</form>

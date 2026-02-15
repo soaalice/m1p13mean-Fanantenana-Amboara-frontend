@@ -38,6 +38,7 @@ export class SidebarComponent implements OnInit {
     // ADMIN MENU
     { label: 'Users', icon: 'people', route: '/admin/users', roles: [UserRole.ADMIN] },
     { label: 'Boxes', icon: 'store', route: '/admin/boxes', roles: [UserRole.ADMIN] },
+    { label: 'Product Types', icon: 'category', route: '/admin/product-types', roles: [UserRole.ADMIN] },
 
     
     // BOUTIQUE MENU
