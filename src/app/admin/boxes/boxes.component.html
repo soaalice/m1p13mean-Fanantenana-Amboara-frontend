@@ -7,6 +7,7 @@
 			</div>
 			<div class="actions">
 				<button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+				<button mat-raised-button color="primary" type="button" (click)="openBoxModal()">Add Box</button>
 			</div>
 		</div>
 	</div>
@@ -68,3 +69,33 @@
 		</mat-paginator>
 	</div>
 </section>
+
+<app-modal-forms [isOpen]="isModalOpen" title="Add box" (close)="closeBoxModal()">
+	<form [formGroup]="boxForm" (ngSubmit)="submitBox()">
+		<div class="form-grid">
+			<label>
+				Label
+				<input type="text" formControlName="label" placeholder="Box A1" />
+			</label>
+			<label>
+				State
+				<select formControlName="state">
+					<option *ngFor="let state of stateOptions" [value]="state">{{ state }}</option>
+				</select>
+			</label>
+			<label>
+				Rent (MGA)
+				<input type="number" formControlName="rent" min="0" placeholder="0" />
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+
+		<div class="modal-actions">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeBoxModal()">Cancel</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="boxForm.invalid || isSubmitting">
+				{{ isSubmitting ? 'Creating...' : 'Create' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>

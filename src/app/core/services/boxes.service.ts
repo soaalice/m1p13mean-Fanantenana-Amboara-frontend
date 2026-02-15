@@ -23,6 +23,10 @@ export class BoxService {
       if (params.search) httpParams = httpParams.set('search', params.search);
     }
 
-    return this.http.get<PageResult<Box>>(`${this.apiUrl}/box`, { params: httpParams });
+    return this.http.get<PageResult<Box>>(`${this.apiUrl}/boxes`, { params: httpParams });
+  }
+
+  createBox(payload: Omit<Box, '_id'>): Observable<Box> {
+    return this.http.post<Box>(`${this.apiUrl}/boxes`, payload);
   }
 }
