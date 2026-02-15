@@ -1,0 +1,46 @@
+<section class="shops-page">
+    <div class="header">
+        <div class="header-main">
+            <div>
+                <h1>Shops</h1>
+                <p class="subtitle">Manage shops and their details</p>
+            </div>
+            <div class="actions">
+                <button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="state" *ngIf="isLoading">Loading shops...</div>
+    <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && !loadError">
+        <table mat-table [dataSource]="shops" class="shops-table">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let shop">{{ shop.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let shop">
+                    <span [class]="getStatusClass(shop.status)">{{ shop.status || 'UNKNOWN' }}</span>
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    
+        <div class="empty" *ngIf="shops.length === 0">No shops found.</div>
+
+        <mat-paginator
+            class="paginator"
+            [length]="total"
+            [pageIndex]="page - 1"
+            [pageSize]="limit"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</section>
