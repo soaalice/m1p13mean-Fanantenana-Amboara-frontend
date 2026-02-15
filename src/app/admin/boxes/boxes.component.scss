@@ -35,6 +35,12 @@ h1 {
   flex-wrap: wrap;
 }
 
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
 .state {
   padding: 12px 16px;
   border-radius: 12px;

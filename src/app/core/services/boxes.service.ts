@@ -23,6 +23,18 @@ export class BoxService {
       if (params.search) httpParams = httpParams.set('search', params.search);
     }
 
-    return this.http.get<PageResult<Box>>(`${this.apiUrl}/box`, { params: httpParams });
+    return this.http.get<PageResult<Box>>(`${this.apiUrl}/boxes`, { params: httpParams });
+  }
+
+  createBox(payload: Omit<Box, '_id'>): Observable<Box> {
+    return this.http.post<Box>(`${this.apiUrl}/boxes`, payload);
+  }
+
+  updateBox(id: string, payload: Omit<Box, '_id'>): Observable<Box> {
+    return this.http.put<Box>(`${this.apiUrl}/boxes/${id}`, payload);
+  }
+
+  deleteBox(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/boxes/${id}`);
   }
 }
