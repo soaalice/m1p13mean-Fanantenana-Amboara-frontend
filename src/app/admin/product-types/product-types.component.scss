@@ -51,6 +51,67 @@ h1 {
 	width: 100%;
 }
 
+.product-type-modal {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.product-type-modal textarea {
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-size: 14px;
+	resize: vertical;
+}
+
+.attributes-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.attributes-header h3 {
+	margin: 0;
+	font-size: 16px;
+}
+
+.attribute-list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.attribute-card {
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 14px;
+	background: #f8fafc;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.attribute-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.attribute-wide {
+	grid-column: span 2;
+}
+
+.remove-attr {
+	align-self: flex-end;
+}
+
+.field-error {
+	color: #b91c1c;
+	font-size: 12px;
+}
+
 .empty {
 	text-align: center;
 	padding: 24px 16px;
@@ -73,6 +134,16 @@ h1 {
 	.header-main {
 		flex-direction: column;
 		align-items: flex-start;
+	}
+}
+
+@media (max-width: 720px) {
+	.attribute-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.attribute-wide {
+		grid-column: span 1;
 	}
 }
 

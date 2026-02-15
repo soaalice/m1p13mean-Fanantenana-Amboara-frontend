@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { User } from '../../shared/models/user';
 import { PageResult } from '../../shared/models/shared.model';
 import { ProductType } from '../../shared/models/product-type';
 
@@ -21,5 +20,9 @@ export class ProductTypesService {
       .set('page', page)
       .set('limit', limit);
     return this.http.get<PageResult<ProductType>>(`${environment.apiUrl}/product-types`, { params });
+  }
+
+  createProductType(productType: ProductType): Observable<ProductType> {
+    return this.http.post<ProductType>(`${environment.apiUrl}/product-types`, productType);
   }
 }
