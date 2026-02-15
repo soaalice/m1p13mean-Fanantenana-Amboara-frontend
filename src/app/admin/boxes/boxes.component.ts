@@ -33,7 +33,9 @@ export class BoxesComponent extends PaginatedComponent<Box> {
   isModalOpen = false;
   isSubmitting = false;
   submitError = '';
-  stateOptions: Box['state'][] = ['AVAILABLE', 'RENTED', 'REPAIR'];
+  stateOptions: Box['state'][] = ['AVAILABLE', 'REPAIR'];
+  isEditMode = false;
+  selectedBox: Box | null = null;
 
   boxForm = this.fb.group({
     label: ['', [Validators.required, Validators.minLength(2)]],
@@ -81,6 +83,8 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.sidebarService.requestCloseSidebar();
     this.isModalOpen = true;
     this.isSubmitting = false;
+    this.isEditMode = false;
+    this.selectedBox = null;
     this.submitError = '';
     this.boxForm.reset({
       state: 'AVAILABLE',
@@ -91,6 +95,8 @@ export class BoxesComponent extends PaginatedComponent<Box> {
   closeBoxModal(): void {
     this.isModalOpen = false;
     this.isSubmitting = false;
+    this.isEditMode = false;
+    this.selectedBox = null;
     this.submitError = '';
     this.boxForm.reset({
       state: 'AVAILABLE',
@@ -114,7 +120,11 @@ export class BoxesComponent extends PaginatedComponent<Box> {
       rent: Number(value.rent ?? 0)
     };
 
-    this.boxService.createBox(payload).subscribe({
+    const request$ = this.isEditMode && this.selectedBox?._id
+      ? this.boxService.updateBox(this.selectedBox._id, payload)
+      : this.boxService.createBox(payload);
+
+    request$.subscribe({
       next: () => {
         this.isSubmitting = false;
         this.closeBoxModal();
@@ -122,16 +132,44 @@ export class BoxesComponent extends PaginatedComponent<Box> {
       },
       error: () => {
         this.isSubmitting = false;
-        this.submitError = 'Failed to create box.';
+        this.submitError = this.isEditMode
+          ? 'Failed to update box.'
+          : 'Failed to create box.';
       }
     });
   }
 
   onEdit(box: Box): void {
-    console.log('Edit', box);
+    this.sidebarService.requestCloseSidebar();
+    this.isEditMode = true;
+    this.selectedBox = box;
+    this.isModalOpen = true;
+    this.isSubmitting = false;
+    this.submitError = '';
+    this.boxForm.setValue({
+      label: box.label ?? '',
+      state: box.state ?? 'AVAILABLE',
+      rent: box.rent ?? 0
+    });
   }
 
   onDelete(box: Box): void {
-    console.log('Delete', box);
+    if (!box._id) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete box "${box.label || box._id}"?`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.boxService.deleteBox(box._id).subscribe({
+      next: () => {
+        this.fetchData(this.page);
+      },
+      error: () => {
+        this.loadError = 'Failed to delete box.';
+      }
+    });
   }
 }

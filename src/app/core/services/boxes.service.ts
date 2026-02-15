@@ -29,4 +29,12 @@ export class BoxService {
   createBox(payload: Omit<Box, '_id'>): Observable<Box> {
     return this.http.post<Box>(`${this.apiUrl}/boxes`, payload);
   }
+
+  updateBox(id: string, payload: Omit<Box, '_id'>): Observable<Box> {
+    return this.http.put<Box>(`${this.apiUrl}/boxes/${id}`, payload);
+  }
+
+  deleteBox(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/boxes/${id}`);
+  }
 }

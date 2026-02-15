@@ -70,7 +70,7 @@
 	</div>
 </section>
 
-<app-modal-forms [isOpen]="isModalOpen" title="Add box" (close)="closeBoxModal()">
+<app-modal-forms [isOpen]="isModalOpen" [title]="isEditMode ? 'Edit box' : 'Add box'" (close)="closeBoxModal()">
 	<form [formGroup]="boxForm" (ngSubmit)="submitBox()">
 		<div class="form-grid">
 			<label>
@@ -94,7 +94,7 @@
 		<div class="modal-actions">
 			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeBoxModal()">Cancel</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="boxForm.invalid || isSubmitting">
-				{{ isSubmitting ? 'Creating...' : 'Create' }}
+				{{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
 			</button>
 		</div>
 	</form>
