@@ -25,4 +25,12 @@ export class ProductTypesService {
   createProductType(productType: ProductType): Observable<ProductType> {
     return this.http.post<ProductType>(`${environment.apiUrl}/product-types`, productType);
   }
+
+  updateProductType(id: string, productType: ProductType): Observable<ProductType> {
+    return this.http.put<ProductType>(`${environment.apiUrl}/product-types/${id}`, productType);
+  }
+
+  deleteProductType(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/product-types/${id}`);
+  }
 }

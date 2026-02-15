@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -19,18 +21,22 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    ModalFormsComponent
+    ModalFormsComponent,
+    MatIconModule,
+    MatMenuModule
   ],
   templateUrl: './product-types.component.html',
   styleUrl: './product-types.component.scss'
 })
 export class ProductTypesComponent extends PaginatedComponent<ProductType> {
-  displayedColumns = ['label'];
+  displayedColumns = ['label', 'attributes', 'actions'];
   attributeTypes: ProductTypeAttribute['type'][] = ['ENUM', 'NUMBER', 'STRING', 'BOOLEAN', 'DATE'];
   productTypeForm: FormGroup;
   submitError = '';
   isModalOpen = false;
   isSubmitting = false;
+  isEditMode = false;
+  selectedProductType: ProductType | null = null;
 
   get productTypes(): ProductType[] {
     return this.items;
@@ -38,6 +44,32 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
 
   get attributes(): FormArray {
     return this.productTypeForm.get('attributes') as FormArray;
+  }
+
+  formatAttributes(productType: ProductType): string {
+    if (!productType.attributes || productType.attributes.length === 0) {
+      return '-';
+    }
+
+    return productType.attributes
+      .map(attribute => {
+        const code = attribute.code || '-';
+        const type = attribute.type || '-';
+
+        if (type === 'ENUM') {
+          const values = (attribute.values ?? []).join(', ');
+          return `${code} (${type}${values ? `: ${values}` : ''})`;
+        }
+
+        if (type === 'NUMBER') {
+          const min = attribute.min ?? '-';
+          const max = attribute.max ?? '-';
+          return `${code} (${type}: ${min} - ${max})`;
+        }
+
+        return `${code} (${type})`;
+      })
+      .join(' | ');
   }
 
   constructor(
@@ -90,7 +122,11 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
 
     this.isSubmitting = true;
     const payload = this.buildPayload();
-    this.productTypesService.createProductType(payload).subscribe({
+    const request$ = this.isEditMode && this.selectedProductType?._id
+      ? this.productTypesService.updateProductType(this.selectedProductType._id, payload)
+      : this.productTypesService.createProductType(payload);
+
+    request$.subscribe({
       next: () => {
         this.isSubmitting = false;
         this.closeProductTypeModal();
@@ -98,7 +134,9 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
       },
       error: () => {
         this.isSubmitting = false;
-        this.submitError = 'Failed to create product type.';
+        this.submitError = this.isEditMode
+          ? 'Failed to update product type.'
+          : 'Failed to create product type.';
       }
     });
   }
@@ -106,12 +144,17 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
   openProductTypeModal(): void {
     this.sidebarService.requestCloseSidebar();
     this.isModalOpen = true;
+    this.isEditMode = false;
+    this.selectedProductType = null;
+    this.productTypeForm.get('_id')?.enable({ emitEvent: false });
     this.submitError = '';
   }
 
   closeProductTypeModal(): void {
     this.isModalOpen = false;
     this.isSubmitting = false;
+    this.isEditMode = false;
+    this.selectedProductType = null;
     this.submitError = '';
     this.productTypeForm.reset();
     this.attributes.clear();
@@ -203,5 +246,64 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     return Number.isNaN(parsed) ? undefined : parsed;
   }
 
+  onEdit(productType: ProductType): void {
+    this.sidebarService.requestCloseSidebar();
+    this.isEditMode = true;
+    this.isModalOpen = true;
+    this.selectedProductType = productType;
+    this.submitError = '';
 
+    this.productTypeForm.reset();
+    this.attributes.clear();
+
+    this.productTypeForm.patchValue({
+      _id: productType._id || '',
+      label: productType.label || ''
+    });
+    this.productTypeForm.get('_id')?.disable({ emitEvent: false });
+
+    const attributes = productType.attributes ?? [];
+    if (attributes.length === 0) {
+      this.addAttribute();
+      return;
+    }
+
+    attributes.forEach(attribute => {
+      const group = this.buildAttributeGroupFromModel(attribute);
+      this.attributes.push(group);
+      this.updateAttributeValidators(group);
+    });
+  }
+
+  onDelete(productType: ProductType): void {
+    if (!productType._id) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete product type "${productType.label || productType._id}"?`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.productTypesService.deleteProductType(productType._id).subscribe({
+      next: () => {
+        this.fetchData(this.page);
+      },
+      error: () => {
+        this.loadError = 'Failed to delete product type.';
+      }
+    });
+  }
+
+  private buildAttributeGroupFromModel(attribute: ProductTypeAttribute): FormGroup {
+    const valuesText = attribute.values ? attribute.values.join(', ') : '';
+
+    return this.fb.group({
+      code: [attribute.code || '', Validators.required],
+      type: [attribute.type || 'STRING', Validators.required],
+      valuesText: [valuesText],
+      min: [attribute.min ?? ''],
+      max: [attribute.max ?? '']
+    });
+  }
 }
