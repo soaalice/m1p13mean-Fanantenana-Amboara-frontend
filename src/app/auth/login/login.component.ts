@@ -28,6 +28,7 @@ import { UserRole } from '../../shared/models/user';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  errorMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -42,11 +43,8 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Login Data:', this.loginForm.value);
-
       this.authService.login(this.loginForm.value.login, this.loginForm.value.password).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
           const role = this.authService.getRoleFromToken();
 
           switch (role) {
@@ -66,6 +64,7 @@ export class LoginComponent {
         },
         error: (error) => {
           console.error('Login error:', error);
+          this.errorMessage = error.error?.message || 'An error occurred during login. Please try again.';
         }
       });
     }

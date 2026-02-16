@@ -28,6 +28,7 @@ import { User, UserRole, UserStatus } from '../../shared/models/user';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  errorMessage: string = '';
 
   constructor (
     private fb: FormBuilder,
@@ -44,8 +45,6 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      console.log('Registration Data:', this.registerForm.value);
-
       const user : User = {
         profile : {
           fullName: this.registerForm.value.fullName,
@@ -60,11 +59,11 @@ export class RegisterComponent {
 
       this.authService.register(user).subscribe({
         next: (response) => {
-          console.log('Registration successful:', response);
           this.router.navigate(['/login']);
         },
         error: (error) => {
           console.error('Registration error:', error);
+          this.errorMessage = error.error?.message || 'An error occurred during registration. Please try again.';
         }
       });
     }
