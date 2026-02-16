@@ -25,4 +25,16 @@ export class ShopsService {
 
     return this.http.get<PageResult<Shop>>(`${this.apiUrl}/shops`, { params });
   }
+
+  getShopByOwner(ownerId: string | number): Observable<Shop | Shop[] | null> {
+    return this.http.get<Shop | Shop[] | null>(`${this.apiUrl}/shops/owner/${ownerId}`);
+  }
+
+  createShop(shopData: Partial<Shop>): Observable<Shop> {
+    return this.http.post<Shop>(`${this.apiUrl}/shops`, shopData);
+  }
+
+  updateShop(shopId: number, shopData: Partial<Shop>): Observable<Shop> {
+    return this.http.put<Shop>(`${this.apiUrl}/shops/${shopId}`, shopData);
+  }
 }

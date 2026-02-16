@@ -1,0 +1,48 @@
+<section class="my-shop-page">
+	<div class="page-header">
+		<h1>My Shop</h1>
+		<p class="subtitle">Manage your shop information and activity.</p>
+	</div>
+
+	<div *ngIf="isLoading" class="state loading">
+		<mat-icon>hourglass_top</mat-icon>
+		Loading your shop...
+	</div>
+
+	<div *ngIf="loadError && !isLoading" class="state error">
+		<mat-icon>error</mat-icon>
+		{{ loadError }}
+	</div>
+
+	<ng-container *ngIf="!isLoading && !loadError">
+		<mat-card *ngIf="shop; else emptyState" class="shop-card">
+			<div class="shop-header">
+				<div class="shop-title">
+					<h2>{{ shop.name }}</h2>
+					<span class="status" [class.active]="shop.status === 'ACTIVE'">
+						{{ shop.status === 'ACTIVE' ? 'Active' : 'Inactive' }}
+					</span>
+				</div>
+			</div>
+		</mat-card>
+
+		<ng-template #emptyState>
+			<div class="hero">
+				<div class="hero-content">
+					<h2>Your shop is not yet created</h2>
+					<p>Add your first shop to start selling.</p>
+					<div class="hero-actions">
+						<button mat-raised-button color="primary" routerLink="/boutique/create-shop">
+							<mat-icon>storefront</mat-icon>
+							Create my shop
+						</button>
+						<button mat-stroked-button color="primary" routerLink="/boutique/dashboard">
+							Return to dashboard
+						</button>
+					</div>
+				</div>
+			</div>
+		</ng-template>
+	</ng-container>
+
+</section>

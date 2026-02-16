@@ -69,6 +69,14 @@ export const routes: Routes = [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./boutique/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'my-shop',
+                loadComponent: () => import('./boutique/my-shop/my-shop.component').then(m => m.MyShopComponent)
+            },
+            {
+                path: 'create-shop',
+                loadComponent: () => import('./boutique/create-shop/create-shop.component').then(m => m.CreateShopComponent)
             }
         ]
     },
