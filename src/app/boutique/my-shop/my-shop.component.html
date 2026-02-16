@@ -24,6 +24,21 @@
 					</span>
 				</div>
 			</div>
+
+			<div class="shop-meta">
+				<div>
+					<span class="label">Assigned box</span>
+					<span class="value">{{ shop.assignedBox?.label || 'Unassigned' }}</span>
+				</div>
+				<div *ngIf="shop?.assignedBox">
+					<span class="label">Box state</span>
+					<span class="value">{{ shop.assignedBox?.state }}</span>
+				</div>
+				<div *ngIf="shop?.assignedBox">
+					<span class="label">Rent</span>
+					<span class="value">{{ shop.assignedBox?.rent }} MGA</span>
+				</div>
+			</div>
 		</mat-card>
 
 		<ng-template #emptyState>

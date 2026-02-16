@@ -33,7 +33,7 @@ export class BoxesComponent extends PaginatedComponent<Box> {
   isModalOpen = false;
   isSubmitting = false;
   submitError = '';
-  stateOptions: Box['state'][] = ['AVAILABLE', 'REPAIR'];
+  stateOptions: Box['state'][] = ['AVAILABLE', 'REPAIR', 'RENTED'];
   isEditMode = false;
   selectedBox: Box | null = null;
 
