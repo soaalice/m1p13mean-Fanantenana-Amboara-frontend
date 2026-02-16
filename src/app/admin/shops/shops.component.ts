@@ -42,7 +42,7 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
   statusOptions = ['ACTIVE', 'INACTIVE'];
   statusFilter = '';
   ownerNameFilter = '';
-  boxesDisplayedColumns = ['select', 'label', 'state', 'rent'];
+  boxesDisplayedColumns = ['select', 'label', 'state'];
   isAssignModalOpen = false;
   isAssignSubmitting = false;
   assignError = '';
@@ -55,6 +55,8 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
   availableBoxes: Box[] = [];
   selectedBoxId = '';
   selectedShop: Shop | null = null;
+  assignRent: number | null = null;
+  assignStartDate = '';
 
   constructor(
     private shopsService: ShopsService, 
@@ -127,6 +129,8 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     this.sidebarService.requestCloseSidebar();
     this.selectedShop = shop;
     this.selectedBoxId = '';
+    this.assignRent = null;
+    this.assignStartDate = '';
     this.assignError = '';
     this.isAssignModalOpen = true;
     this.loadAvailableBoxes(1);
@@ -138,6 +142,8 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     this.assignError = '';
     this.selectedBoxId = '';
     this.selectedShop = null;
+    this.assignRent = null;
+    this.assignStartDate = '';
     this.availableBoxes = [];
     this.boxesLoadError = '';
   }
@@ -209,13 +215,25 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
       return;
     }
 
+    if (this.assignRent === null || Number.isNaN(this.assignRent) || this.assignRent < 0) {
+      this.assignError = 'Please provide a valid rent.';
+      return;
+    }
+
+    if (!this.assignStartDate) {
+      this.assignError = 'Please choose a start date.';
+      return;
+    }
+
     this.isAssignSubmitting = true;
     this.assignError = '';
 
     this.shopsService.assignateShopToBox({
       boxId: this.selectedBoxId,
       shopId: this.selectedShop._id,
-      isAssignate: true
+      isAssignate: true,
+      rent: this.assignRent,
+      startDate: this.assignStartDate
     }).subscribe({
       next: () => {
         this.isAssignSubmitting = false;

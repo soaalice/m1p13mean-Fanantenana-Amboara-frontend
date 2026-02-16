@@ -61,7 +61,13 @@ export class ShopsService {
     return this.http.put<Shop>(`${this.apiUrl}/shops/${shopId}`, shopData);
   }
 
-  assignateShopToBox(payload: { boxId: string; shopId: string; isAssignate: boolean }): Observable<Shop> {
+  assignateShopToBox(payload: {
+    boxId: string;
+    shopId: string;
+    isAssignate: boolean;
+    rent?: number | null;
+    startDate?: string;
+  }): Observable<Shop> {
     return this.http.patch<Shop>(`${this.apiUrl}/shops/assignate`, payload);
   }
 }
