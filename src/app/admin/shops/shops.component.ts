@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -13,6 +14,7 @@ import { ShopsService } from '../../core/services/shops.service';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
@@ -27,7 +29,10 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return this.items;
   }
 
-  displayedColumns = ['name', 'status'];
+  displayedColumns = ['name', 'ownerFullName', 'status'];
+  statusOptions = ['ACTIVE', 'INACTIVE'];
+  statusFilter = '';
+  ownerNameFilter = '';
 
   constructor(private shopsService: ShopsService) {
     super();
@@ -37,7 +42,21 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
       this.isLoading = true;
       this.loadError = '';
 
-      this.shopsService.getShops(page, this.limit).subscribe({
+      const filters: { ownerFullName?: string; status?: string } = {};
+
+      if (this.ownerNameFilter) {
+        filters.ownerFullName = this.ownerNameFilter.trim();
+      }
+
+      if (this.statusFilter) {
+        filters.status = this.statusFilter;
+      }
+
+      this.shopsService.searchShops(
+        page,
+        this.limit,
+        filters
+      ).subscribe({
         next: (result) => {
           this.applyResponse(result);
           this.isLoading = false;
@@ -49,7 +68,17 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
       });
   }
 
+  resetFilters(): void {
+    this.statusFilter = '';
+    this.ownerNameFilter = '';
+    this.fetchData(1);
+  }
+
   getStatusClass(status: string): string {
     return status === 'ACTIVE' ? 'status-active' : 'status-inactive';
+  }
+
+  getOwnerFullName(shop: Shop): string {
+    return shop.ownerUser?.profile?.fullName || 'N/A';
   }
 }
