@@ -1,21 +1,14 @@
-export interface UserProfilePreview {
-    fullName: string;
-    tel: string;
-    solde: number;
-    email?: string;
-}
-
-export interface OwnerUserPreview {
-    _id: string;
-    profile: UserProfilePreview;
-}
+import { Box } from "./box";
+import { User } from "./user";
 
 export interface Shop {
     _id: string;
     name: string;
     status: 'ACTIVE' | 'INACTIVE';
     ownerUserId: string;
-    ownerUser?: OwnerUserPreview;
+    ownerUser?: User;
+    boxId?: string;
+    assignedBox?: Box;
     createdAt?: string | Date;
     updatedAt?: string | Date;
 }

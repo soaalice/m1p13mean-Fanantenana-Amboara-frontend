@@ -39,7 +39,7 @@ export class BoxesComponent extends PaginatedComponent<Box> {
 
   boxForm = this.fb.group({
     label: ['', [Validators.required, Validators.minLength(2)]],
-    state: ['AVAILABLE' as Box['state'], Validators.required],
+    state: [{ value: 'AVAILABLE', disabled: true }, [Validators.required]],
     rent: [0, [Validators.required, Validators.min(0)]]
   });
 
@@ -87,9 +87,13 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.selectedBox = null;
     this.submitError = '';
     this.boxForm.reset({
+      label: '',
       state: 'AVAILABLE',
       rent: 0
     });
+    this.boxForm.get('label')?.enable();
+    this.boxForm.get('rent')?.enable();
+    this.boxForm.get('state')?.disable();
   }
 
   closeBoxModal(): void {
@@ -99,9 +103,13 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.selectedBox = null;
     this.submitError = '';
     this.boxForm.reset({
+      label: '',
       state: 'AVAILABLE',
       rent: 0
     });
+    this.boxForm.get('label')?.enable();
+    this.boxForm.get('rent')?.enable();
+    this.boxForm.get('state')?.disable();
   }
 
   submitBox(): void {
@@ -114,11 +122,17 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.submitError = '';
 
     const value = this.boxForm.getRawValue();
-    const payload = {
-      label: value.label ?? '',
-      state: value.state ?? 'AVAILABLE',
-      rent: Number(value.rent ?? 0)
-    };
+    const payload: Omit<Box, '_id'> = this.isEditMode
+      ? { 
+          label: value.label ?? '',
+          state: (value.state ?? 'AVAILABLE') as Box['state'],
+          rent: value.rent ?? 0
+        }
+      : {
+          label: value.label ?? '',
+          state: (value.state ?? 'AVAILABLE') as Box['state'],
+          rent: value.rent ?? 0
+        };
 
     const request$ = this.isEditMode && this.selectedBox?._id
       ? this.boxService.updateBox(this.selectedBox._id, payload)
@@ -151,6 +165,9 @@ export class BoxesComponent extends PaginatedComponent<Box> {
       state: box.state ?? 'AVAILABLE',
       rent: box.rent ?? 0
     });
+    this.boxForm.get('label')?.enable();
+    this.boxForm.get('state')?.disable();
+    this.boxForm.get('rent')?.disable();
   }
 
   onDelete(box: Box): void {

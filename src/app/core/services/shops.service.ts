@@ -60,4 +60,8 @@ export class ShopsService {
   updateShop(shopId: number, shopData: Partial<Shop>): Observable<Shop> {
     return this.http.put<Shop>(`${this.apiUrl}/shops/${shopId}`, shopData);
   }
+
+  assignateShopToBox(payload: { boxId: string; shopId: string; isAssignate: boolean }): Observable<Shop> {
+    return this.http.patch<Shop>(`${this.apiUrl}/shops/assignate`, payload);
+  }
 }

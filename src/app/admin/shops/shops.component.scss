@@ -51,6 +51,23 @@ h1 {
     width: 100%;
 }
 
+.boxes-table tr[mat-row].selectable-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.boxes-table tr[mat-row].selectable-row:hover {
+    background: #f8fafc;
+}
+
+.boxes-table tr[mat-row].selectable-row.is-selected {
+    background: #e0f2fe;
+}
+
+.boxes-table tr[mat-row].selectable-row.is-selected:hover {
+    background: #bae6fd;
+}
+
 .status {
     display: inline-flex;
     align-items: center;
