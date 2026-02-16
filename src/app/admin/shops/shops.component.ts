@@ -171,6 +171,33 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     this.loadAvailableBoxes(this.boxesPage);
   }
 
+  unassignateShop(shop: Shop): void {
+    const boxId = shop.assignedBox?._id || shop.boxId;
+
+    if (!shop._id || !boxId) {
+      this.loadError = 'Box not found for this shop.';
+      return;
+    }
+
+    const confirmed = window.confirm(`Unassign box from "${shop.name || shop._id}"?`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.shopsService.assignateShopToBox({
+      boxId,
+      shopId: shop._id,
+      isAssignate: false
+    }).subscribe({
+      next: () => {
+        this.fetchData(this.page);
+      },
+      error: () => {
+        this.loadError = 'Error unassigning the box.';
+      }
+    });
+  }
+
   submitAssignation(): void {
     if (!this.selectedShop?._id) {
       this.assignError = 'Invalid shop.';

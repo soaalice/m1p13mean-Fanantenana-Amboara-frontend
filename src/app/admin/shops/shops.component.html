@@ -59,9 +59,13 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #shopMenu="matMenu">
-                        <button mat-menu-item (click)="assignateShop(shop)">
-                            <mat-icon>inbox</mat-icon>
+                        <button mat-menu-item *ngIf="!shop.assignedBox && !shop.boxId" (click)="assignateShop(shop)">
+                            <mat-icon>link_on</mat-icon>
                             <span>Assignate to box</span>
+                        </button>
+                        <button mat-menu-item *ngIf="shop.assignedBox || shop.boxId" (click)="unassignateShop(shop)">
+                            <mat-icon>link_off</mat-icon>
+                            <span>Unassign box</span>
                         </button>
                     </mat-menu>
                 </td>
