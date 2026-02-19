@@ -20,6 +20,7 @@ export class TransactionsService {
       type?: string;
       startDate?: string;
       endDate?: string;
+      rentId?: string;
     }
   ): Observable<PageResult<Transaction>> {
     let params = new HttpParams()
@@ -36,6 +37,10 @@ export class TransactionsService {
 
     if (filters?.endDate) {
       params = params.set('endDate', filters.endDate);
+    }
+
+    if (filters?.rentId) {
+      params = params.set('rentId', filters.rentId);
     }
 
     return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions/user/${userId}`, { params });

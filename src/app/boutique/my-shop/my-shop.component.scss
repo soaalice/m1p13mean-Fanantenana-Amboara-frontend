@@ -43,6 +43,38 @@
 	margin: 16px 0;
 }
 
+.transactions-section {
+	margin-top: 24px;
+	padding-top: 20px;
+	border-top: 1px solid #e2e8f0;
+}
+
+.transactions-header {
+	margin-bottom: 10px;
+}
+
+.table-wrap {
+	margin-top: 14px;
+	border: 1px solid #e2e8f0;
+	border-radius: 14px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.transactions-table {
+	width: 100%;
+}
+
+.empty {
+	padding: 20px 16px;
+	text-align: center;
+	color: #64748b;
+}
+
+.paginator {
+	border-top: 1px solid #e2e8f0;
+}
+
 .shop-overview {
 	display: flex;
 	align-items: center;
@@ -230,5 +262,13 @@
 
 	.hero {
 		padding: 22px;
+	}
+
+	.table-wrap {
+		overflow-x: auto;
+	}
+
+	.transactions-table {
+		min-width: 520px;
 	}
 }

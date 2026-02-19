@@ -37,13 +37,10 @@
 							<span class="label">Box</span>
 							<span class="value">{{ shop.assignedBox?.label || 'Unassigned' }}</span>
 						</div>
-						<div class="meta-row" *ngIf="shop?.assignedBox; else noBoxState">
+						<div class="meta-row" *ngIf="shop?.assignedBox">
 							<span class="label">State</span>
 							<span class="value">{{ shop.assignedBox?.state }}</span>
 						</div>
-						<ng-template #noBoxState>
-							<p class="hint">Your shop is not assigned to a box yet.</p>
-						</ng-template>
 					</div>
 				</div>
 
@@ -65,6 +62,72 @@
 					<ng-template #noActiveRent>
 						<p class="hint">No active rent found for this shop.</p>
 					</ng-template>
+				</div>
+			</div>
+
+			<div class="transactions-section" *ngIf="shop?.activeRent">
+				<div class="section-header transactions-header">
+					<mat-icon>receipt_long</mat-icon>
+					<h3>Rent transactions</h3>
+				</div>
+
+				<app-list-filters
+					[showApply]="true"
+					applyLabel="Filter"
+					resetLabel="Reset"
+					(apply)="applyTransactionFilters()"
+					(reset)="resetTransactionFilters()">
+					<label class="filter-item">
+						<span>Start date</span>
+						<input type="date" [(ngModel)]="startDateFilter" />
+					</label>
+					<label class="filter-item">
+						<span>End date</span>
+						<input type="date" [(ngModel)]="endDateFilter" />
+					</label>
+				</app-list-filters>
+
+				<div *ngIf="isLoadingTransactions" class="state loading">
+					<mat-icon>hourglass_top</mat-icon>
+					Loading rent transactions...
+				</div>
+
+				<div *ngIf="loadTransactionsError && !isLoadingTransactions" class="state error">
+					<mat-icon>error</mat-icon>
+					{{ loadTransactionsError }}
+				</div>
+
+				<div class="table-wrap" *ngIf="!isLoadingTransactions && !loadTransactionsError">
+					<table mat-table [dataSource]="transactionHistory" class="transactions-table" [trackBy]="trackById">
+						<ng-container matColumnDef="date">
+							<th mat-header-cell *matHeaderCellDef>Date</th>
+							<td mat-cell *matCellDef="let transaction">{{ transaction.date | date:'medium' }}</td>
+						</ng-container>
+
+						<ng-container matColumnDef="amount">
+							<th mat-header-cell *matHeaderCellDef>Amount</th>
+							<td mat-cell *matCellDef="let transaction">{{ transaction.total | number:'1.0-2' }} MGA</td>
+						</ng-container>
+
+						<ng-container matColumnDef="type">
+							<th mat-header-cell *matHeaderCellDef>Type</th>
+							<td mat-cell *matCellDef="let transaction">{{ transaction.type }}</td>
+						</ng-container>
+
+						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+					</table>
+
+					<div class="empty" *ngIf="transactionHistory.length === 0">No transactions yet.</div>
+
+					<mat-paginator
+						class="paginator"
+						[length]="transactionsTotal"
+						[pageIndex]="transactionsPage - 1"
+						[pageSize]="transactionsLimit"
+						[pageSizeOptions]="pageSizeOptions"
+						(page)="onTransactionsPageChange($event)">
+					</mat-paginator>
 				</div>
 			</div>
 		</mat-card>
