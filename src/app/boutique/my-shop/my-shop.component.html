@@ -34,9 +34,10 @@
 					<span class="label">Box state</span>
 					<span class="value">{{ shop.assignedBox?.state }}</span>
 				</div>
-				<div *ngIf="shop?.assignedBox">
-					<span class="label">Rent</span>
-					<span class="value">{{ shop.assignedBox?.rent }} MGA</span>
+
+				<div *ngIf="shop?.activeRent">
+					<span class="label">Active Rent</span>
+					<span class="value">{{ shop.activeRent?.amount }} MGA — due {{ shop.activeRent?.nextDeadline | date:'shortDate' }}</span>
 				</div>
 			</div>
 		</mat-card>

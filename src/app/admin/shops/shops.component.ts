@@ -9,6 +9,8 @@ import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { Shop } from '../../shared/models/shop';
 import { ShopsService } from '../../core/services/shops.service';
 import { BoxService } from '../../core/services/boxes.service';
+import { RentsService } from '../../core/services/rents.service';
+import { AuthService } from '../../core/services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { Box } from '../../shared/models/box';
@@ -38,7 +40,7 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return this.items;
   }
 
-  displayedColumns = ['name', 'ownerFullName', 'status', 'assignedBox', 'actions'];
+  displayedColumns = ['name', 'ownerFullName', 'status', 'activeRent', 'assignedBox', 'actions'];
   statusOptions = ['ACTIVE', 'INACTIVE'];
   statusFilter = '';
   ownerNameFilter = '';
@@ -61,9 +63,41 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
   constructor(
     private shopsService: ShopsService, 
     private boxService: BoxService,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    private rentsService: RentsService,
+    private authService: AuthService
   ) {
     super();
+  }
+
+  getActiveRentInfo(shop: Shop): string {
+    const rent = shop.activeRent;
+    if (!rent) return '—';
+    const amount = rent.amount != null ? `${rent.amount} MGA` : '—';
+    const next = rent.nextDeadline ? new Date(rent.nextDeadline).toLocaleDateString() : '—';
+    return `${amount} / due ${next}`;
+  }
+
+  payRent(shop: Shop): void {
+    const rentId = shop.activeRent?._id;
+    const payerId = shop.ownerUser?._id || (shop as any).ownerUserId;
+
+    if (!rentId || !payerId) {
+      this.loadError = 'Cannot determine rent or payer.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.rentsService.payRent(rentId, payerId).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.fetchData(this.page);
+      },
+      error: () => {
+        this.isLoading = false;
+        this.loadError = 'Error paying rent.';
+      }
+    });
   }
 
   protected fetchData(page = this.page): void {
