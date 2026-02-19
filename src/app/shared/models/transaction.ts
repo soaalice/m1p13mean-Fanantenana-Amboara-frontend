@@ -10,4 +10,6 @@ export interface Transaction {
     total : number;
     type : TransactionType;
     date ?: string | Date;
+    rentId ?: string;
+    periode ?: string;
 }

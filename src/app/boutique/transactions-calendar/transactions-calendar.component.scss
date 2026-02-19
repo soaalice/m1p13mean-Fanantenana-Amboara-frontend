@@ -1,0 +1,136 @@
+.transactions-calendar-page {
+	padding: 32px;
+}
+
+.page-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	margin-bottom: 24px;
+
+	h1 {
+		margin: 0;
+		font-size: 28px;
+		font-weight: 700;
+	}
+
+	.subtitle {
+		margin: 4px 0 0;
+		color: #475569;
+	}
+}
+
+.state {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 16px;
+	border-radius: 14px;
+	font-weight: 500;
+	background: #f8fafc;
+	color: #334155;
+
+	&.error {
+		background: #fee2e2;
+		color: #b91c1c;
+	}
+}
+
+.calendar-card {
+	padding: 24px;
+	border-radius: 20px;
+	border: 1px solid #e2e8f0;
+	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+// Legend
+.legend {
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 20px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #e2e8f0;
+}
+
+.legend-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 13px;
+	color: #475569;
+	font-weight: 500;
+}
+
+.legend-dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+// FullCalendar overrides
+::ng-deep {
+	.fc {
+		font-family: Roboto, 'Helvetica Neue', sans-serif;
+	}
+
+	.fc-button {
+		border-radius: 18px !important;
+		text-transform: capitalize !important;
+		font-weight: 500 !important;
+		padding: 6px 14px !important;
+	}
+
+	.fc-button-primary {
+		background-color: #3f51b5 !important;
+		border-color: #3f51b5 !important;
+
+		&:hover,
+		&:not(:disabled):active,
+		&.fc-button-active {
+			background-color: #303f9f !important;
+			border-color: #303f9f !important;
+		}
+	}
+
+	.fc-toolbar-title {
+		font-size: 18px !important;
+		font-weight: 700 !important;
+		color: #1e293b;
+	}
+
+	.fc-day-today {
+		background-color: #eff6ff !important;
+	}
+
+	.fc-event {
+		border-radius: 8px !important;
+		font-size: 12px !important;
+		font-weight: 500 !important;
+		border-width: 2px !important;
+		cursor: default;
+	}
+
+	.fc-col-header-cell {
+		background: #f8fafc;
+		color: #64748b;
+		font-weight: 600;
+		font-size: 13px;
+	}
+
+	.fc-daygrid-day-number,
+	.fc-multimonth-daygrid-day-number {
+		color: #334155;
+	}
+
+	.fc-multimonth-title {
+		background: #f8fafc !important;
+		color: #1e293b !important;
+		font-weight: 700 !important;
+		font-size: 14px !important;
+		padding: 10px !important;
+	}
+}

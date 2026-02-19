@@ -50,7 +50,16 @@
 }
 
 .transactions-header {
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
 	margin-bottom: 10px;
+}
+
+.transactions-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
 .table-wrap {

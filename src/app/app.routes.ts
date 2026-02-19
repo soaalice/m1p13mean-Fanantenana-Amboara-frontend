@@ -77,6 +77,10 @@ export const routes: Routes = [
             {
                 path: 'create-shop',
                 loadComponent: () => import('./boutique/create-shop/create-shop.component').then(m => m.CreateShopComponent)
+            },
+            {
+                path: 'transactions-calendar',
+                loadComponent: () => import('./boutique/transactions-calendar/transactions-calendar.component').then(m => m.TransactionsCalendarComponent)
             }
         ]
     },
