@@ -16,28 +16,55 @@
 
 	<ng-container *ngIf="!isLoading && !loadError">
 		<mat-card *ngIf="shop; else emptyState" class="shop-card">
-			<div class="shop-header">
+			<div class="shop-overview">
 				<div class="shop-title">
+					<p class="eyebrow">Shop Overview</p>
 					<h2>{{ shop.name }}</h2>
-					<span class="status" [class.active]="shop.status === 'ACTIVE'">
-						{{ shop.status === 'ACTIVE' ? 'Active' : 'Inactive' }}
-					</span>
 				</div>
+				<span class="status" [class.active]="shop.status === 'ACTIVE'">
+					{{ shop.status === 'ACTIVE' ? 'Active' : 'Inactive' }}
+				</span>
 			</div>
 
-			<div class="shop-meta">
-				<div>
-					<span class="label">Assigned box</span>
-					<span class="value">{{ shop.assignedBox?.label || 'Unassigned' }}</span>
-				</div>
-				<div *ngIf="shop?.assignedBox">
-					<span class="label">Box state</span>
-					<span class="value">{{ shop.assignedBox?.state }}</span>
+			<div class="sections-grid">
+				<div class="info-section">
+					<div class="section-header">
+						<mat-icon>inventory_2</mat-icon>
+						<h3>Assigned Box</h3>
+					</div>
+					<div class="section-content">
+						<div class="meta-row">
+							<span class="label">Box</span>
+							<span class="value">{{ shop.assignedBox?.label || 'Unassigned' }}</span>
+						</div>
+						<div class="meta-row" *ngIf="shop?.assignedBox; else noBoxState">
+							<span class="label">State</span>
+							<span class="value">{{ shop.assignedBox?.state }}</span>
+						</div>
+						<ng-template #noBoxState>
+							<p class="hint">Your shop is not assigned to a box yet.</p>
+						</ng-template>
+					</div>
 				</div>
 
-				<div *ngIf="shop?.activeRent">
-					<span class="label">Active Rent</span>
-					<span class="value">{{ shop.activeRent?.amount }} MGA — due {{ shop.activeRent?.nextDeadline | date:'shortDate' }}</span>
+				<div class="info-section">
+					<div class="section-header">
+						<mat-icon>payments</mat-icon>
+						<h3>Active Rent</h3>
+					</div>
+					<div class="section-content" *ngIf="shop?.activeRent; else noActiveRent">
+						<div class="meta-row">
+							<span class="label">Amount</span>
+							<span class="value">{{ shop.activeRent?.amount }} MGA</span>
+						</div>
+						<div class="meta-row">
+							<span class="label">Next deadline</span>
+							<span class="value">{{ shop.activeRent?.nextDeadline | date:'shortDate' }}</span>
+						</div>
+					</div>
+					<ng-template #noActiveRent>
+						<p class="hint">No active rent found for this shop.</p>
+					</ng-template>
 				</div>
 			</div>
 		</mat-card>
