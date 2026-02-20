@@ -12,6 +12,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { AuthService } from '../../core/services/auth.service';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
+import { cA } from '@fullcalendar/core/internal-common';
 
 const TYPE_COLORS: Record<string, { bg: string; border: string }> = {
   [TransactionType.RECHARGE]: { bg: '#dcfce7', border: '#16a34a' },
@@ -37,8 +38,8 @@ export class TransactionsCalendarComponent implements OnInit {
   loadError: string | null = null;
 
   readonly legend = [
-    // { type: TransactionType.RECHARGE, label: 'Recharge', ...TYPE_COLORS[TransactionType.RECHARGE] },
-    // { type: TransactionType.PURCHASE, label: 'Purchase', ...TYPE_COLORS[TransactionType.PURCHASE] },
+    { type: TransactionType.RECHARGE, label: 'Recharge', ...TYPE_COLORS[TransactionType.RECHARGE] },
+    { type: TransactionType.PURCHASE, label: 'Purchase', ...TYPE_COLORS[TransactionType.PURCHASE] },
     { type: TransactionType.RENT,     label: 'Rent',     ...TYPE_COLORS[TransactionType.RENT]     },
   ];
 
@@ -87,7 +88,7 @@ export class TransactionsCalendarComponent implements OnInit {
     this.isLoading = true;
     this.loadError = null;
 
-    this.transactionsService.getTransactions(1, 500, user._id).subscribe({
+    this.transactionsService.getAllTransactions(1, 500).subscribe({
       next: response => {
         const events = this.toCalendarEvents(response.data);
         this.calendarOptions = { ...this.calendarOptions, events };
@@ -100,19 +101,28 @@ export class TransactionsCalendarComponent implements OnInit {
     });
   }
 
+  getLabel(transaction: Transaction): string {
+    switch (transaction.type) {
+      case TransactionType.RENT:
+        return `${transaction.type} - ${transaction.periode}`;
+      default:
+        return `${transaction.type} - ${transaction.total} MGA`;
+    }
+  }
+
   private toCalendarEvents(transactions: Transaction[]): EventInput[] {
     return transactions.map(tx => {
       const colors = TYPE_COLORS[tx.type] ?? { bg: '#f1f5f9', border: '#94a3b8' };
       const date = tx.date ? new Date(tx.date) : new Date();
       return {
         id:              tx._id,
-        title:          `${tx.type} — ${tx.periode}`,
+        title:          `${this.getLabel(tx)}`,
         start:          date,
         allDay:         false,
         backgroundColor: colors.bg,
         borderColor:    colors.border,
         textColor:      colors.border,
-        extendedProps:  { tooltip: `${tx.type}: ${tx.periode}` },
+        extendedProps:  { tooltip: `${this.getLabel(tx)}` },
       } as EventInput;
     });
   }

@@ -40,6 +40,7 @@ export class SidebarComponent implements OnInit {
     { label: 'Product Types', icon: 'category', route: '/admin/product-types', roles: [UserRole.ADMIN] },
     { label: 'Shops', icon: 'shop', route: '/admin/shops', roles: [UserRole.ADMIN] },
     { label: 'Users', icon: 'people', route: '/admin/users', roles: [UserRole.ADMIN] },
+    { label: 'Transactions Calendar', icon: 'calendar_today', route: '/admin/transactions-calendar', roles: [UserRole.ADMIN] },
     
     // BOUTIQUE MENU
     { label: 'Dashboard', icon: 'dashboard', route: '/boutique/dashboard', roles: [UserRole.BOUTIQUE] },
