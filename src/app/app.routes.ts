@@ -48,6 +48,14 @@ export const routes: Routes = [
             {
                 path: 'product-types',
                 loadComponent: () => import('./admin/product-types/product-types.component').then(m => m.ProductTypesComponent)
+            },
+            {
+                path: 'shops',
+                loadComponent: () => import('./admin/shops/shops.component').then(m => m.ShopsComponent)
+            },
+            {
+                path: 'transactions-calendar',
+                loadComponent: () => import('./admin/transactions-calendar/transactions-calendar.component').then(m => m.TransactionsCalendarComponent)
             }
         ]
     },
@@ -65,6 +73,14 @@ export const routes: Routes = [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./boutique/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'my-shop',
+                loadComponent: () => import('./boutique/my-shop/my-shop.component').then(m => m.MyShopComponent)
+            },
+            {
+                path: 'create-shop',
+                loadComponent: () => import('./boutique/create-shop/create-shop.component').then(m => m.CreateShopComponent)
             }
         ]
     },

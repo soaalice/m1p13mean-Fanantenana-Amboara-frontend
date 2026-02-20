@@ -36,13 +36,15 @@ export class SidebarComponent implements OnInit {
 
   private allMenuItems: MenuItem[] = [
     // ADMIN MENU
-    { label: 'Users', icon: 'people', route: '/admin/users', roles: [UserRole.ADMIN] },
     { label: 'Boxes', icon: 'store', route: '/admin/boxes', roles: [UserRole.ADMIN] },
     { label: 'Product Types', icon: 'category', route: '/admin/product-types', roles: [UserRole.ADMIN] },
-
+    { label: 'Shops', icon: 'shop', route: '/admin/shops', roles: [UserRole.ADMIN] },
+    { label: 'Users', icon: 'people', route: '/admin/users', roles: [UserRole.ADMIN] },
+    { label: 'Transactions Calendar', icon: 'calendar_today', route: '/admin/transactions-calendar', roles: [UserRole.ADMIN] },
     
     // BOUTIQUE MENU
     { label: 'Dashboard', icon: 'dashboard', route: '/boutique/dashboard', roles: [UserRole.BOUTIQUE] },
+    { label: 'My Shop', icon: 'storefront', route: '/boutique/my-shop', roles: [UserRole.BOUTIQUE] },
     
     // ACHETEUR MENU
     { label: 'Home', icon: 'home', route: '/acheteur', roles: [UserRole.ACHETEUR] },

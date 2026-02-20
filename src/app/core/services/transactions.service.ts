@@ -20,6 +20,7 @@ export class TransactionsService {
       type?: string;
       startDate?: string;
       endDate?: string;
+      rentId?: string;
     }
   ): Observable<PageResult<Transaction>> {
     let params = new HttpParams()
@@ -38,7 +39,44 @@ export class TransactionsService {
       params = params.set('endDate', filters.endDate);
     }
 
+    if (filters?.rentId) {
+      params = params.set('rentId', filters.rentId);
+    }
+
     return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions/user/${userId}`, { params });
+  }
+
+  getAllTransactions(
+    page = 1,
+    limit = 10,
+    filters?: {
+      type?: string;
+      startDate?: string;
+      endDate?: string;
+      rentId?: string;
+    }
+  ): Observable<PageResult<Transaction>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    if (filters?.type) {
+      params = params.set('type', filters.type);
+    }
+
+    if (filters?.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+
+    if (filters?.rentId) {
+      params = params.set('rentId', filters.rentId);
+    }
+
+    return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions`, { params });
   }
 
   getTransactionById(transactionId: string): Observable<{ success: boolean; message: string; data: Transaction }> {

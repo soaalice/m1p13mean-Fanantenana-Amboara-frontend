@@ -4,6 +4,7 @@
             <mat-card-title>
                 <h1>Register</h1>
                 <p class="mat-small">Create a new account by filling in the information below.</p>
+                <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
             </mat-card-title>
         </mat-card-header>
 
