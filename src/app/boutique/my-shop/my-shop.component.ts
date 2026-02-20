@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +12,9 @@ import { Shop } from '../../shared/models/shop';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
+import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { RentsService } from '../../core/services/rents.service';
+import { SidebarService } from '../../core/services/sidebar.service';
 
 interface ShopResponse {
   success: boolean;
@@ -25,13 +27,14 @@ interface ShopResponse {
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
+    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
-    ListFiltersComponent
+    ListFiltersComponent,
+    ModalFormsComponent
   ],
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.scss'
@@ -53,11 +56,39 @@ export class MyShopComponent implements OnInit {
   startDateFilter = '';
   endDateFilter = '';
   displayedColumns: string[] = ['date', 'amount', 'period'];
+  isPaymentModalOpen = false;
+  isPaymentSubmitting = false;
+  paymentError = '';
+
+  readonly monthOptions = [
+    { value: '01', label: 'January' },
+    { value: '02', label: 'February' },
+    { value: '03', label: 'March' },
+    { value: '04', label: 'April' },
+    { value: '05', label: 'May' },
+    { value: '06', label: 'June' },
+    { value: '07', label: 'July' },
+    { value: '08', label: 'August' },
+    { value: '09', label: 'September' },
+    { value: '10', label: 'October' },
+    { value: '11', label: 'November' },
+    { value: '12', label: 'December' }
+  ];
+
+  readonly currentYear = new Date().getFullYear();
+
+  paymentForm = this.fb.group({
+    month: ['', Validators.required],
+    year: [this.currentYear, [Validators.required, Validators.min(2000), Validators.max(9999)]]
+  });
 
   constructor(
+    private fb: FormBuilder,
     private authService: AuthService,
     private shopsService: ShopsService,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
+    private sidebarService: SidebarService,
+    private rentsService: RentsService
   ) {}
 
   ngOnInit(): void {
@@ -145,6 +176,55 @@ export class MyShopComponent implements OnInit {
   onTransactionsPageChange(event: PageEvent): void {
     this.transactionsLimit = event.pageSize;
     this.fetchRentTransactions(event.pageIndex + 1);
+  }
+
+  openPaymentModal(): void {
+    if (!this.shop?.activeRent?._id) {
+      return;
+    }
+
+    this.paymentError = '';
+    this.isPaymentSubmitting = false;
+    this.paymentForm.reset({
+      month: '',
+      year: this.currentYear
+    });
+    this.sidebarService.requestCloseSidebar();
+    this.isPaymentModalOpen = true;
+  }
+
+  closePaymentModal(): void {
+    this.isPaymentModalOpen = false;
+    this.isPaymentSubmitting = false;
+    this.paymentError = '';
+  }
+
+  submitRentPayment(): void {
+    const rentId = this.shop?.activeRent?._id;
+    if (!rentId || !this.currentUserId || this.paymentForm.invalid || this.isPaymentSubmitting) {
+      this.paymentForm.markAllAsTouched();
+      return;
+    }
+
+    const rawValue = this.paymentForm.getRawValue();
+    const month = `${rawValue.month ?? ''}`;
+    const year = `${rawValue.year ?? ''}`;
+    const periode = `${year}-${month}`;
+
+    this.isPaymentSubmitting = true;
+    this.paymentError = '';
+
+    this.rentsService.payRent(rentId, this.currentUserId, periode).subscribe({
+      next: () => {
+        this.isPaymentSubmitting = false;
+        this.closePaymentModal();
+        this.fetchShop();
+      },
+      error: (error) => {
+        this.isPaymentSubmitting = false;
+        this.paymentError = error?.error?.message || 'Erreur lors du paiement du loyer.';
+      }
+    });
   }
 
   trackById(index: number, item: Transaction): string | number {

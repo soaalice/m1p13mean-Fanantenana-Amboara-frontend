@@ -26,8 +26,8 @@ export class RentsService {
     return this.http.get<PageResult<Rent>>(`${this.apiUrl}/rents`, { params });
   }
 
-  payRent(rentId: string, userId: string): Observable<Rent> {
-    return this.http.patch<Rent>(`${this.apiUrl}/rents/${rentId}/pay`, { userId});
+  payRent(rentId: string, userId: string, periode: string): Observable<Rent> {
+    return this.http.patch<Rent>(`${this.apiUrl}/rents/${rentId}/pay`, { userId, periode });
   }
 
   getRentById(rentId: string): Observable<Rent> {

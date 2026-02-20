@@ -58,6 +58,9 @@
 							<span class="label">Next deadline</span>
 							<span class="value">{{ shop.activeRent?.nextDeadline | date:'shortDate' }}</span>
 						</div>
+						<button mat-raised-button color="primary" type="button" (click)="openPaymentModal()">
+							Pay rent
+						</button>
 					</div>
 					<ng-template #noActiveRent>
 						<p class="hint">No active rent found for this shop.</p>
@@ -154,3 +157,30 @@
 	</ng-container>
 
 </section>
+
+<app-modal-forms [isOpen]="isPaymentModalOpen" title="Pay rent" (close)="closePaymentModal()">
+	<form [formGroup]="paymentForm" (ngSubmit)="submitRentPayment()">
+		<div class="form-grid">
+			<label>
+				Month
+				<select formControlName="month">
+					<option value="" disabled>Select month</option>
+					<option *ngFor="let month of monthOptions" [value]="month.value">{{ month.label }}</option>
+				</select>
+			</label>
+			<label>
+				Year
+				<input type="number" formControlName="year" min="2000" max="9999" />
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="paymentError">{{ paymentError }}</div>
+
+		<div class="modal-actions">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closePaymentModal()">Cancel</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="paymentForm.invalid || isPaymentSubmitting">
+				{{ isPaymentSubmitting ? 'Paying...' : 'Pay' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>
