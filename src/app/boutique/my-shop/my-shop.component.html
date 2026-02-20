@@ -115,9 +115,9 @@
 							<td mat-cell *matCellDef="let transaction">{{ transaction.total | number:'1.0-2' }} MGA</td>
 						</ng-container>
 
-						<ng-container matColumnDef="type">
-							<th mat-header-cell *matHeaderCellDef>Type</th>
-							<td mat-cell *matCellDef="let transaction">{{ transaction.type }}</td>
+						<ng-container matColumnDef="period">
+							<th mat-header-cell *matHeaderCellDef>Period</th>
+							<td mat-cell *matCellDef="let transaction">{{ transaction.periode }}</td>
 						</ng-container>
 
 						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

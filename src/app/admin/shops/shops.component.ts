@@ -78,28 +78,6 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return `${amount} / due ${next}`;
   }
 
-  payRent(shop: Shop): void {
-    const rentId = shop.activeRent?._id;
-    const payerId = shop.ownerUser?._id || (shop as any).ownerUserId;
-
-    if (!rentId || !payerId) {
-      this.loadError = 'Cannot determine rent or payer.';
-      return;
-    }
-
-    this.isLoading = true;
-    this.rentsService.payRent(rentId, payerId).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.fetchData(this.page);
-      },
-      error: () => {
-        this.isLoading = false;
-        this.loadError = 'Error paying rent.';
-      }
-    });
-  }
-
   protected fetchData(page = this.page): void {
       this.isLoading = true;
       this.loadError = '';

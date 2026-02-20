@@ -52,7 +52,7 @@ export class MyShopComponent implements OnInit {
   pageSizeOptions = [5, 10, 25];
   startDateFilter = '';
   endDateFilter = '';
-  displayedColumns: string[] = ['date', 'amount', 'type'];
+  displayedColumns: string[] = ['date', 'amount', 'period'];
 
   constructor(
     private authService: AuthService,

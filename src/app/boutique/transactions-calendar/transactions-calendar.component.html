@@ -6,7 +6,6 @@
 			<p class="subtitle">Visualise your transactions by year, month or week.</p>
 		</div>
 		<button mat-stroked-button type="button" (click)="loadTransactions()">
-			<mat-icon>refresh</mat-icon>
 			Refresh
 		</button>
 	</div>
@@ -21,18 +20,16 @@
 		{{ loadError }}
 	</div>
 
-	<ng-container *ngIf="!isLoading && !loadError">
-		<mat-card class="calendar-card">
+	<mat-card class="calendar-card">
 
-			<div class="legend">
-				<span *ngFor="let item of legend" class="legend-item">
-					<span class="legend-dot" [style.background]="item.border"></span>
-					{{ item.label }}
-				</span>
-			</div>
+		<div class="legend">
+			<span *ngFor="let item of legend" class="legend-item">
+				<span class="legend-dot" [style.background]="item.border"></span>
+				{{ item.label }}
+			</span>
+		</div>
 
-			<full-calendar [options]="calendarOptions"></full-calendar>
-		</mat-card>
-	</ng-container>
+		<full-calendar [options]="calendarOptions"></full-calendar>
+	</mat-card>
 
 </section>

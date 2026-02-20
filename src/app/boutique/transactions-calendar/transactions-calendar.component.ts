@@ -53,7 +53,7 @@ export class TransactionsCalendarComponent implements OnInit {
     views: {
       multiMonthYear: {
         buttonText: 'Year',
-        multiMonthMaxColumns: 2,
+        multiMonthMaxColumns: 3,
         multiMonthMinWidth: 240,
       },
       dayGridMonth:   { buttonText: 'Month' },
@@ -116,4 +116,6 @@ export class TransactionsCalendarComponent implements OnInit {
       } as EventInput;
     });
   }
+
+
 }
