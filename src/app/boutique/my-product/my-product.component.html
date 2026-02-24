@@ -1,0 +1,156 @@
+<section class="my-products-page">
+    <div class="header">
+        <div class="header-main">
+            <div>
+                <h1>My Products</h1>
+                <p class="subtitle">Manage your products</p>
+            </div>
+            <div class="actions">
+                <button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+                <button mat-raised-button color="primary" type="button" (click)="openProductModal()">Add Product</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="state" *ngIf="isLoading">Loading products...</div>
+    <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && !loadError">
+        <table mat-table [dataSource]="products" class="products-table">
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let product">{{ product._id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let product">{{ product.price | number }} Ar</td>
+            </ng-container>
+
+            <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef>Stock</th>
+                <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="productType">
+                <th mat-header-cell *matHeaderCellDef>Product Type</th>
+                <td mat-cell *matCellDef="let product">{{ product.productTypeId }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="shop">
+                <th mat-header-cell *matHeaderCellDef>Shop</th>
+                <td mat-cell *matCellDef="let product">{{ product.shop.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="attributes">
+                <th mat-header-cell *matHeaderCellDef>Attributes</th>
+                <td mat-cell *matCellDef="let product" class="attributes-cell">
+                    <div class="attributes-badges">
+                        <span
+                            class="attribute-badge"
+                            *ngFor="let badge of getAttributeBadges(product)"
+                            [class.badge-empty]="badge.key === 'NONE'">
+                            {{ badge.label }}
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let product">
+                    <span [class]="getStatusClass(product.status)">{{ product.status }}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let product">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="onEdit(product)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="onDelete(product)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <div class="empty" *ngIf="products.length === 0">No products found.</div>
+
+        <mat-paginator
+            class="paginator"
+            [length]="total"
+            [pageIndex]="page - 1"
+            [pageSize]="limit"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</section>
+
+<app-modal-forms
+    [isOpen]="isModalOpen"
+    [title]="isEditMode ? 'Edit product' : 'Add product'"
+    (close)="closeProductModal()">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <label>
+                ID
+                <span class="field-error" *ngIf="productForm.get('_id')?.hasError('required')">ID is required</span>
+                <input type="text" formControlName="_id" placeholder="PRD-001" [attr.disabled]="isEditMode ? '' : null" />
+            </label>
+            <label>
+                Name
+                <span class="field-error" *ngIf="productForm.get('name')?.hasError('required')">Name is required</span>
+                <input type="text" formControlName="name" placeholder="Tomates cerises" />
+            </label>
+            <label>
+                Price (Ar)
+                <span class="field-error" *ngIf="productForm.get('price')?.hasError('required')">Price is required</span>
+                <input type="number" formControlName="price" placeholder="2500" min="0" />
+            </label>
+            <label>
+                Stock
+                <input type="number" formControlName="stock" placeholder="0" min="0" />
+            </label>
+            <label>
+                Product Type ID
+                <span class="field-error" *ngIf="productForm.get('productTypeId')?.hasError('required')">Product type is required</span>
+                <input type="text" formControlName="productTypeId" placeholder="PT-001" />
+            </label>
+            <label>
+                Status
+                <select formControlName="status">
+                    <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+
+        <div class="modal-actions">
+            <button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeProductModal()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid || isSubmitting">
+                {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
+            </button>
+        </div>
+    </form>
+</app-modal-forms>
+

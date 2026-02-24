@@ -1,0 +1,162 @@
+.my-products-page {
+	padding: 32px;
+}
+
+.header {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.header-main {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+	width: 100%;
+}
+
+h1 {
+	margin: 0 0 6px;
+	font-size: 28px;
+}
+
+.subtitle {
+	margin: 0;
+	color: rgba(15, 23, 42, 0.7);
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.state {
+	padding: 12px 16px;
+	border-radius: 12px;
+	background: #f1f5f9;
+	margin-bottom: 16px;
+}
+
+.state.error {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+.products-table {
+	width: 100%;
+}
+
+.attributes-cell {
+	white-space: normal;
+	line-height: 1.4;
+}
+
+.attributes-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.attribute-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	border: 1px solid #bae6fd;
+	background: #e0f2fe;
+	color: #0c4a6e;
+}
+
+.attribute-badge.badge-empty {
+	background: #f8fafc;
+	border-color: #e2e8f0;
+	color: #94a3b8;
+}
+
+.status-badge {
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.status-active {
+	background: #dcfce7;
+	color: #15803d;
+}
+
+.status-inactive {
+	background: #fee2e2;
+	color: #b91c1c;
+}
+
+.table-wrap {
+	overflow-x: auto;
+}
+
+.empty {
+	padding: 24px;
+	text-align: center;
+	color: rgba(15, 23, 42, 0.5);
+}
+
+.paginator {
+	margin-top: 8px;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+input, select {
+	padding: 8px 12px;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	font-size: 14px;
+	outline: none;
+
+	&:focus {
+		border-color: #6366f1;
+	}
+}
+
+.field-error {
+	color: #b91c1c;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.form-error {
+	color: #b91c1c;
+	padding: 8px 12px;
+	background: #fee2e2;
+	border-radius: 8px;
+	margin-bottom: 12px;
+	font-size: 13px;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 24px;
+}

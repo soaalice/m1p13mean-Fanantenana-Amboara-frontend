@@ -100,7 +100,7 @@
 
         <div class="attributes-header">
             <h3>Attributes</h3>
-            <button mat-stroked-button type="button" (click)="addAttribute()">Add attribute</button>
+           
         </div>
 
         <div class="attribute-list" formArrayName="attributes">
@@ -146,7 +146,7 @@
         </div>
 
         <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
-
+         <button mat-stroked-button type="button" (click)="addAttribute()">Add attribute</button>
         <div class="modal-actions">
             <button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeProductTypeModal()">Cancel</button>
             <button mat-raised-button color="primary" type="submit" [disabled]="productTypeForm.invalid || isSubmitting">

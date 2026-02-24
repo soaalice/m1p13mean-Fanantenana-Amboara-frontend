@@ -15,6 +15,7 @@ import { ListFiltersComponent } from '../../shared/components/list-filters/list-
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { RentsService } from '../../core/services/rents.service';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { RouterLink } from '@angular/router';
 
 interface ShopResponse {
   success: boolean;
@@ -34,7 +35,8 @@ interface ShopResponse {
     MatTableModule,
     MatPaginatorModule,
     ListFiltersComponent,
-    ModalFormsComponent
+    ModalFormsComponent,
+    RouterLink
   ],
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.scss'
