@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { Product } from '../../shared/models/product';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Product, CreateProductDto } from '../../shared/models/product';
 import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { MyProductService } from '../../core/services/my-product.service';
+import { ProductTypeSelect } from '../../shared/models/product-type';
 
 @Component({
   selector: 'app-my-product',
@@ -21,9 +25,12 @@ import { SidebarService } from '../../core/services/sidebar.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatSelectModule,
+    MatCheckboxModule,
     ModalFormsComponent
   ],
-  templateUrl: './my-product.component.html',
+  templateUrl:
+   './my-product.component.html',
   styleUrl: './my-product.component.scss'
 })
 export class MyProductComponent implements OnInit {
@@ -44,15 +51,18 @@ export class MyProductComponent implements OnInit {
   selectedProduct: Product | null = null;
 
   statusOptions = ['ACTIVE', 'INACTIVE'];
+  productTypes: ProductTypeSelect[] = [];
+  selectedProductType: ProductTypeSelect | null = null;
+  isLoadingProductTypes = false;
 
   productForm = this.fb.group({
-    _id: ['', Validators.required],
     name: ['', Validators.required],
     price: [0, [Validators.required, Validators.min(0)]],
-    stock: [0, [Validators.required, Validators.min(0)]],
     productTypeId: ['', Validators.required],
     status: ['ACTIVE', Validators.required]
   });
+
+  attributesForm: FormGroup = this.fb.group({});
 
   // Static mock data
   private allProducts: Product[] = [
@@ -93,21 +103,95 @@ export class MyProductComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private sidebarService: SidebarService) { }
+    private sidebarService: SidebarService,
+    private myProductService: MyProductService) { }
 
   ngOnInit(): void {
     this.fetchData();
+    this.loadProductTypes();
+  }
+
+  loadProductTypes(): void {
+    this.isLoadingProductTypes = true;
+    this.myProductService.getProductTypesForSelect().subscribe({
+      next: (types) => {
+        this.productTypes = types;
+        this.isLoadingProductTypes = false;
+      },
+      error: (err) => {
+        console.error('Error loading product types:', err);
+        this.isLoadingProductTypes = false;
+      }
+    });
+  }
+
+  onProductTypeChange(productTypeId: string): void {
+    this.selectedProductType = this.productTypes.find(pt => pt.id === productTypeId) || null;
+    this.generateAttributeFields();
+  }
+
+  generateAttributeFields(): void {
+    // Clear existing attribute controls
+    Object.keys(this.attributesForm.controls).forEach(key => {
+      this.attributesForm.removeControl(key);
+    });
+
+    if (!this.selectedProductType?.attributes) {
+      return;
+    }
+
+    // Generate dynamic controls based on attribute types
+    this.selectedProductType.attributes.forEach(attr => {
+      let defaultValue: any = null;
+      let validators = [];
+
+      switch (attr.type) {
+        case 'STRING':
+          defaultValue = '';
+          break;
+        case 'NUMBER':
+          defaultValue = attr.min || 0;
+          if (attr.min !== undefined) {
+            validators.push(Validators.min(attr.min));
+          }
+          if (attr.max !== undefined) {
+            validators.push(Validators.max(attr.max));
+          }
+          break;
+        case 'BOOLEAN':
+          defaultValue = false;
+          break;
+        case 'ENUM':
+          defaultValue = attr.values && attr.values.length > 0 ? attr.values[0] : '';
+          break;
+        case 'DATE':
+          defaultValue = '';
+          break;
+      }
+
+      this.attributesForm.addControl(attr.code, this.fb.control(defaultValue, validators));
+    });
   }
 
   fetchData(): void {
     this.isLoading = true;
     this.loadError = '';
-    // Static: simulate a short delay
-    setTimeout(() => {
-      this.products = this.allProducts;
-      this.total = this.allProducts.length;
-      this.isLoading = false;
-    }, 300);
+
+    this.myProductService.getProducts(this.page, this.limit).subscribe({
+      next: (res) => {
+        this.products = res.data;
+        this.total = res.pagination?.total ?? res.data.length;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading products:', err);
+        // Fallback to static data when API fails
+        this.products = this.allProducts;
+        this.total = this.allProducts.length;
+        this.isLoading = false;
+        this.loadError = 'Unable to load products from server, showing local data.';
+      }
+    });
   }
 
   onPageChange(event: PageEvent): void {
@@ -139,7 +223,10 @@ export class MyProductComponent implements OnInit {
     this.isEditMode = false;
     this.selectedProduct = null;
     this.submitError = '';
-    this.productForm.reset({ price: 0, stock: 0, status: 'ACTIVE' });
+    this.selectedProductType = null;
+    this.productForm.reset({ price: 0, status: 'ACTIVE' });
+    this.attributesForm.reset();
+    this.generateAttributeFields();
     this.isModalOpen = true;
   }
 
@@ -148,13 +235,20 @@ export class MyProductComponent implements OnInit {
     this.selectedProduct = product;
     this.submitError = '';
     this.productForm.patchValue({
-      _id: product._id,
       name: product.name,
       price: product.price,
-      stock: product.stock,
       productTypeId: product.productTypeId,
       status: product.status
     });
+    
+    // Load product type and set attributes
+    this.selectedProductType = this.productTypes.find(pt => pt.id === product.productTypeId) || null;
+    this.generateAttributeFields();
+    
+    if (product.attributes) {
+      this.attributesForm.patchValue(product.attributes);
+    }
+    
     this.isModalOpen = true;
   }
 
@@ -169,34 +263,62 @@ export class MyProductComponent implements OnInit {
     this.isSubmitting = true;
     this.submitError = '';
 
-    setTimeout(() => {
-      const val = this.productForm.value;
-      if (this.isEditMode && this.selectedProduct) {
+    const val = this.productForm.value;
+    const attributes = this.attributesForm.value;
+    
+    if (this.isEditMode && this.selectedProduct) {
+      // Mode édition - simulation pour l'instant
+      setTimeout(() => {
         const idx = this.products.findIndex(p => p._id === this.selectedProduct!._id);
         if (idx !== -1) {
-          this.products[idx] = { ...this.products[idx], ...val as Partial<Product> };
+          this.products[idx] = { 
+            ...this.products[idx], 
+            ...val as Partial<Product>,
+            attributes
+          };
           this.products = [...this.products];
         }
-      } else {
-        const newProduct: Product = {
-          _id: val._id!,
-          name: val.name!,
-          price: val.price!,
-          stock: val.stock!,
-          productTypeId: val.productTypeId!,
-          shop: { _id: '', name: '' },
-          status: (val.status as 'ACTIVE' | 'INACTIVE') ?? 'ACTIVE'
-        };
-        this.products = [...this.products, newProduct];
-        this.total = this.products.length;
-      }
-      this.isSubmitting = false;
-      this.isModalOpen = false;
-    }, 300);
+        this.isSubmitting = false;
+        this.isModalOpen = false;
+      }, 300);
+    } else {
+      // Mode création - utilise le service
+      const createProductDto: CreateProductDto = {
+        name: val.name!,
+        price: val.price!,
+        productTypeId: val.productTypeId!,
+        attributes: Object.keys(attributes).length > 0 ? attributes : undefined
+      };
+
+      this.myProductService.createProduct(createProductDto).subscribe({
+        next: (createdProduct) => {
+          console.log('Product created successfully:', createdProduct);
+          this.products = [...this.products, createdProduct];
+          this.total = this.products.length;
+          this.isSubmitting = false;
+          this.isModalOpen = false;
+        },
+        error: (err) => {
+          console.error('Error creating product:', err);
+          this.submitError = 'Failed to create product. Please try again.';
+          this.isSubmitting = false;
+        }
+      });
+    }
   }
 
   closeProductModal(): void {
     this.isModalOpen = false;
+  }
+
+  get nonBooleanAttributes() {
+    if (!this.selectedProductType?.attributes) return [];
+    return this.selectedProductType.attributes.filter(attr => attr.type !== 'BOOLEAN');
+  }
+
+  get booleanAttributes() {
+    if (!this.selectedProductType?.attributes) return [];
+    return this.selectedProductType.attributes.filter(attr => attr.type === 'BOOLEAN');
   }
 }
 

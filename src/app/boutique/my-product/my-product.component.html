@@ -112,11 +112,6 @@
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
             <label>
-                ID
-                <span class="field-error" *ngIf="productForm.get('_id')?.hasError('required')">ID is required</span>
-                <input type="text" formControlName="_id" placeholder="PRD-001" [attr.disabled]="isEditMode ? '' : null" />
-            </label>
-            <label>
                 Name
                 <span class="field-error" *ngIf="productForm.get('name')?.hasError('required')">Name is required</span>
                 <input type="text" formControlName="name" placeholder="Tomates cerises" />
@@ -127,13 +122,12 @@
                 <input type="number" formControlName="price" placeholder="2500" min="0" />
             </label>
             <label>
-                Stock
-                <input type="number" formControlName="stock" placeholder="0" min="0" />
-            </label>
-            <label>
-                Product Type ID
+                Product Type
                 <span class="field-error" *ngIf="productForm.get('productTypeId')?.hasError('required')">Product type is required</span>
-                <input type="text" formControlName="productTypeId" placeholder="PT-001" />
+                <select formControlName="productTypeId" (change)="onProductTypeChange($any($event.target).value)">
+                    <option value="">Select a product type</option>
+                    <option *ngFor="let pt of productTypes" [value]="pt.id">{{ pt.label }}</option>
+                </select>
             </label>
             <label>
                 Status
@@ -141,6 +135,63 @@
                     <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
                 </select>
             </label>
+        </div>
+
+        <!-- Dynamic Attributes Section -->
+        <div class="attributes-section" *ngIf="selectedProductType && selectedProductType.attributes && selectedProductType.attributes.length > 0">
+            <h3>Product Attributes</h3>
+            
+            <!-- Non-Boolean Attributes (STRING, NUMBER, ENUM, DATE) -->
+            <div class="form-grid" [formGroup]="attributesForm" *ngIf="nonBooleanAttributes.length > 0">
+                <ng-container *ngFor="let attr of nonBooleanAttributes">
+                    
+                    <!-- STRING type -->
+                    <label *ngIf="attr.type === 'STRING'">
+                        {{ attr.code }}
+                        <input type="text" [formControlName]="attr.code" [placeholder]="attr.code" />
+                    </label>
+
+                    <!-- NUMBER type -->
+                    <label *ngIf="attr.type === 'NUMBER'">
+                        {{ attr.code }}
+                        <input 
+                            type="number" 
+                            [formControlName]="attr.code" 
+                            [placeholder]="attr.code"
+                            [min]="attr.min ?? null"
+                            [max]="attr.max ?? null" />
+                        <small *ngIf="attr.min !== undefined || attr.max !== undefined">
+                            (Min: {{ attr.min ?? 'N/A' }}, Max: {{ attr.max ?? 'N/A' }})
+                        </small>
+                    </label>
+
+                    <!-- ENUM type -->
+                    <label *ngIf="attr.type === 'ENUM'">
+                        {{ attr.code }}
+                        <select [formControlName]="attr.code">
+                            <option value="">Select {{ attr.code }}</option>
+                            <option *ngFor="let val of attr.values" [value]="val">{{ val }}</option>
+                        </select>
+                    </label>
+
+                    <!-- DATE type -->
+                    <label *ngIf="attr.type === 'DATE'">
+                        {{ attr.code }}
+                        <input type="date" [formControlName]="attr.code" />
+                    </label>
+
+                </ng-container>
+            </div>
+
+            <!-- Boolean Attributes (separated section) -->
+            <div class="boolean-attributes" [formGroup]="attributesForm" *ngIf="booleanAttributes.length > 0">
+                <ng-container *ngFor="let attr of booleanAttributes">
+                    <label class="checkbox-label">
+                        <input type="checkbox" [formControlName]="attr.code" />
+                        <span>{{ attr.code }}</span>
+                    </label>
+                </ng-container>
+            </div>
         </div>
 
         <div class="form-error" *ngIf="submitError">{{ submitError }}</div>

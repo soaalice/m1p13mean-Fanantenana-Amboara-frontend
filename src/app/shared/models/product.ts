@@ -17,3 +17,18 @@ export interface Product {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface CreateProductDto {
+  name: string;
+  price: number;
+  productTypeId: string;
+  attributes?: Record<string, any>;
+}
+
+export interface UpdateProductDto {
+  name?: string;
+  price?: number;
+  productTypeId?: string;
+  attributes?: Record<string, any>;
+  status?: 'ACTIVE' | 'INACTIVE';
+}

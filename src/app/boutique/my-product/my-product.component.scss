@@ -133,10 +133,19 @@ input, select {
 	border-radius: 8px;
 	font-size: 14px;
 	outline: none;
+	height: 40px;
+	width: 100%;
+	box-sizing: border-box;
+	line-height: 1.5;
 
 	&:focus {
 		border-color: #6366f1;
 	}
+}
+
+input[type="checkbox"] {
+	width: 18px;
+	height: 18px;
 }
 
 .field-error {
@@ -159,4 +168,63 @@ input, select {
 	justify-content: flex-end;
 	gap: 10px;
 	margin-top: 24px;
+}
+
+.attributes-section {
+	margin-top: 24px;
+	padding-top: 24px;
+	border-top: 1px solid #e2e8f0;
+
+	h3 {
+		margin: 0 0 16px;
+		font-size: 16px;
+		font-weight: 600;
+		color: #334155;
+	}
+
+	small {
+		display: block;
+		margin-top: 4px;
+		color: #64748b;
+		font-size: 12px;
+	}
+}
+
+.boolean-attributes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-top: 16px;
+	padding: 16px;
+	background: #f8fafc;
+	border-radius: 8px;
+}
+
+.checkbox-label {
+	flex-direction: row !important;
+	align-items: center;
+	gap: 8px !important;
+	margin: 0 !important;
+	cursor: pointer;
+	user-select: none;
+
+	input[type="checkbox"] {
+		width: 18px;
+		height: 18px;
+		margin: 0;
+		cursor: pointer;
+		accent-color: #6366f1;
+	}
+
+	span {
+		font-size: 14px;
+		font-weight: 500;
+		color: #334155;
+	}
+
+	&:hover {
+		span {
+			color: #6366f1;
+		}
+	}
 }
