@@ -302,13 +302,25 @@ export class MyProductComponent implements OnInit {
   }
 
   onDelete(product: Product): void {
-    // Static: just remove from list
-    this.products = this.products.filter(p => p._id !== product._id);
-    this.total = this.products.length;
+    if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+      this.myProductService.deleteProduct(product._id).subscribe({
+        next: () => {
+          // Remove product from local list after successful deletion
+          this.products = this.products.filter(p => p._id !== product._id);
+          this.total = this.products.length;
+          console.log('Product deleted successfully');
+        },
+        error: (err) => {
+          console.error('Error deleting product:', err);
+          // Could add a toast notification here
+          alert('Failed to delete product. Please try again.');
+        }
+      });
+    }
   }
 
   onSubmit(): void {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid || this.isSubmitting) return;
     this.isSubmitting = true;
     this.submitError = '';
 
@@ -344,8 +356,8 @@ export class MyProductComponent implements OnInit {
           console.log('Product created successfully:', createdProduct);
           this.products = [...this.products, createdProduct];
           this.total = this.products.length;
-          this.isSubmitting = false;
           this.isModalOpen = false;
+          this.isSubmitting = false;
         },
         error: (err) => {
           console.error('Error creating product:', err);

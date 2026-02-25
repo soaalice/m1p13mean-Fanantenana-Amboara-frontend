@@ -67,4 +67,13 @@ export class MyProductService {
         map(res => res.data)
       );
   }
+
+  /**
+   * Supprime un produit
+   * DELETE /products/:id
+   */
+  deleteProduct(productId: string): Observable<void> {
+    console.log('Deleting product with id:', productId);
+    return this.http.delete<void>(`${this.apiUrl}/products/${productId}`);
+  }
 }

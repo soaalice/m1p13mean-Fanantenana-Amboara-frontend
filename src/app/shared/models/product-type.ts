@@ -14,6 +14,11 @@ export interface ProductType {
   attributes?: ProductTypeAttribute[];
 }
 
+export interface CreateProductTypeDto {
+  label: string;
+  attributes?: ProductTypeAttribute[];
+}
+
 export interface ProductTypeSelect extends SelectItem {
   attributes?: ProductTypeAttribute[];
 }
