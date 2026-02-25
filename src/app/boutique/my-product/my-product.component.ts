@@ -9,7 +9,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Product, CreateProductDto } from '../../shared/models/product';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { CreateProductModalComponent } from './create-product-modal/create-product-modal.component';
+import { AddStockModalComponent } from './add-stock-modal/add-stock-modal.component';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { MyProductService } from '../../core/services/my-product.service';
 import { ProductTypeSelect } from '../../shared/models/product-type';
@@ -27,7 +28,8 @@ import { ProductTypeSelect } from '../../shared/models/product-type';
     MatMenuModule,
     MatSelectModule,
     MatCheckboxModule,
-    ModalFormsComponent
+    CreateProductModalComponent,
+    AddStockModalComponent
   ],
   templateUrl:
    './my-product.component.html',
@@ -228,6 +230,53 @@ export class MyProductComponent implements OnInit {
     this.attributesForm.reset();
     this.generateAttributeFields();
     this.isModalOpen = true;
+  }
+
+  // --- Add stock modal handlers ---
+  isStockModalOpen = false;
+  stockModalProduct: Product | null = null;
+  isStockSubmitting = false;
+  stockSubmitError = '';
+
+  openStockModal(product: Product): void {
+    this.sidebarService.requestCloseSidebar();
+    this.stockModalProduct = product;
+    this.stockSubmitError = '';
+    this.isStockModalOpen = true;
+  }
+
+  closeStockModal(): void {
+    this.isStockModalOpen = false;
+    this.stockModalProduct = null;
+  }
+
+  onAddStock(quantity: number): void {
+    if (!this.stockModalProduct) return;
+    this.isStockSubmitting = true;
+    this.stockSubmitError = '';
+    // Call backend API to add stock
+    this.myProductService.addStock(this.stockModalProduct._id, quantity).subscribe({
+      next: (updatedProduct) => {
+        const idx = this.products.findIndex(p => p._id === updatedProduct._id);
+        if (idx !== -1) {
+          // replace immutably so Angular change detection updates the table
+          const next = [...this.products];
+          next[idx] = updatedProduct;
+          this.products = next;
+        } else {
+          // if not found, prepend to keep newest first
+          this.products = [updatedProduct, ...this.products];
+        }
+        this.total = this.products.length;
+        this.isStockSubmitting = false;
+        this.closeStockModal();
+      },
+      error: (err) => {
+        console.error('Error adding stock:', err);
+        this.stockSubmitError = 'Failed to add stock. Please try again.';
+        this.isStockSubmitting = false;
+      }
+    });
   }
 
   onEdit(product: Product): void {

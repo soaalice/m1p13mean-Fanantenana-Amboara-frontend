@@ -1,0 +1,38 @@
+<app-modal-forms [isOpen]="isOpen" [title]="'Add stock to product'" (close)="emitClose()">
+  <div class="stock-modal" *ngIf="product">
+    <div class="modal-header-row">
+      <h3>Add stock to product</h3>
+      <button class="close-btn" mat-icon-button type="button" (click)="emitClose()" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="product-grid">
+      <div class="left">
+        <p><strong>ID:</strong> {{ product._id }}</p>
+        <p><strong>Name:</strong> {{ product.name }}</p>
+        <p><strong>Current stock:</strong> {{ product.stock || 0 }}</p>
+      </div>
+      <div class="right">
+        <p *ngIf="product.price"><strong>Price:</strong> {{ product.price | number }} Ar</p>
+      </div>
+    </div>
+
+    <div class="stock-input">
+      <mat-form-field appearance="outline">
+        <mat-label>Quantity to add</mat-label>
+        <input matInput type="number" [(ngModel)]="quantity" min="1" />
+        <mat-hint>Enter the number of units to add to stock</mat-hint>
+      </mat-form-field>
+      <div class="field-error" *ngIf="error">{{ error }}</div>
+    </div>
+
+    <div class="modal-actions">
+      <button mat-stroked-button color="primary" type="button" (click)="emitClose()">Cancel</button>
+      <button mat-raised-button color="primary" type="button" (click)="doAdd()" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">Add</span>
+        <span *ngIf="isSubmitting">Adding...</span>
+      </button>
+    </div>
+  </div>
+</app-modal-forms>

@@ -55,4 +55,16 @@ export class MyProductService {
         map(res => res.data)
       );
   }
+
+  /**
+   * Ajoute du stock à un produit
+   * POST /products/:id/add-stock
+   */
+  addStock(productId: string, quantity: number): Observable<Product> {
+    const body = { quantity };
+    return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}/add-stock`, body)
+      .pipe(
+        map(res => res.data)
+      );
+  }
 }
