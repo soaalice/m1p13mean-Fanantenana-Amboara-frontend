@@ -1,0 +1,8 @@
+.product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px; }
+.product-grid .left p, .product-grid .right p { margin:4px 0; }
+.stock-input { margin-bottom: 12px; display:flex; flex-direction:column; gap:6px; }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+.field-error { color:#c62828; font-size:13px; }
+.modal-header-row { display:flex; align-items:center; justify-content:space-between; }
+.close-btn { height:36px; width:36px; }
+

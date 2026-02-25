@@ -41,11 +41,12 @@ export class SidebarComponent implements OnInit {
     { label: 'Shops', icon: 'shop', route: '/admin/shops', roles: [UserRole.ADMIN] },
     { label: 'Users', icon: 'people', route: '/admin/users', roles: [UserRole.ADMIN] },
     { label: 'Transactions Calendar', icon: 'calendar_today', route: '/admin/transactions-calendar', roles: [UserRole.ADMIN] },
-    
+
     // BOUTIQUE MENU
     { label: 'Dashboard', icon: 'dashboard', route: '/boutique/dashboard', roles: [UserRole.BOUTIQUE] },
     { label: 'My Shop', icon: 'storefront', route: '/boutique/my-shop', roles: [UserRole.BOUTIQUE] },
-    
+    { label: 'My Product', icon: 'inventory_2', route: '/boutique/my-product', roles: [UserRole.BOUTIQUE] },
+
     // ACHETEUR MENU
     { label: 'Home', icon: 'home', route: '/acheteur', roles: [UserRole.ACHETEUR] },
     { label: 'Transactions', icon: 'receipt_long', route: '/acheteur/transactions', roles: [UserRole.ACHETEUR] }
@@ -54,7 +55,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userRole = this.authService.getRoleFromToken();
@@ -67,7 +68,7 @@ export class SidebarComponent implements OnInit {
       return;
     }
 
-    this.menuItems = this.allMenuItems.filter(item => 
+    this.menuItems = this.allMenuItems.filter(item =>
       item.roles.includes(this.userRole!)
     );
   }

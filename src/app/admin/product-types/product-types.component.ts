@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
-import { ProductType, ProductTypeAttribute } from '../../shared/models/product-type';
+import { ProductType, ProductTypeAttribute, CreateProductTypeDto } from '../../shared/models/product-type';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ProductTypesService } from '../../core/services/product-types.service';
@@ -112,7 +112,6 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
   ) {
     super();
     this.productTypeForm = this.fb.group({
-      _id: ['', Validators.required],
       label: ['', Validators.required],
       attributes: this.fb.array([])
     });
@@ -179,7 +178,6 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     this.isModalOpen = true;
     this.isEditMode = false;
     this.selectedProductType = null;
-    this.productTypeForm.get('_id')?.enable({ emitEvent: false });
     this.submitError = '';
   }
 
@@ -194,7 +192,7 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     this.addAttribute();
   }
 
-  private buildPayload(): ProductType {
+  private buildPayload(): CreateProductTypeDto {
     const raw = this.productTypeForm.getRawValue();
 
     const attributes = (raw.attributes ?? []).map((attr: any) => {
@@ -213,7 +211,6 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     });
 
     return {
-      _id: (raw._id ?? '').trim(),
       label: (raw.label ?? '').trim(),
       attributes
     };
@@ -290,10 +287,8 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     this.attributes.clear();
 
     this.productTypeForm.patchValue({
-      _id: productType._id || '',
       label: productType.label || ''
     });
-    this.productTypeForm.get('_id')?.disable({ emitEvent: false });
 
     const attributes = productType.attributes ?? [];
     if (attributes.length === 0) {

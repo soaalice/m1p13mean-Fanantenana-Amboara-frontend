@@ -8,3 +8,19 @@ export interface PageResult<T> {
     pages: number;
   };
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T[];
+}
+
+export interface ApiSingleResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T;
+}
+
+export interface SelectItem {
+  id: string;
+  label: string;
+}

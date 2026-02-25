@@ -86,12 +86,6 @@
     <form class="product-type-modal" [formGroup]="productTypeForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
             <label>
-                Id
-                <span class="field-error" *ngIf="productTypeForm.get('_id')?.hasError('required')">Id is required</span>
-                <input type="text" formControlName="_id" placeholder="PT-001" [disabled]="isEditMode" />
-            </label>
-
-            <label>
                 Label
                 <span class="field-error" *ngIf="productTypeForm.get('label')?.hasError('required')">Label is required</span>
                 <input type="text" formControlName="label" placeholder="Fresh vegetables" />
@@ -100,7 +94,7 @@
 
         <div class="attributes-header">
             <h3>Attributes</h3>
-            <button mat-stroked-button type="button" (click)="addAttribute()">Add attribute</button>
+           
         </div>
 
         <div class="attribute-list" formArrayName="attributes">
@@ -146,7 +140,7 @@
         </div>
 
         <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
-
+         <button mat-stroked-button type="button" (click)="addAttribute()">Add attribute</button>
         <div class="modal-actions">
             <button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeProductTypeModal()">Cancel</button>
             <button mat-raised-button color="primary" type="submit" [disabled]="productTypeForm.invalid || isSubmitting">

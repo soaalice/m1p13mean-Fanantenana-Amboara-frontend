@@ -1,0 +1,10 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.attributes-section { margin-top: 12px; }
+.boolean-attributes { margin-top: 8px; }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+.field-error { color: #c62828; font-size: 12px; margin-left: 6px; }
+.checkbox-label { display:flex; align-items:center; gap:8px; }
