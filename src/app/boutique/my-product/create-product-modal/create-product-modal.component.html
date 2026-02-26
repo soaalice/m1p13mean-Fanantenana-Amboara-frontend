@@ -30,6 +30,39 @@
           </label>
       </div>
 
+      <div class="image-upload-section">
+          <label class="image-upload-label">Product Image</label>
+          
+          <div class="image-upload-container" *ngIf="!imagePreview">
+              <input 
+                  type="file" 
+                  #fileInput
+                  accept="image/*" 
+                  (change)="onImageSelected($event)"
+                  style="display: none" />
+              <button 
+                  mat-stroked-button 
+                  type="button" 
+                  class="upload-button"
+                  (click)="fileInput.click()">
+                  <mat-icon>add_photo_alternate</mat-icon>
+                  <span>Upload Image</span>
+              </button>
+              <p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+          </div>
+
+          <div class="image-preview-container" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Product preview" class="image-preview" />
+              <button 
+                  mat-icon-button 
+                  type="button" 
+                  class="remove-image-button"
+                  (click)="removeImage()">
+                  <mat-icon>close</mat-icon>
+              </button>
+          </div>
+      </div>
+
       <div class="attributes-section" *ngIf="selectedProductType && selectedProductType.attributes && selectedProductType.attributes.length > 0">
           <h3>Product Attributes</h3>
 

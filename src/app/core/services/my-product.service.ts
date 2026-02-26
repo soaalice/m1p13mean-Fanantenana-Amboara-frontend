@@ -46,11 +46,63 @@ export class MyProductService {
   }
 
   /**
-   * Crée un nouveau produit
+   * Crée un nouveau produit avec upload de fichier
    */
-  createProduct(productData: CreateProductDto): Observable<Product> {
-    console.log('Creating product with data:', productData);
-    return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products`, productData)
+  createProduct(productData: CreateProductDto, photoFile?: File): Observable<Product> {
+   
+    const formData = new FormData();
+    // Ajouter les données du produit
+    formData.append('name', productData.name);
+    formData.append('price', productData.price.toString());
+    formData.append('productTypeId', productData.productTypeId);
+    
+    if (productData.attributes) {
+      formData.append('attributes', JSON.stringify(productData.attributes));
+    }
+    
+    // Ajouter le fichier photo si présent
+    if (photoFile) {
+      formData.append('photo', photoFile, photoFile.name);
+    }
+    
+    return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products`, formData)
+      .pipe(
+        map(res => res.data)
+      );
+  }
+
+  /**
+   * Met à jour un produit existant avec upload de fichier optionnel
+   * PATCH /products/:id
+   */
+  updateProduct(productId: string, productData: Partial<CreateProductDto> & { status?: string }, photoFile?: File): Observable<Product> {
+    console.log('Updating product with id:', productId, 'data:', productData);
+    
+    const formData = new FormData();
+    
+    // Ajouter les données du produit si présentes
+    if (productData.name !== undefined) {
+      formData.append('name', productData.name);
+    }
+    if (productData.price !== undefined) {
+      formData.append('price', productData.price.toString());
+    }
+    if (productData.productTypeId !== undefined) {
+      formData.append('productTypeId', productData.productTypeId);
+    }
+    if (productData.attributes !== undefined) {
+      formData.append('attributes', JSON.stringify(productData.attributes));
+    }
+    if (productData.status !== undefined) {
+      formData.append('status', productData.status);
+    }
+    
+    // Ajouter le fichier photo si présent
+    if (photoFile) {
+      formData.append('photo', photoFile, photoFile.name);
+    }
+    
+    return this.http.put<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}`, formData)
       .pipe(
         map(res => res.data)
       );
@@ -75,5 +127,33 @@ export class MyProductService {
   deleteProduct(productId: string): Observable<void> {
     console.log('Deleting product with id:', productId);
     return this.http.delete<void>(`${this.apiUrl}/products/${productId}`);
+  }
+
+  /**
+   * Met à jour uniquement la photo d'un produit
+   * POST /products/:id/photo
+   */
+  updatePhoto(productId: string, photoFile: File): Observable<Product> {
+    console.log('Updating photo for product:', productId);
+    
+    const formData = new FormData();
+    formData.append('photo', photoFile, photoFile.name);
+    
+    return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}/photo`, formData)
+      .pipe(
+        map(res => res.data)
+      );
+  }
+
+  /**
+   * Supprime la photo d'un produit
+   * DELETE /products/:id/photo
+   */
+  removePhoto(productId: string): Observable<Product> {
+    console.log('Removing photo for product:', productId);
+    return this.http.delete<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}/photo`)
+      .pipe(
+        map(res => res.data)
+      );
   }
 }

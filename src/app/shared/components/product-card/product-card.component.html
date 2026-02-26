@@ -10,7 +10,7 @@
     <h3 class="product-name">{{ product.name }}</h3>
     
     <div class="product-shop">
-      <span class="shop-label">Shop:</span>
+      <span class="shop-label">from</span>
       <span class="shop-name">{{ product.shop.name }}</span>
     </div>
     
@@ -18,17 +18,6 @@
       <div class="price-container">
         <span class="current-price">${{ getDiscountedPrice() | number:'1.0-0' }}</span>
         <span *ngIf="hasPromotion()" class="original-price">${{ product.price }}</span>
-      </div>
-      
-      <div class="rating-container">
-        <div class="stars">
-          <span class="star">★</span>
-          <span class="star">★</span>
-          <span class="star">★</span>
-          <span class="star">★</span>
-          <span class="star">★</span>
-        </div>
-        <span class="rating-score">5.0</span>
       </div>
     </div>
     
