@@ -1,0 +1,14 @@
+<div class="products-page">
+  <header class="page-header">
+    <h1 class="page-title">Discover Our Products</h1>
+    <p class="page-subtitle">Explore our curated collection of premium products</p>
+  </header>
+
+  <div class="products-grid">
+    <app-product-card 
+      *ngFor="let product of products" 
+      [product]="product"
+      [imageUrl]="product.imageUrl">
+    </app-product-card>
+  </div>
+</div>
