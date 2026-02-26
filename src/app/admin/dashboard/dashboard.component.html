@@ -1,0 +1,110 @@
+<section class="admin-dashboard">
+	<header class="page-header">
+		<div class="heading-copy">
+			<span class="heading-eyebrow">Administration</span>
+			<h1>Dashboard</h1>
+			<p>Overview of key metrics and analytics</p>
+		</div>
+
+		<div class="header-actions">
+			<button type="button" class="refresh-btn" (click)="fetchDashboard()" [disabled]="isLoading">
+				<mat-icon>refresh</mat-icon>
+				{{ isLoading ? 'Loading…' : 'Refresh' }}
+			</button>
+		</div>
+	</header>
+
+	<div class="error-banner" *ngIf="loadError">
+		<mat-icon>error_outline</mat-icon>
+		<p>{{ loadError }}</p>
+	</div>
+
+	<ng-container *ngIf="isLoading && !data">
+		<div class="cards-grid skeleton-grid">
+			<div class="skeleton-card" *ngFor="let i of [1,2,3]"></div>
+		</div>
+		<div class="skeleton-chart"></div>
+	</ng-container>
+
+	<ng-container *ngIf="data as dashboard">
+
+		<!-- KPI cards -->
+		<div class="cards-grid">
+			<app-dashboard-card
+				icon="inventory_2"
+				title="Total boxes"
+				[text]="(dashboard.boxes.total | number) ?? '0'"
+				color="#3b82f6"
+			></app-dashboard-card>
+
+			<app-dashboard-card
+				icon="group"
+				title="Total users"
+				[text]="(dashboard.users.total | number) ?? '0'"
+				color="#22c55e"
+			></app-dashboard-card>
+
+			<app-dashboard-card
+				icon="trending_up"
+				title="Net sales"
+				[text]="(dashboard.netSales.total | number) ?? '0'"
+				color="#f59e0b"
+			></app-dashboard-card>
+		</div>
+
+		<section class="analytics-section">
+			<div class="section-header">
+				<div class="section-title">
+					<h2>Analytics</h2>
+					<p>Trends and evolution of key indicators</p>
+				</div>
+				<span class="section-badge">{{ netSales.length }} periods</span>
+			</div>
+
+			<div class="charts-grid">
+				<div class="chart-card chart-card--wide">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#f59e0b"></span>
+						<span class="chart-card-label">Net sales</span>
+						<span class="chart-card-hint">Evolution by period</span>
+					</div>
+					<app-dashboard-graph
+						title="Net sales"
+						[data]="netSales"
+						type="line"
+						color="#f59e0b"
+					></app-dashboard-graph>
+				</div>
+
+				<div class="chart-card">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#3b82f6"></span>
+						<span class="chart-card-label">Boxes by state</span>
+						<span class="chart-card-hint">Current distribution</span>
+					</div>
+					<app-dashboard-graph
+						title="Boxes by state"
+						[data]="boxStates"
+						type="bar"
+						color="#3b82f6"
+					></app-dashboard-graph>
+				</div>
+
+				<div class="chart-card">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#22c55e"></span>
+						<span class="chart-card-label">Users by role</span>
+						<span class="chart-card-hint">Current distribution</span>
+					</div>
+					<app-dashboard-graph
+						title="Users by role"
+						[data]="userRoles"
+						type="doughnut"
+						color="#22c55e"
+					></app-dashboard-graph>
+				</div>
+			</div>
+		</section>
+	</ng-container>
+
+</section>
