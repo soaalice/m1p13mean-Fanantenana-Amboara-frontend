@@ -56,15 +56,35 @@
 					<h2>Analytics</h2>
 					<p>Trends and evolution of key indicators</p>
 				</div>
-				<span class="section-badge">{{ netSales.length }} periods</span>
+				<span class="section-badge">{{ selectedNetSalesYear }} • {{ netSales.length }} periods</span>
 			</div>
+
+			<app-list-filters
+				class="net-sales-filter"
+				[showApply]="false"
+				[showReset]="true"
+				resetLabel="Current year"
+				(reset)="resetNetSalesYear()"
+			>
+				<div class="filter-item">
+					<label for="net-sales-year">Year</label>
+					<select
+						id="net-sales-year"
+						[value]="selectedNetSalesYear"
+						(change)="onNetSalesYearChange($any($event.target).value)"
+						[disabled]="isLoading || isNetSalesLoading"
+					>
+						<option *ngFor="let year of netSalesYears" [value]="year">{{ year }}</option>
+					</select>
+				</div>
+			</app-list-filters>
 
 			<div class="charts-grid">
 				<div class="chart-card chart-card--wide">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#f59e0b"></span>
 						<span class="chart-card-label">Net sales</span>
-						<span class="chart-card-hint">Evolution by period</span>
+						<span class="chart-card-hint">{{ isNetSalesLoading ? 'Refreshing…' : 'Evolution by period' }}</span>
 					</div>
 					<app-dashboard-graph
 						title="Net sales"
