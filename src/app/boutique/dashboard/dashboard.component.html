@@ -1,1 +1,93 @@
-<p>dashboard works!</p>
+<section class="boutique-dashboard">
+	<header class="page-header">
+		<div class="heading-copy">
+			<h1>Boutique Dashboard</h1>
+			<p>Overview of customer activity and sales trends</p>
+		</div>
+
+		<div class="header-actions">
+			<button mat-stroked-button type="button" (click)="fetchDashboard()" [disabled]="isLoading">
+				{{ isLoading ? 'Loading…' : 'Refresh' }}
+			</button>
+		</div>
+	</header>
+
+	<div class="error-banner" *ngIf="loadError">
+		<mat-icon>error_outline</mat-icon>
+		<p>{{ loadError }}</p>
+	</div>
+
+	<ng-container *ngIf="isLoading && !data">
+		<div class="cards-grid skeleton-grid">
+			<div class="skeleton-card" *ngFor="let item of [1, 2]"></div>
+		</div>
+		<div class="charts-grid">
+			<div class="skeleton-chart"></div>
+			<div class="skeleton-chart"></div>
+		</div>
+	</ng-container>
+
+	<ng-container *ngIf="data as dashboard">
+		<div class="cards-grid">
+			<app-dashboard-card
+				icon="groups"
+				title="Total customers"
+				[text]="(dashboard.customers.total | number) ?? '0'"
+				color="#3b82f6"
+			></app-dashboard-card>
+
+			<app-dashboard-card
+				icon="trending_up"
+				title="Net sales"
+				text="—"
+				description="Available soon"
+				color="#f59e0b"
+			></app-dashboard-card>
+		</div>
+
+		<section class="analytics-section">
+			<div class="section-header">
+				<div class="section-title">
+					<h2>Analytics</h2>
+					<p>Track customer activity and sales trends over time.</p>
+				</div>
+			</div>
+
+			<div class="charts-grid">
+				<div class="chart-card">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#3b82f6"></span>
+						<span class="chart-card-label">Customers by month</span>
+						<span class="chart-card-hint">Current distribution</span>
+					</div>
+
+					<app-dashboard-graph
+						*ngIf="customersByMonth.length > 0"
+						title="Customers by month"
+						[data]="customersByMonth"
+						type="line"
+						color="#3b82f6"
+					></app-dashboard-graph>
+
+					<div class="chart-empty" *ngIf="customersByMonth.length === 0">
+						<mat-icon>insights</mat-icon>
+						<p>No customer data available yet.</p>
+					</div>
+				</div>
+
+				<div class="chart-card chart-card--unavailable">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#f59e0b"></span>
+						<span class="chart-card-label">Net sales by period</span>
+						<span class="chart-card-hint">Coming soon</span>
+					</div>
+
+					<div class="chart-empty chart-empty--muted">
+						<mat-icon>hourglass_top</mat-icon>
+						<p>Net sales data is not available yet.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	</ng-container>
+</section>

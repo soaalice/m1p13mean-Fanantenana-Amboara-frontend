@@ -21,3 +21,14 @@ export interface AdminDashboardData {
     },
     netSales: AdminNetSalesData;
 }
+
+export interface BoutiqueCustomersData {
+    total: number;
+    byMonth: {
+        [month: string]: number;
+    }
+}
+
+export interface BoutiqueDashboardData {
+    customers: BoutiqueCustomersData;
+}
