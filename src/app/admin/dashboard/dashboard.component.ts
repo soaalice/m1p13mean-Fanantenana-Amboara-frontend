@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { AdminDashboardData } from '../../shared/models/dashboard';
 import { DashboardCardComponent } from '../../shared/components/dashboard-card/dashboard-card.component';
@@ -12,6 +13,7 @@ import { DashboardGraphComponent } from '../../shared/components/dashboard-graph
   imports: [
     CommonModule,
     MatIconModule,
+    MatButtonModule,
     DashboardCardComponent,
     DashboardGraphComponent
   ],

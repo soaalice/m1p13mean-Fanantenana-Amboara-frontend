@@ -1,14 +1,12 @@
 <section class="admin-dashboard">
 	<header class="page-header">
 		<div class="heading-copy">
-			<span class="heading-eyebrow">Administration</span>
 			<h1>Dashboard</h1>
 			<p>Overview of key metrics and analytics</p>
 		</div>
 
 		<div class="header-actions">
-			<button type="button" class="refresh-btn" (click)="fetchDashboard()" [disabled]="isLoading">
-				<mat-icon>refresh</mat-icon>
+			<button mat-stroked-button type="button" (click)="fetchDashboard()" [disabled]="isLoading">
 				{{ isLoading ? 'Loading…' : 'Refresh' }}
 			</button>
 		</div>
