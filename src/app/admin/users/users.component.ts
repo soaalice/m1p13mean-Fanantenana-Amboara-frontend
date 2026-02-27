@@ -51,6 +51,7 @@ export class UsersComponent extends PaginatedComponent<User> {
     fullName: ['', [Validators.required, Validators.minLength(2)]],
     login: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    email: ['', [Validators.email]],
     tel: [''],
     role: [UserRole.ADMIN, Validators.required]
   });
@@ -129,6 +130,7 @@ export class UsersComponent extends PaginatedComponent<User> {
       password: value.password ?? '',
       profile: {
         fullName: value.fullName ?? '',
+        email: value.email ?? '',
         tel: value.tel || '',
         solde: 0
       }

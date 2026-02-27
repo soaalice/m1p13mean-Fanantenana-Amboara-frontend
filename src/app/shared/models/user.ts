@@ -11,6 +11,7 @@ export enum UserStatus {
 
 export interface UserProfile {
     fullName : string;
+    email ?: string;
     tel : string;
     solde : number;
 }
