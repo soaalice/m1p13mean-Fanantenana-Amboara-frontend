@@ -1,0 +1,16 @@
+<article class="graph-panel">
+  <h2>{{ title }}</h2>
+
+  <div class="chart-container" *ngIf="data.length; else emptyState">
+    <canvas
+      baseChart
+      [type]="chartType"
+      [data]="chartData"
+      [options]="chartOptions"
+    ></canvas>
+  </div>
+
+  <ng-template #emptyState>
+    <p class="empty">Aucune donnée</p>
+  </ng-template>
+</article>

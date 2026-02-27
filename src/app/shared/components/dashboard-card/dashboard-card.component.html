@@ -1,0 +1,18 @@
+<mat-card class="dashboard-card" [style.--card-color]="color">
+  <div class="dashboard-card__chrome" aria-hidden="true"></div>
+
+  <mat-card-content class="dashboard-card__body">
+    <div class="top-row">
+      <div class="meta">
+        <p class="label">{{ title }}</p>
+        <p class="sub-label" *ngIf="description">{{ description }}</p>
+      </div>
+
+      <div class="icon-badge" aria-hidden="true">
+        <mat-icon>{{ icon }}</mat-icon>
+      </div>
+    </div>
+
+    <p class="value" *ngIf="text">{{ text }}</p>
+  </mat-card-content>
+</mat-card>
