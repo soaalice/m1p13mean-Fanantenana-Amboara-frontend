@@ -14,6 +14,7 @@ export interface Product {
     reduction?: number;
   };
   status: 'ACTIVE' | 'INACTIVE';
+  photoUrl?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -31,4 +32,5 @@ export interface UpdateProductDto {
   productTypeId?: string;
   attributes?: Record<string, any>;
   status?: 'ACTIVE' | 'INACTIVE';
+  photoUrl?: string;
 }

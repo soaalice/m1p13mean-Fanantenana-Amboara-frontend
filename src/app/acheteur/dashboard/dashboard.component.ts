@@ -52,10 +52,13 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.user = this.authService.getCurrentUser();
-    if (this.user?._id) {
-      this.loadRecentTransactions();
-    }
+    // Abonnement réactif : se met à jour dès que refreshCurrentUser() émet
+    this.authService.currentUser$.subscribe(u => {
+      this.user = u;
+      if (u?._id) this.loadRecentTransactions();
+    });
+    // Charge les données fraîches depuis le backend (GET /users/me)
+    this.authService.refreshCurrentUser();
   }
 
   private loadRecentTransactions(): void {
@@ -101,8 +104,7 @@ export class DashboardComponent implements OnInit {
 
     this.usersService.rechargeUserSolde(this.user._id, amount).subscribe({
       next: response => {
-        this.user = response.data;
-        localStorage.setItem('currentUser', JSON.stringify(response.data));
+        this.authService.updateCurrentUser(response.data);
         this.isRecharging = false;
         this.closeRechargeModal();
         this.loadRecentTransactions();
