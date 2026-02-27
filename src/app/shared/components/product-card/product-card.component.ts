@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-card',
@@ -12,6 +13,12 @@ import { Product } from '../../models/product';
 export class ProductCardComponent {
   @Input() product!: Product;
   @Input() imageUrl: string = '';
+  constructor(private cartService: CartService) {}
+
+  getAttributeEntries(): Array<{ key: string; value: any }> {
+    if (!this.product.attributes) return [];
+    return Object.entries(this.product.attributes).map(([key, value]) => ({ key, value }));
+  }
 
   getDiscountedPrice(): number {
     if (this.product.promotion?.active && this.product.promotion?.reduction) {
@@ -25,7 +32,15 @@ export class ProductCardComponent {
   }
 
   onAddToCart(): void {
-    console.log('Add to cart:', this.product);
-    // TODO: Implement add to cart functionality
+    if (this.product.stock === 0) return;
+    const item = {
+      produitId: (this.product._id || this.product._id || '').toString(),
+      nom: this.product.name || this.product.name || 'Produit',
+      prix: this.product.price || this.product.price || 0,
+      qte: 1,
+    };
+    this.cartService.addItem(item, 1);
+    // small feedback for now
+    console.log('Added to cart:', item);
   }
 }

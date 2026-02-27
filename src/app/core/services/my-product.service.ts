@@ -44,27 +44,36 @@ export class MyProductService {
 
     return this.http.get<PageResult<Product>>(`${this.apiUrl}/products`, { params });
   }
+  //my-product
+  getMyProduct(page = 1, limit = 10): Observable<PageResult<Product>> {
+    const params = {
+      page: page.toString(),
+      limit: limit.toString()
+    };
+
+    return this.http.get<PageResult<Product>>(`${this.apiUrl}/products/my-product`, { params });
+  }
 
   /**
    * Crée un nouveau produit avec upload de fichier
    */
   createProduct(productData: CreateProductDto, photoFile?: File): Observable<Product> {
-   
+
     const formData = new FormData();
     // Ajouter les données du produit
     formData.append('name', productData.name);
     formData.append('price', productData.price.toString());
     formData.append('productTypeId', productData.productTypeId);
-    
+
     if (productData.attributes) {
       formData.append('attributes', JSON.stringify(productData.attributes));
     }
-    
+
     // Ajouter le fichier photo si présent
     if (photoFile) {
       formData.append('photo', photoFile, photoFile.name);
     }
-    
+
     return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products`, formData)
       .pipe(
         map(res => res.data)
@@ -77,9 +86,9 @@ export class MyProductService {
    */
   updateProduct(productId: string, productData: Partial<CreateProductDto> & { status?: string }, photoFile?: File): Observable<Product> {
     console.log('Updating product with id:', productId, 'data:', productData);
-    
+
     const formData = new FormData();
-    
+
     // Ajouter les données du produit si présentes
     if (productData.name !== undefined) {
       formData.append('name', productData.name);
@@ -96,12 +105,12 @@ export class MyProductService {
     if (productData.status !== undefined) {
       formData.append('status', productData.status);
     }
-    
+
     // Ajouter le fichier photo si présent
     if (photoFile) {
       formData.append('photo', photoFile, photoFile.name);
     }
-    
+
     return this.http.put<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}`, formData)
       .pipe(
         map(res => res.data)
@@ -135,10 +144,10 @@ export class MyProductService {
    */
   updatePhoto(productId: string, photoFile: File): Observable<Product> {
     console.log('Updating photo for product:', productId);
-    
+
     const formData = new FormData();
     formData.append('photo', photoFile, photoFile.name);
-    
+
     return this.http.post<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}/photo`, formData)
       .pipe(
         map(res => res.data)

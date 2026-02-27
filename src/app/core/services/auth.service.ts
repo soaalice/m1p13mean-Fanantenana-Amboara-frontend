@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, UserRole } from '../../shared/models/user';
 
@@ -9,29 +9,68 @@ import { User, UserRole } from '../../shared/models/user';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  private currentUserSub = new BehaviorSubject<User | null>(this._loadUser());
+  /** Stream réactif de l'utilisateur courant — émis à chaque refresh */
+  currentUser$ = this.currentUserSub.asObservable();
+
+  constructor(private http: HttpClient) {}
+
+  private _loadUser(): User | null {
+    try {
+      const raw = localStorage.getItem('currentUser');
+      return raw ? JSON.parse(raw) as User : null;
+    } catch { return null; }
+  }
+
+  private _saveUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSub.next(user);
+  }
+
+  /** Met à jour l'utilisateur courant (localStorage + currentUser$) */
+  updateCurrentUser(user: User): void {
+    this._saveUser(user);
+  }
 
   register(user: User): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/users`, user);
   }
 
-  login( login: string, password: string ): Observable<{ token: string, user: User }> {
+  login(login: string, password: string): Observable<{ token: string, user: User }> {
     return this.http.post<{ token: string, user: User }>(`${environment.apiUrl}/users/login`, { login, password })
       .pipe(
         tap(response => {
           localStorage.setItem('authToken', response.token);
-          localStorage.setItem('currentUser', JSON.stringify(response.user));
+          this._saveUser(response.user);
         })
       );
+  }
+
+
+
+
+  /**
+   * Recharge les données de l'utilisateur depuis le backend (GET /me)
+   * et met à jour le localStorage + currentUser$.
+   */
+  refreshCurrentUser(): void {
+    this.http.get<{ success: boolean; data: User }>(`${environment.apiUrl}/users/me`)
+      .subscribe({
+        next: (res) => {
+          if (res.success && res.data) {
+            this._saveUser(res.data);
+          }
+        },
+        error: () => { /* silencieux */ }
+      });
   }
 
   getToken(): string | null {
     return localStorage.getItem('authToken');
   }
-  
+
   getCurrentUser(): User | null {
-    const userJson = localStorage.getItem('currentUser');
-    return userJson ? JSON.parse(userJson) as User : null;
+    return this.currentUserSub.value ?? this._loadUser();
   }
 
   getRoleFromToken(): UserRole | null {
@@ -76,5 +115,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
+    this.currentUserSub.next(null);
   }
 }

@@ -146,7 +146,7 @@ export class MyProductComponent implements OnInit {
     this.isLoading = true;
     this.loadError = '';
 
-    this.myProductService.getProducts(this.page, this.limit).subscribe({
+    this.myProductService.getMyProduct(this.page, this.limit).subscribe({
       next: (res) => {
         this.products = res.data;
         this.total = res.pagination?.total ?? res.data.length;
