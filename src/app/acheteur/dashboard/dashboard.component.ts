@@ -1,0 +1,118 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { UsersService } from '../../core/services/users.service';
+import { SidebarService } from '../../core/services/sidebar.service';
+import { TransactionsService } from '../../core/services/transactions.service';
+import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { User } from '../../shared/models/user';
+import { Transaction } from '../../shared/models/transaction';
+
+@Component({
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatListModule,
+    RouterModule,
+    ModalFormsComponent
+  ],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.scss'
+})
+export class DashboardComponent implements OnInit {
+  user: User | null = null;
+  transactions: Transaction[] = [];
+  isRechargeModalOpen = false;
+  isRecharging = false;
+  rechargeError = '';
+
+  rechargeForm = this.fb.group({
+    amount: [null as number | null, [Validators.required, Validators.min(1)]]
+  });
+
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+    private sidebarService: SidebarService,
+    private transactionsService: TransactionsService,
+    private fb: FormBuilder
+  ) {}
+
+  ngOnInit(): void {
+    // Abonnement réactif : se met à jour dès que refreshCurrentUser() émet
+    this.authService.currentUser$.subscribe(u => {
+      this.user = u;
+      if (u?._id) this.loadRecentTransactions();
+    });
+    // Charge les données fraîches depuis le backend (GET /users/me)
+    this.authService.refreshCurrentUser();
+  }
+
+  private loadRecentTransactions(): void {
+    if (!this.user?._id) return;
+    this.transactionsService.getTransactions(1, 3, this.user._id).subscribe({
+      next: res => {
+        this.transactions = res.data || [];
+      },
+      error: () => {
+        this.transactions = [];
+      }
+    });
+  }
+
+  openRechargeModal(): void {
+    this.sidebarService.requestCloseSidebar();
+    this.isRechargeModalOpen = true;
+    this.rechargeError = '';
+    this.rechargeForm.reset({ amount: null });
+  }
+
+  closeRechargeModal(): void {
+    this.isRechargeModalOpen = false;
+    this.isRecharging = false;
+    this.rechargeError = '';
+    this.rechargeForm.reset({ amount: null });
+  }
+
+  submitRecharge(): void {
+    if (!this.user?._id || this.rechargeForm.invalid || this.isRecharging) {
+      this.rechargeForm.markAllAsTouched();
+      return;
+    }
+
+    const amount = Number(this.rechargeForm.getRawValue().amount ?? 0);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      this.rechargeForm.markAllAsTouched();
+      return;
+    }
+
+    this.isRecharging = true;
+    this.rechargeError = '';
+
+    this.usersService.rechargeUserSolde(this.user._id, amount).subscribe({
+      next: response => {
+        this.authService.updateCurrentUser(response.data);
+        this.isRecharging = false;
+        this.closeRechargeModal();
+        this.loadRecentTransactions();
+      },
+      error: () => {
+        this.isRecharging = false;
+        this.rechargeError = 'Failed to recharge balance.';
+      }
+    });
+  }
+}

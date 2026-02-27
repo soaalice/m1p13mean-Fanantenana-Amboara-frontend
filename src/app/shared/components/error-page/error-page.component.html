@@ -1,0 +1,16 @@
+<section class="error-page">
+	<div class="error-orb orb-1"></div>
+	<div class="error-orb orb-2"></div>
+	<div class="error-grid"></div>
+
+	<div class="error-card">
+		<div class="error-code">
+			<span class="code">{{ status || 404 }}</span>
+			<span class="label">Error</span>
+		</div>
+
+		<h1>We hit a detour.</h1>
+		<p class="message">{{ message }}</p>
+		<p class="hint">Try a different route or go back to safety.</p>
+	</div>
+</section>

@@ -1,0 +1,35 @@
+<section class="transactions-calendar-page">
+
+	<div class="page-header">
+		<div>
+			<h1>Transactions Calendar</h1>
+			<p class="subtitle">Visualise all transactions by year, month or week.</p>
+		</div>
+		<button mat-stroked-button type="button" (click)="loadTransactions()">
+			Refresh
+		</button>
+	</div>
+
+	<div *ngIf="isLoading" class="state loading">
+		<mat-icon>hourglass_top</mat-icon>
+		Loading transactions...
+	</div>
+
+	<div *ngIf="loadError && !isLoading" class="state error">
+		<mat-icon>error</mat-icon>
+		{{ loadError }}
+	</div>
+
+	<mat-card class="calendar-card">
+
+		<div class="legend">
+			<span *ngFor="let item of legend" class="legend-item">
+				<span class="legend-dot" [style.background]="item.border"></span>
+				{{ item.label }}
+			</span>
+		</div>
+
+		<full-calendar [options]="calendarOptions"></full-calendar>
+	</mat-card>
+
+</section>

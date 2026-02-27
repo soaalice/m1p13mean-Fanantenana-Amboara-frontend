@@ -1,0 +1,41 @@
+<main class="login-container"> 
+    <mat-card class="login-card">
+        <mat-card-header>
+            <mat-card-title>
+                <h1>Login</h1>
+                <p class="mat-small">Welcome back! Please enter your credentials to access your account.</p>
+                <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+            </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label for="login">Login</mat-label>
+                    <input matInput id="login" formControlName="login" required autocomplete="email"/>
+                    <mat-icon matPrefix>email</mat-icon>
+
+                    <mat-error *ngIf="loginForm.get('login')?.hasError('required')">
+                        Login is required
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width">
+                    <mat-label for="password">Password</mat-label>
+                    <input matInput id="password" type="password" formControlName="password" required autocomplete="current-password"/>
+                    <mat-icon matPrefix>lock</mat-icon>
+
+                    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                        Password is required
+                    </mat-error>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+                    Login
+                </button>
+                <div class="links">
+                    <span>Don't have an account?</span>
+                    <a routerLink="/register">Sign in</a>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</main>

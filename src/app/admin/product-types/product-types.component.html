@@ -1,0 +1,151 @@
+<section class="product-types-page">
+    <div class="header">
+        <div class="header-main">
+            <div>
+                <h1>Product types</h1>
+                <p class="subtitle">Manage product types</p>
+            </div>
+            <div class="actions">
+                <button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+                <button mat-raised-button color="primary" type="button" (click)="openProductTypeModal()">Add Product Type</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="state" *ngIf="isLoading">Loading product types...</div>
+    <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && !loadError">
+        <table mat-table [dataSource]="productTypes" class="product-types-table">
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let productType">{{ productType._id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="label">
+                <th mat-header-cell *matHeaderCellDef>Label</th>
+                <td mat-cell *matCellDef="let productType">{{ productType.label }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="attributes">
+                <th mat-header-cell *matHeaderCellDef>Attributes</th>
+                <td mat-cell *matCellDef="let productType" class="attributes-cell">
+                    <div class="attributes-badges">
+                        <span
+                            class="attribute-badge"
+                            *ngFor="let badge of getAttributeBadges(productType)"
+                            [class.badge-enum]="badge.type === 'ENUM'"
+                            [class.badge-number]="badge.type === 'NUMBER'"
+                            [class.badge-string]="badge.type === 'STRING'"
+                            [class.badge-boolean]="badge.type === 'BOOLEAN'"
+                            [class.badge-date]="badge.type === 'DATE'"
+                            [class.badge-empty]="badge.type === 'NONE'">
+                            {{ badge.label }}
+                        </span>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let productType">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="onEdit(productType)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="onDelete(productType)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <div class="empty" *ngIf="productTypes.length === 0">No product types available.</div>
+
+        <mat-paginator
+            class="paginator"
+            [length]="total"
+            [pageIndex]="page - 1"
+            [pageSize]="limit"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</section>
+
+<app-modal-forms [isOpen]="isModalOpen" [title]="isEditMode ? 'Edit product type' : 'Add product type'" (close)="closeProductTypeModal()">
+    <form class="product-type-modal" [formGroup]="productTypeForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <label>
+                Label
+                <span class="field-error" *ngIf="productTypeForm.get('label')?.hasError('required')">Label is required</span>
+                <input type="text" formControlName="label" placeholder="Fresh vegetables" />
+            </label>
+        </div>
+
+        <div class="attributes-header">
+            <h3>Attributes</h3>
+           
+        </div>
+
+        <div class="attribute-list" formArrayName="attributes">
+            <div class="attribute-card" *ngFor="let attribute of attributes.controls; let i = index" [formGroupName]="i">
+                <div class="attribute-grid">
+                    <label>
+                        Code
+                        <span class="field-error" *ngIf="attribute.get('code')?.hasError('required')">Code is required</span>
+                        <input type="text" formControlName="code" placeholder="COLOR" />
+                    </label>
+
+                    <label>
+                        Type
+                        <span class="field-error" *ngIf="attribute.get('type')?.hasError('required')">Type is required</span>
+                        <select formControlName="type">
+                            <option *ngFor="let type of attributeTypes" [value]="type">{{ type }}</option>
+                        </select>
+                    </label>
+
+                    <label class="attribute-wide" *ngIf="attribute.get('type')?.value === 'ENUM'">
+                        Values (comma separated)
+                        <span class="field-error" *ngIf="attribute.get('valuesText')?.hasError('required')">Values are required for ENUM</span>
+                        <textarea rows="2" formControlName="valuesText" placeholder="RED, GREEN, BLUE"></textarea>
+                    </label>
+
+                    <label *ngIf="attribute.get('type')?.value === 'NUMBER'">
+                        Min
+                        <span class="field-error" *ngIf="attribute.get('min')?.hasError('required')">Min is required for NUMBER</span>
+                        <input type="number" formControlName="min" placeholder="0" />
+                    </label>
+
+                    <label *ngIf="attribute.get('type')?.value === 'NUMBER'">
+                        Max
+                        <span class="field-error" *ngIf="attribute.get('max')?.hasError('required')">Max is required for NUMBER</span>
+                        <input type="number" formControlName="max" placeholder="100" />
+                    </label>
+                </div>
+
+                <button mat-stroked-button color="primary" type="button" class="remove-attr" (click)="removeAttribute(i)">
+                    Remove
+                </button>
+            </div>
+        </div>
+
+        <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+         <button mat-stroked-button type="button" (click)="addAttribute()">Add attribute</button>
+        <div class="modal-actions">
+            <button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeProductTypeModal()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="productTypeForm.invalid || isSubmitting">
+                {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
+            </button>
+        </div>
+    </form>
+</app-modal-forms>
