@@ -18,6 +18,22 @@
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
         <table mat-table [dataSource]="products" class="products-table">
 
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef>Photo</th>
+                <td mat-cell *matCellDef="let product">
+                    <div class="product-photo">
+                        <img 
+                            *ngIf="product.photoUrl" 
+                            [src]="product.photoUrl" 
+                            [alt]="product.name"
+                            class="product-thumbnail" />
+                        <div *ngIf="!product.photoUrl" class="no-photo">
+                            <mat-icon>image_not_supported</mat-icon>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let product">{{ product._id }}</td>
@@ -84,6 +100,14 @@
                             <mat-icon>inventory_2</mat-icon>
                             <span>Add Stock</span>
                         </button>
+                        <button mat-menu-item (click)="openPhotoModal(product)">
+                            <mat-icon>photo_camera</mat-icon>
+                            <span>Update Photo</span>
+                        </button>
+                        <button mat-menu-item (click)="onRemovePhoto(product)" [disabled]="!product.photoUrl">
+                            <mat-icon>hide_image</mat-icon>
+                            <span>Remove Photo</span>
+                        </button>
                         <button mat-menu-item (click)="onDelete(product)">
                             <mat-icon>delete</mat-icon>
                             <span>Delete</span>
@@ -124,6 +148,7 @@
   [booleanAttributes]="booleanAttributes"
   (close)="closeProductModal()"
   (productTypeChange)="onProductTypeChange($event)"
+  (imageChange)="onImageChange($event)"
   (submit)="onSubmit()">
 </app-create-product-modal>
 
@@ -135,4 +160,13 @@
     (close)="closeStockModal()"
     (add)="onAddStock($event)">
 </app-add-stock-modal>
+
+<app-update-photo-modal
+    [isOpen]="isPhotoModalOpen"
+    [product]="photoModalProduct"
+    [isSubmitting]="isPhotoSubmitting"
+    [error]="photoSubmitError"
+    (close)="closePhotoModal()"
+    (update)="onUpdatePhoto($event)">
+</app-update-photo-modal>
 
