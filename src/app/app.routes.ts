@@ -89,6 +89,10 @@ export const routes: Routes = [
       {
         path: 'my-product',
         loadComponent: () => import('./boutique/my-product/my-product.component').then(m => m.MyProductComponent)
+      },
+      {
+        path: 'my-command',
+        loadComponent: () => import('./boutique/my-command/my-command.component').then(m => m.MyCommandComponent)
       }
     ]
   },

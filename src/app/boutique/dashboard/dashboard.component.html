@@ -39,8 +39,8 @@
 			<app-dashboard-card
 				icon="trending_up"
 				title="Net sales"
-				text="—"
-				description="Available soon"
+				[text]="(dashboard.netSales.total | number) ?? '0'"
+				[description]="selectedYear + ' • Ar'"
 				color="#f59e0b"
 			></app-dashboard-card>
 		</div>
@@ -51,14 +51,35 @@
 					<h2>Analytics</h2>
 					<p>Track customer activity and sales trends over time.</p>
 				</div>
+				<span class="section-badge">{{ selectedYear }}</span>
 			</div>
+
+			<app-list-filters
+				class="year-filter"
+				[showApply]="false"
+				[showReset]="true"
+				resetLabel="Current year"
+				(reset)="resetYear()"
+			>
+				<div class="filter-item">
+					<label for="dashboard-year">Year</label>
+					<select
+						id="dashboard-year"
+						[value]="selectedYear"
+						(change)="onYearChange($any($event.target).value)"
+						[disabled]="isLoading"
+					>
+						<option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+					</select>
+				</div>
+			</app-list-filters>
 
 			<div class="charts-grid">
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#3b82f6"></span>
 						<span class="chart-card-label">Customers by month</span>
-						<span class="chart-card-hint">Current distribution</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Current distribution' }}</span>
 					</div>
 
 					<app-dashboard-graph
@@ -75,16 +96,24 @@
 					</div>
 				</div>
 
-				<div class="chart-card chart-card--unavailable">
+				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#f59e0b"></span>
-						<span class="chart-card-label">Net sales by period</span>
-						<span class="chart-card-hint">Coming soon</span>
+						<span class="chart-card-label">Net sales by month</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Evolution in Ar' }}</span>
 					</div>
 
-					<div class="chart-empty chart-empty--muted">
-						<mat-icon>hourglass_top</mat-icon>
-						<p>Net sales data is not available yet.</p>
+					<app-dashboard-graph
+						*ngIf="netSalesByMonth.length > 0"
+						title="Net sales by month"
+						[data]="netSalesByMonth"
+						type="line"
+						color="#f59e0b"
+					></app-dashboard-graph>
+
+					<div class="chart-empty" *ngIf="netSalesByMonth.length === 0">
+						<mat-icon>insights</mat-icon>
+						<p>No net sales data available yet.</p>
 					</div>
 				</div>
 			</div>

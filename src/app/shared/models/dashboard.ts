@@ -29,6 +29,15 @@ export interface BoutiqueCustomersData {
     }
 }
 
+export interface BoutiqueNetSalesData {
+    year: number;
+    total: number;
+    byMonth: {
+        [month: string]: number;
+    }
+}
+
 export interface BoutiqueDashboardData {
     customers: BoutiqueCustomersData;
+    netSales: BoutiqueNetSalesData;
 }
