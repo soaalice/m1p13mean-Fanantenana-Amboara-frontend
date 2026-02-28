@@ -84,3 +84,32 @@ body {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 3px;
 }
+
+// ── Toast / Snack-bar panel overrides ────────────────────────
+// These rules must live in the global stylesheet because
+// MatSnackBar renders the panel outside the component tree.
+.toast-panel {
+  padding: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  min-width: 320px !important;
+  max-width: 480px !important;
+  // Reset Material's default background since our component owns it
+  background: transparent !important;
+  box-shadow: none !important;
+
+  // The mat-mdc-snack-bar-container inner wrapper
+  .mdc-snackbar__surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-width: unset !important;
+    max-width: unset !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+  }
+
+  .mat-mdc-snack-bar-label {
+    padding: 0 !important;
+  }
+}

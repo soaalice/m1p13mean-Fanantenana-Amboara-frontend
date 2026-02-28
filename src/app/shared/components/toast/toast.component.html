@@ -1,0 +1,33 @@
+<div class="toast-wrapper" [class]="'toast-' + data.type">
+  <!-- Icon -->
+  <mat-icon class="toast-icon">{{ icon }}</mat-icon>
+
+  <!-- Content -->
+  <div class="toast-content">
+    @if (data.title) {
+      <span class="toast-title">{{ data.title }}</span>
+    }
+    <span class="toast-message">{{ data.message }}</span>
+  </div>
+
+  <!-- Action & close -->
+  <div class="toast-actions">
+    @if (data.actionLabel && data.onAction) {
+      <button mat-button class="toast-action-btn" (click)="handleAction()">
+        {{ data.actionLabel }}
+      </button>
+    }
+    <button mat-icon-button class="toast-close-btn" (click)="dismiss()" aria-label="Fermer">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<!-- Progress bar (only when duration > 0) -->
+@if ((data.duration ?? 4000) > 0) {
+  <mat-progress-bar
+    class="toast-progress"
+    mode="determinate"
+    [value]="progress()"
+  />
+}
