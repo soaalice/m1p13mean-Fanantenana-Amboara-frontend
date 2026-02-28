@@ -8,10 +8,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject, takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { CartModalComponent } from '../cart-modal/cart-modal.component';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { CartService } from '../../../core/services/cart.service';
 import { UserRole } from '../../models/user';
 import { NavItem, getNavItemsForRole } from '../../config/nav.config';
 
@@ -28,6 +31,7 @@ import { NavItem, getNavItemsForRole } from '../../config/nav.config';
     MatTooltipModule,
     SidebarComponent,
     FooterComponent,
+    CartModalComponent,
     RouterLink,
     RouterLinkActive,
   ],
@@ -38,13 +42,19 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   @ViewChild('drawer') drawer!: MatDrawer;
   isMobile = false;
   isAcheteur = false;
+  cartOpen = false;
   private destroy$ = new Subject<void>();
 
   readonly acheteurNavItems: NavItem[] = getNavItemsForRole(UserRole.ACHETEUR);
 
+  cartCount$ = this.cartService.items$.pipe(
+    map(items => items.reduce((acc, i) => acc + (i.qte || 0), 0))
+  );
+
   constructor(
     private sidebarService: SidebarService,
     private authService: AuthService,
+    private cartService: CartService,
     private breakpointObserver: BreakpointObserver,
     private cdRef: ChangeDetectorRef,
     private router: Router,
@@ -100,5 +110,9 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  openCart(): void {
+    this.cartOpen = true;
   }
 }

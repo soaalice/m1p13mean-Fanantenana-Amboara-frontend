@@ -162,4 +162,13 @@ export class MyProductService {
         map(res => res.data)
       );
   }
+
+  /**
+   * Récupère un produit par son ID
+   * GET /products/:id
+   */
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${id}`)
+      .pipe(map(res => res.data));
+  }
 }
