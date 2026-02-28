@@ -6,6 +6,7 @@ import { DashboardService } from '../../core/services/dashboard.service';
 import { DashboardCardComponent } from '../../shared/components/dashboard-card/dashboard-card.component';
 import { DashboardGraphComponent } from '../../shared/components/dashboard-graph/dashboard-graph.component';
 import { BoutiqueDashboardData } from '../../shared/models/dashboard';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,8 @@ import { BoutiqueDashboardData } from '../../shared/models/dashboard';
     MatIconModule,
     MatButtonModule,
     DashboardCardComponent,
-    DashboardGraphComponent
+    DashboardGraphComponent,
+    LoaderComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

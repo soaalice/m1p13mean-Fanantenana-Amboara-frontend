@@ -22,10 +22,7 @@
     </header>
 
     <!-- Loader : vérification panier PENDING en cours -->
-    <div class="pending-check-loader" *ngIf="checkingPending">
-      <span class="spinner"></span>
-      <span>Vérification du panier en cours…</span>
-    </div>
+    <app-loader *ngIf="checkingPending" message="Vérification du panier en cours…" [inline]="true" size="sm"></app-loader>
 
     <!-- Error banner -->
     <div class="error-banner" *ngIf="saveError">

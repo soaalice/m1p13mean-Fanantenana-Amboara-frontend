@@ -13,6 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
 import { cA } from '@fullcalendar/core/internal-common';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 const TYPE_COLORS: Record<string, { bg: string; border: string }> = {
   [TransactionType.RECHARGE]: { bg: '#dcfce7', border: '#16a34a' },
@@ -29,6 +30,7 @@ const TYPE_COLORS: Record<string, { bg: string; border: string }> = {
     MatIconModule,
     MatButtonModule,
     FullCalendarModule,
+    LoaderComponent,
   ],
   templateUrl: './transactions-calendar.component.html',
   styleUrl: './transactions-calendar.component.scss'

@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Box } from '../../shared/models/box';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { AssignBoxModalComponent } from './assign-box-modal/assign-box-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-shops',
@@ -29,7 +30,8 @@ import { AssignBoxModalComponent } from './assign-box-modal/assign-box-modal.com
     MatMenuModule,
     MatIconModule,
     AssignBoxModalComponent,
-    ListFiltersComponent
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './shops.component.html',
   styleUrl: './shops.component.scss'

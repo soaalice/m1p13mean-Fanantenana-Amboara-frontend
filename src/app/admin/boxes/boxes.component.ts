@@ -11,6 +11,7 @@ import { Box } from '../../shared/models/box';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { BoxModalComponent } from './box-modal/box-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-boxes',
@@ -23,7 +24,8 @@ import { BoxModalComponent } from './box-modal/box-modal.component';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    BoxModalComponent
+    BoxModalComponent,
+    LoaderComponent
   ],
   templateUrl: './boxes.component.html',
   styleUrls: ['./boxes.component.scss']

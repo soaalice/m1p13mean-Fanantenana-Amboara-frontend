@@ -4,10 +4,7 @@
 		<p class="subtitle">Manage your shop information and activity.</p>
 	</div>
 
-	<div *ngIf="isLoading" class="state loading">
-		<mat-icon>hourglass_top</mat-icon>
-		Loading your shop...
-	</div>
+	<app-loader *ngIf="isLoading" message="Loading your shop…"></app-loader>
 
 	<div *ngIf="loadError && !isLoading" class="state error">
 		<mat-icon>error</mat-icon>
@@ -92,10 +89,7 @@
 					</label>
 				</app-list-filters>
 
-				<div *ngIf="isLoadingTransactions" class="state loading">
-					<mat-icon>hourglass_top</mat-icon>
-					Loading rent transactions...
-				</div>
+				<app-loader *ngIf="isLoadingTransactions" message="Loading rent transactions…" [inline]="true"></app-loader>
 
 				<div *ngIf="loadTransactionsError && !isLoadingTransactions" class="state error">
 					<mat-icon>error</mat-icon>

@@ -29,7 +29,7 @@
 		</app-list-filters>
 	</div>
 
-	<div class="state" *ngIf="isLoading">Loading users...</div>
+	<app-loader *ngIf="isLoading" message="Loading users…" [inline]="true"></app-loader>
 	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
 	<div class="table-wrap" *ngIf="!isLoading && !loadError">

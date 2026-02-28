@@ -16,6 +16,7 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
 import { RentsService } from '../../core/services/rents.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { RouterLink } from '@angular/router';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 interface ShopResponse {
   success: boolean;
@@ -36,7 +37,8 @@ interface ShopResponse {
     MatPaginatorModule,
     ListFiltersComponent,
     ModalFormsComponent,
-    RouterLink
+    RouterLink,
+    LoaderComponent
   ],
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.scss'
