@@ -47,6 +47,7 @@ export class SidebarComponent implements OnInit {
     { label: 'Dashboard', icon: 'dashboard', route: '/boutique/dashboard', roles: [UserRole.BOUTIQUE] },
     { label: 'My Shop', icon: 'storefront', route: '/boutique/my-shop', roles: [UserRole.BOUTIQUE] },
     { label: 'My Product', icon: 'inventory_2', route: '/boutique/my-product', roles: [UserRole.BOUTIQUE] },
+    { label: 'My Commands', icon: 'receipt_long', route: '/boutique/my-command', roles: [UserRole.BOUTIQUE] },
 
     // ACHETEUR MENU
     { label: 'Home', icon: 'home', route: '/acheteur', roles: [UserRole.ACHETEUR] },

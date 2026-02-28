@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiSingleResponse } from '../../shared/models/shared.model';
-import { AdminDashboardData, AdminNetSalesData, BoutiqueDashboardData } from '../../shared/models/dashboard';
+import { AdminDashboardData, AdminNetSalesData, BoutiqueDashboardData, BoutiqueNetSalesData } from '../../shared/models/dashboard';
 
 @Injectable({
   providedIn: 'root'
@@ -27,9 +27,16 @@ export class DashboardService {
       .pipe(map(response => response.data));
   }
 
-  getBoutiqueDashboard(): Observable<BoutiqueDashboardData> {
+  getBoutiqueDashboard(year?: number): Observable<BoutiqueDashboardData> {
+    const params = year ? `?year=${year}` : '';
     return this.http
-      .get<ApiSingleResponse<BoutiqueDashboardData>>(`${this.apiUrl}/dashboard/boutique`)
+      .get<ApiSingleResponse<BoutiqueDashboardData>>(`${this.apiUrl}/dashboard/boutique${params}`)
+      .pipe(map(response => response.data));
+  }
+
+  getBoutiqueNetSales(year: number): Observable<BoutiqueNetSalesData> {
+    return this.http
+      .get<ApiSingleResponse<BoutiqueNetSalesData>>(`${this.apiUrl}/dashboard/boutique/net-sales?year=${year}`)
       .pipe(map(response => response.data));
   }
 
