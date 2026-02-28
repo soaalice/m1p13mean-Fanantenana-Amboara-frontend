@@ -27,10 +27,20 @@ $theme: mat.define-light-theme((
 @include mat.all-component-themes($theme);
 
 // Variables du thème accessibles globalement
+// Toute la palette primaire (indigo)
 :root {
-  --primary-color: #{mat.get-color-from-palette($primary-palette, 500)};
+  // ─ Primary (indigo) — exposer uniquement les teintes réellement utilisées ─
+  --primary-100:  #{mat.get-color-from-palette($primary-palette, 100)};
+  --primary-300:  #{mat.get-color-from-palette($primary-palette, 300)};
+  --primary-color:#{mat.get-color-from-palette($primary-palette, 500)};
+  --primary-700:  #{mat.get-color-from-palette($primary-palette, 700)};
+  --primary-800:  #{mat.get-color-from-palette($primary-palette, 800)};
+  --primary-900:  #{mat.get-color-from-palette($primary-palette, 900)};
+  // ─ Accent (pink) + Warn (red) ────────────────────────────────────
   --accent-color: #{mat.get-color-from-palette($accent-palette, 500)};
-  --warn-color: #{mat.get-color-from-palette($warn-palette, 500)};
+  --warn-color:   #{mat.get-color-from-palette($warn-palette, 500)};
+  // ─ Surface ──────────────────────────────────────────────────────
+  --surface-bg:   #f5f7fa;   // fond clair des pages
 }
 
 /* Styles globaux */
@@ -46,12 +56,31 @@ body {
 /* Tables */
 .table-wrap {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
-overflow-x: auto; } 
+  overflow-x: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
 
-/* Buttons */ 
+/* Buttons */
 .mdc-button {
   border-radius: 18px !important;
+}
+
+/* Scrollbar global (desktop) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 3px;
 }

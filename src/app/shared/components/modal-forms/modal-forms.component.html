@@ -1,4 +1,7 @@
-<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick()">
+<div #backdropEl
+     class="modal-backdrop"
+     [class.modal-backdrop--open]="isOpen"
+     (click)="onBackdropClick()">
   <div class="modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>{{ title }}</h2>
