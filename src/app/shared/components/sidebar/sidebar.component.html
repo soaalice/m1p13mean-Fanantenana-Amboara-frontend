@@ -1,28 +1,48 @@
-<div class="sidebar-container">
-  <div class="sidebar-header">
-    <mat-icon>account_circle</mat-icon>
-    <span class="user-role" *ngIf="userRole">{{ userRole }}</span>
+<div class="sidebar-wrap">
+
+  <!-- ── Brand ── -->
+  <div class="sidebar-brand">
+    <mat-icon class="brand-icon">storefront</mat-icon>
+    <span class="brand-text">MEAN APP</span>
   </div>
 
-  <mat-divider></mat-divider>
+  <!-- ── User profile ── -->
+  <div class="sidebar-profile">
+    <div class="avatar" aria-hidden="true">{{ userInitial }}</div>
+    <div class="profile-info">
+      <span class="profile-name">{{ userName }}</span>
+      <span class="profile-role">{{ userRoleLabel }}</span>
+    </div>
+  </div>
 
-  <mat-nav-list class="nav-list">
-    <a mat-list-item 
-       *ngFor="let item of menuItems"
-       [routerLink]="item.route"
-       routerLinkActive="active"
-       class="nav-item">
-      <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-      <span matListItemTitle>{{ item.label }}</span>
+  <div class="sidebar-divider"></div>
+
+  <!-- ── Navigation ── -->
+  <nav class="sidebar-nav" role="navigation" aria-label="Menu principal">
+    <a
+      *ngFor="let item of menuItems"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: !!item.exact }"
+      [ariaCurrentWhenActive]="'page'"
+      (click)="onNavItemClick()"
+    >
+      <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+      <span class="nav-label">{{ item.label }}</span>
     </a>
-  </mat-nav-list>
+  </nav>
 
-  <mat-divider></mat-divider>
+  <div class="sidebar-spacer"></div>
 
+  <div class="sidebar-divider"></div>
+
+  <!-- ── Logout ── -->
   <div class="sidebar-footer">
-    <button mat-stroked-button color="warn" (click)="logout()" class="logout-btn">
+    <button class="logout-btn" matRipple (click)="logout()" type="button">
       <mat-icon>logout</mat-icon>
-      Logout
+      <span>Déconnexion</span>
     </button>
   </div>
+
 </div>

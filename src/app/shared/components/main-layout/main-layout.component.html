@@ -1,21 +1,70 @@
 <mat-drawer-container class="layout-container" autosize>
-  <mat-drawer #drawer class="layout-sidenav" mode="side" [opened]="isSidebarOpen">
+
+  <mat-drawer
+    #drawer
+    class="layout-sidenav"
+    [mode]="drawerMode"
+    [opened]="drawerOpened"
+  >
     <app-sidebar></app-sidebar>
   </mat-drawer>
 
   <mat-drawer-content class="layout-content">
-    <mat-toolbar color="primary" class="layout-toolbar">
-      <button mat-icon-button (click)="toggleSidebar()">
+
+    <mat-toolbar
+      class="layout-toolbar"
+      [class.layout-toolbar--acheteur]="isAcheteur && !isMobile"
+    >
+      <!-- Hamburger : admin/boutique toujours | acheteur mobile seulement -->
+      <button
+        *ngIf="!isAcheteur || isMobile"
+        mat-icon-button
+        class="menu-toggle-btn"
+        (click)="toggleSidebar()"
+        aria-label="Ouvrir le menu"
+        matTooltip="Menu"
+      >
         <mat-icon>menu</mat-icon>
       </button>
-      <span class="toolbar-title">MEAN-APP</span>
+
+      <div *ngIf="isAcheteur" class="toolbar-brand">
+        <mat-icon class="brand-icon">storefront</mat-icon>
+        <span class="brand-name">MEAN APP</span>
+      </div>
+
+      <!-- Nav inline : acheteur desktop / tablet uniquement -->
+      <nav *ngIf="isAcheteur && !isMobile" class="toolbar-acheteur-nav" aria-label="Navigation acheteur">
+        <a
+          *ngFor="let item of acheteurNavItems"
+          class="toolbar-nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: !!item.exact }"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      </nav>
+
       <span class="spacer"></span>
+
+      <!-- Déconnexion : acheteur uniquement dans la toolbar -->
+      <button
+        *ngIf="isAcheteur && !isMobile"
+        mat-icon-button
+        matTooltip="Déconnexion"
+        aria-label="Déconnexion"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
     </mat-toolbar>
 
-    <main class="main-content">
+    <main class="main-content" [class.main-content--acheteur]="isAcheteur && isMobile">
       <router-outlet></router-outlet>
     </main>
 
     <app-footer></app-footer>
+
   </mat-drawer-content>
 </mat-drawer-container>
