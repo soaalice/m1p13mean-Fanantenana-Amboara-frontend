@@ -42,7 +42,7 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return this.items;
   }
 
-  displayedColumns = ['name', 'ownerFullName', 'status', 'activeRent', 'assignedBox', 'actions'];
+  displayedColumns = ['photo', 'name', 'ownerFullName', 'status', 'activeRent', 'assignedBox', 'actions'];
   statusOptions = ['ACTIVE', 'INACTIVE'];
   statusFilter = '';
   ownerNameFilter = '';

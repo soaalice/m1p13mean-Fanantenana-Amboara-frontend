@@ -10,6 +10,8 @@ export interface Shop {
     ownerUser?: User;
     boxId?: string;
     assignedBox?: Box;
+    photoUrl?: string;
+    photoPath?: string;
     createdAt?: string | Date;
     updatedAt?: string | Date;
     activeRent?: Rent;
