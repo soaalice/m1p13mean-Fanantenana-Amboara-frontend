@@ -87,67 +87,23 @@
 	</div>
 </section>
 
-<app-modal-forms [isOpen]="isModalOpen" title="Add user" (close)="closeUserModal()">
-	<form [formGroup]="userForm" (ngSubmit)="submitUser()">
-		<div class="form-grid">
-			<label>
-				Full name
-				<input type="text" formControlName="fullName" placeholder="Jane Doe" />
-			</label>
-			<label for=""></label>
-			<label>
-				Email
-				<input type="email" formControlName="email" placeholder="jane.doe@example.com" />
-			</label>
-			<label>
-				Password
-				<input type="password" formControlName="password" placeholder="******" />
-			</label>
-			<label>
-				Phone
-				<input type="text" formControlName="tel" placeholder="+221 77 000 00 00" />
-			</label>
-			<label>
-				Role
-				<select formControlName="role">
-					<option *ngFor="let role of rolesForm" [value]="role">{{ role }}</option>
-				</select>
-			</label>
-		</div>
+<app-add-user-modal
+	[isOpen]="isModalOpen"
+	[isSubmitting]="isSubmitting"
+	[error]="submitError"
+	[roles]="rolesForm"
+	[form]="userForm"
+	(close)="closeUserModal()"
+	(submit)="submitUser()"
+></app-add-user-modal>
 
-		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
-
-		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeUserModal()">Cancel</button>
-			<button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid || isSubmitting">
-				{{ isSubmitting ? 'Creating...' : 'Create' }}
-			</button>
-		</div>
-	</form>
-</app-modal-forms>
-
-<app-modal-forms [isOpen]="isStatusModalOpen" title="Change status" (close)="closeStatusModal()">
-	<form [formGroup]="statusForm" (ngSubmit)="submitStatusChange()">
-		<div class="form-grid">
-			<label>
-				User
-				<input type="text" [value]="selectedUser?.profile?.fullName || selectedUser?.login || ''" disabled />
-			</label>
-			<label>
-				Status
-				<select formControlName="status">
-					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-				</select>
-			</label>
-		</div>
-
-		<div class="form-error" *ngIf="statusError">{{ statusError }}</div>
-
-		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeStatusModal()">Cancel</button>
-			<button mat-raised-button color="primary" type="submit" [disabled]="statusForm.invalid || isStatusSubmitting">
-				{{ isStatusSubmitting ? 'Updating...' : 'Update' }}
-			</button>
-		</div>
-	</form>
-</app-modal-forms>
+<app-user-status-modal
+	[isOpen]="isStatusModalOpen"
+	[isSubmitting]="isStatusSubmitting"
+	[error]="statusError"
+	[statusOptions]="statusOptions"
+	[selectedUser]="selectedUser"
+	[form]="statusForm"
+	(close)="closeStatusModal()"
+	(submit)="submitStatusChange()"
+></app-user-status-modal>

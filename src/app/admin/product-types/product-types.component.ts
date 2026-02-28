@@ -10,7 +10,7 @@ import { ProductType, ProductTypeAttribute, CreateProductTypeDto } from '../../s
 import { SidebarService } from '../../core/services/sidebar.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ProductTypesService } from '../../core/services/product-types.service';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { ProductTypeModalComponent } from './product-type-modal/product-type-modal.component';
 
 @Component({
   selector: 'app-product-types',
@@ -21,7 +21,7 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    ModalFormsComponent,
+    ProductTypeModalComponent,
     MatIconModule,
     MatMenuModule
   ],

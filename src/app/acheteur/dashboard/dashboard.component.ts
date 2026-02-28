@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { TransactionsService } from '../../core/services/transactions.service';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { RechargeModalComponent } from './recharge-modal/recharge-modal.component';
 import { User } from '../../shared/models/user';
 import { Transaction } from '../../shared/models/transaction';
 
@@ -20,14 +19,13 @@ import { Transaction } from '../../shared/models/transaction';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
     MatListModule,
     RouterModule,
-    ModalFormsComponent
+    RechargeModalComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -39,16 +37,11 @@ export class DashboardComponent implements OnInit {
   isRecharging = false;
   rechargeError = '';
 
-  rechargeForm = this.fb.group({
-    amount: [null as number | null, [Validators.required, Validators.min(1)]]
-  });
-
   constructor(
     private authService: AuthService,
     private usersService: UsersService,
     private sidebarService: SidebarService,
-    private transactionsService: TransactionsService,
-    private fb: FormBuilder
+    private transactionsService: TransactionsService
   ) {}
 
   ngOnInit(): void {
@@ -77,25 +70,20 @@ export class DashboardComponent implements OnInit {
     this.sidebarService.requestCloseSidebar();
     this.isRechargeModalOpen = true;
     this.rechargeError = '';
-    this.rechargeForm.reset({ amount: null });
   }
 
   closeRechargeModal(): void {
     this.isRechargeModalOpen = false;
     this.isRecharging = false;
     this.rechargeError = '';
-    this.rechargeForm.reset({ amount: null });
   }
 
-  submitRecharge(): void {
-    if (!this.user?._id || this.rechargeForm.invalid || this.isRecharging) {
-      this.rechargeForm.markAllAsTouched();
+  submitRecharge(amount: number): void {
+    if (!this.user?._id || this.isRecharging) {
       return;
     }
 
-    const amount = Number(this.rechargeForm.getRawValue().amount ?? 0);
     if (!Number.isFinite(amount) || amount <= 0) {
-      this.rechargeForm.markAllAsTouched();
       return;
     }
 

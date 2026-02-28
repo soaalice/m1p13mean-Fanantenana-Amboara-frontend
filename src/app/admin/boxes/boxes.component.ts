@@ -9,8 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BoxService } from '../../core/services/boxes.service';
 import { Box } from '../../shared/models/box';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { BoxModalComponent } from './box-modal/box-modal.component';
 
 @Component({
   selector: 'app-boxes',
@@ -23,7 +23,7 @@ import { SidebarService } from '../../core/services/sidebar.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    ModalFormsComponent
+    BoxModalComponent
   ],
   templateUrl: './boxes.component.html',
   styleUrls: ['./boxes.component.scss']
