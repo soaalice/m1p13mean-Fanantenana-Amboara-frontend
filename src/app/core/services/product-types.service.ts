@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 import { ProductType, CreateProductTypeDto } from '../../shared/models/product-type';
 
 @Injectable({
@@ -23,14 +23,17 @@ export class ProductTypesService {
   }
 
   createProductType(productType: CreateProductTypeDto): Observable<ProductType> {
-    return this.http.post<ProductType>(`${environment.apiUrl}/product-types`, productType);
+    return this.http.post<ApiSingleResponse<ProductType>>(`${environment.apiUrl}/product-types`, productType)
+      .pipe(map(response => response.data));
   }
 
   updateProductType(id: string, productType: CreateProductTypeDto): Observable<ProductType> {
-    return this.http.put<ProductType>(`${environment.apiUrl}/product-types/${id}`, productType);
+    return this.http.put<ApiSingleResponse<ProductType>>(`${environment.apiUrl}/product-types/${id}`, productType)
+      .pipe(map(response => response.data));
   }
 
   deleteProductType(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/product-types/${id}`);
+    return this.http.delete<ApiSingleResponse<null>>(`${environment.apiUrl}/product-types/${id}`)
+      .pipe(map(() => undefined));
   }
 }

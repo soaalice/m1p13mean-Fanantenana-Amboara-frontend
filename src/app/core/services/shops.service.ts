@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Shop } from '../../shared/models/shop';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,15 +50,19 @@ export class ShopsService {
   }
 
   getShopByOwner(ownerId: string | number): Observable<Shop | Shop[] | null> {
-    return this.http.get<Shop | Shop[] | null>(`${this.apiUrl}/shops/owner/${ownerId}`);
+    return this.http
+      .get<ApiSingleResponse<Shop | Shop[] | null>>(`${this.apiUrl}/shops/owner/${ownerId}`)
+      .pipe(map(response => response.data));
   }
 
   createShop(shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.post<Shop>(`${this.apiUrl}/shops`, shopData);
+    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops`, shopData)
+      .pipe(map(response => response.data));
   }
 
   updateShop(shopId: number, shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.put<Shop>(`${this.apiUrl}/shops/${shopId}`, shopData);
+    return this.http.put<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}`, shopData)
+      .pipe(map(response => response.data));
   }
 
   assignateShopToBox(payload: {
@@ -68,6 +72,7 @@ export class ShopsService {
     rent?: number | null;
     startDate?: string;
   }): Observable<Shop> {
-    return this.http.patch<Shop>(`${this.apiUrl}/shops/assignate`, payload);
+    return this.http.patch<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/assignate`, payload)
+      .pipe(map(response => response.data));
   }
 }

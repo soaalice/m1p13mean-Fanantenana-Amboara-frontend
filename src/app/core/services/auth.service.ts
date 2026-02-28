@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, UserRole } from '../../shared/models/user';
+import { ApiSingleResponse } from '../../shared/models/shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,8 @@ export class AuthService {
   }
 
   register(user: User): Observable<User> {
-    return this.http.post<User>(`${environment.apiUrl}/users`, user);
+    return this.http.post<ApiSingleResponse<User>>(`${environment.apiUrl}/users`, user)
+      .pipe(map(response => response.data));
   }
 
   login(login: string, password: string): Observable<{ token: string, user: User }> {
@@ -54,7 +56,7 @@ export class AuthService {
    * et met à jour le localStorage + currentUser$.
    */
   refreshCurrentUser(): void {
-    this.http.get<{ success: boolean; data: User }>(`${environment.apiUrl}/users/me`)
+    this.http.get<ApiSingleResponse<User>>(`${environment.apiUrl}/users/me`)
       .subscribe({
         next: (res) => {
           if (res.success && res.data) {
