@@ -14,8 +14,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { Box } from '../../shared/models/box';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { AssignBoxModalComponent } from './assign-box-modal/assign-box-modal.component';
 
 @Component({
   selector: 'app-shops',
@@ -28,7 +28,7 @@ import { SidebarService } from '../../core/services/sidebar.service';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    ModalFormsComponent,
+    AssignBoxModalComponent,
     ListFiltersComponent
   ],
   templateUrl: './shops.component.html',

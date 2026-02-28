@@ -70,22 +70,12 @@
 	</div>
 </section>
 
-<app-modal-forms [isOpen]="isModalOpen" [title]="isEditMode ? 'Edit box' : 'Add box'" (close)="closeBoxModal()">
-	<form [formGroup]="boxForm" (ngSubmit)="submitBox()">
-		<div class="form-grid">
-			<label>
-				Label
-				<input type="text" formControlName="label" placeholder="Box A1" />
-			</label>
-		</div>
-
-		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
-
-		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeBoxModal()">Cancel</button>
-			<button mat-raised-button color="primary" type="submit" [disabled]="boxForm.invalid || isSubmitting">
-				{{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
-			</button>
-		</div>
-	</form>
-</app-modal-forms>
+<app-box-modal
+	[isOpen]="isModalOpen"
+	[isEditMode]="isEditMode"
+	[isSubmitting]="isSubmitting"
+	[error]="submitError"
+	[form]="boxForm"
+	(close)="closeBoxModal()"
+	(submit)="submitBox()"
+></app-box-modal>

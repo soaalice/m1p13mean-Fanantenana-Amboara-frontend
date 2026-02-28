@@ -1,0 +1,87 @@
+:host {
+	display: block;
+}
+
+.product-type-modal {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.product-type-modal label {
+	display: grid;
+	gap: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: rgba(15, 23, 42, 0.8);
+}
+
+.product-type-modal input,
+.product-type-modal select,
+.product-type-modal textarea {
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 10px 12px;
+	font-size: 14px;
+}
+
+.product-type-modal textarea {
+	resize: vertical;
+}
+
+.attributes-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.attributes-header h3 {
+	margin: 0;
+	font-size: 16px;
+}
+
+.attribute-list {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.attribute-card {
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 14px;
+	background: #f8fafc;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.attribute-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.attribute-wide {
+	grid-column: span 2;
+}
+
+.remove-attr {
+	align-self: flex-end;
+}
+
+.field-error {
+	color: #b91c1c;
+	font-size: 12px;
+}
+
+@media (max-width: 720px) {
+	.attribute-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.attribute-wide {
+		grid-column: span 1;
+	}
+}

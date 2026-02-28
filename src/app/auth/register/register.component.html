@@ -21,6 +21,16 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="fill" class="full-width">
+                    <mat-label for="email">Email</mat-label>
+                    <input matInput id="email" formControlName="email" autocomplete="email"/>
+                    <mat-icon matPrefix>email</mat-icon>
+
+                    <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+                        Please enter a valid email address
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
                     <mat-label for="tel">Phone Number</mat-label>
                     <input matInput id="tel" formControlName="tel" required autocomplete="tel"/>
                     <mat-icon matPrefix>phone</mat-icon>

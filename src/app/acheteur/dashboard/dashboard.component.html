@@ -49,8 +49,8 @@
 						<span class="value">{{ user.login || '-' }}</span>
 					</div>
 					<div class="detail-item">
-						<span class="label">Role</span>
-						<span class="value">{{ user.role || 'ACHETEUR' }}</span>
+						<span class="label">Email</span>
+						<span class="value">{{ user.profile.email || '-' }}</span>
 					</div>
 				</div>
 			</mat-card-content>
@@ -87,22 +87,10 @@
 	</section>
 </div>
 
-<app-modal-forms [isOpen]="isRechargeModalOpen" title="Recharge balance" (close)="closeRechargeModal()">
-	<form [formGroup]="rechargeForm" (ngSubmit)="submitRecharge()">
-		<div class="form-grid">
-			<label>
-				Amount
-				<input type="number" min="1" step="0.01" formControlName="amount" placeholder="0.0" />
-			</label>
-		</div>
-
-		<div class="form-error" *ngIf="rechargeError">{{ rechargeError }}</div>
-
-		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeRechargeModal()">Cancel</button>
-			<button mat-raised-button color="primary" type="submit" [disabled]="rechargeForm.invalid || isRecharging">
-				{{ isRecharging ? 'Recharging...' : 'Recharge' }}
-			</button>
-		</div>
-	</form>
-</app-modal-forms>
+<app-recharge-modal
+	[isOpen]="isRechargeModalOpen"
+	[isSubmitting]="isRecharging"
+	[error]="rechargeError"
+	(close)="closeRechargeModal()"
+	(recharge)="submitRecharge($event)"
+></app-recharge-modal>

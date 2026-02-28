@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Rent } from '../../shared/models/rent';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -27,10 +27,12 @@ export class RentsService {
   }
 
   payRent(rentId: string, userId: string, periode: string): Observable<Rent> {
-    return this.http.patch<Rent>(`${this.apiUrl}/rents/${rentId}/pay`, { userId, periode });
+    return this.http.patch<ApiSingleResponse<Rent>>(`${this.apiUrl}/rents/${rentId}/pay`, { userId, periode })
+      .pipe(map(response => response.data));
   }
 
   getRentById(rentId: string): Observable<Rent> {
-    return this.http.get<Rent>(`${this.apiUrl}/rents/${rentId}`);
+    return this.http.get<ApiSingleResponse<Rent>>(`${this.apiUrl}/rents/${rentId}`)
+      .pipe(map(response => response.data));
   }
 }

@@ -7,9 +7,10 @@ import { MatTableModule } from '@angular/material/table';
 import { User, UserRole } from '../../shared/models/user';
 import { UsersService } from '../../core/services/users.service';
 import { SidebarService } from '../../core/services/sidebar.service';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
+import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
+import { UserStatusModalComponent } from './user-status-modal/user-status-modal.component';
 
 @Component({
   selector: 'app-users',
@@ -18,7 +19,8 @@ import { ListFiltersComponent } from '../../shared/components/list-filters/list-
     CommonModule, 
     FormsModule, 
     ReactiveFormsModule, 
-    ModalFormsComponent, 
+    AddUserModalComponent,
+    UserStatusModalComponent,
     MatTableModule, 
     MatPaginatorModule, 
     MatButtonModule,
@@ -51,6 +53,7 @@ export class UsersComponent extends PaginatedComponent<User> {
     fullName: ['', [Validators.required, Validators.minLength(2)]],
     login: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    email: ['', [Validators.email]],
     tel: [''],
     role: [UserRole.ADMIN, Validators.required]
   });
@@ -129,6 +132,7 @@ export class UsersComponent extends PaginatedComponent<User> {
       password: value.password ?? '',
       profile: {
         fullName: value.fullName ?? '',
+        email: value.email ?? '',
         tel: value.tel || '',
         solde: 0
       }

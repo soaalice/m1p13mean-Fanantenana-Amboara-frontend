@@ -37,6 +37,7 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.fb.group({
       fullName: ['', Validators.required],
+      email: ['', [Validators.email]],
       tel: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(10)]],
       login: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -48,6 +49,7 @@ export class RegisterComponent {
       const user : User = {
         profile : {
           fullName: this.registerForm.value.fullName,
+          email: this.registerForm.value.email,
           tel: this.registerForm.value.tel,
           solde: 0
         },
