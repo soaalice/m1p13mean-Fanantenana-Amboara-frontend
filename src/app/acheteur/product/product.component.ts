@@ -231,6 +231,11 @@ export class ProductComponent implements OnInit, OnDestroy, AfterViewInit {
     this.resetAndLoad();
   }
 
+  selectShop(id: string): void {
+    this.selectedShopId = id;
+    this.resetAndLoad();
+  }
+
   applyAttributeFilters(): void {
     this.resetAndLoad();
   }

@@ -1,0 +1,36 @@
+<section class="boutique-preview-page">
+
+  <!-- Page header -->
+  <div class="preview-page-header">
+    <button mat-icon-button class="back-btn" (click)="goBack()" aria-label="Retour">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="header-text">
+      <h1>Aperçu produit</h1>
+      <p class="subtitle">Visualisez votre produit tel qu'il apparaît aux acheteurs</p>
+    </div>
+  </div>
+
+  <!-- Loader -->
+  <app-loader *ngIf="isLoading" message="Chargement du produit…" [inline]="true"></app-loader>
+
+  <!-- Error -->
+  <div class="error-state" *ngIf="!isLoading && loadError">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ loadError }}</p>
+    <button mat-stroked-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Retour à mes produits
+    </button>
+  </div>
+
+  <!-- Product detail (preview mode – hides breadcrumb & cart) -->
+  <div class="preview-content" *ngIf="!isLoading && !loadError && product">
+    <app-product-detail
+      [previewMode]="true"
+      [previewData]="product"
+      (closed)="goBack()">
+    </app-product-detail>
+  </div>
+
+</section>

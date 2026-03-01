@@ -1,0 +1,74 @@
+.boutique-preview-page {
+  padding: 24px 32px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    padding: 16px 16px 40px;
+  }
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.preview-page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.back-btn {
+  flex-shrink: 0;
+  color: var(--text-muted, #64748b);
+  transition: color .15s;
+
+  &:hover {
+    color: var(--text-primary, #0f172a);
+  }
+}
+
+.header-text {
+  h1 {
+    margin: 0;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text-primary, #0f172a);
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    margin: 2px 0 0;
+    font-size: .875rem;
+    color: var(--text-muted, #64748b);
+  }
+}
+
+// ── Content area ──────────────────────────────────────────────────────────────
+.preview-content {
+  // The ProductDetailComponent handles its own layout; we just give it room.
+  app-product-detail {
+    display: block;
+  }
+}
+
+// ── Error state ───────────────────────────────────────────────────────────────
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 64px 24px;
+  text-align: center;
+  color: var(--text-muted, #64748b);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #dc2626;
+  }
+
+  p {
+    margin: 0;
+    font-size: .9375rem;
+  }
+}

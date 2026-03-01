@@ -1,7 +1,12 @@
-<div class="pdp-root">
+<div class="pdp-root" [class.pdp-root--preview]="previewMode">
 
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb">
+    <!-- Close button (preview only) -->
+    <button class="preview-close-btn" *ngIf="previewMode" (click)="closed.emit()" mat-icon-button aria-label="Fermer">
+        <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Breadcrumb (route mode only) -->
+    <nav class="breadcrumb" *ngIf="!previewMode">
         <button class="breadcrumb-link" (click)="goBack()">
             <mat-icon>storefront</mat-icon>
             <span>Produits</span>
@@ -77,7 +82,7 @@
                 </div>
 
                 <h1 class="product-name">{{ p.name }}</h1>
-                <div class="product-shop">
+                <div class="product-shop" *ngIf="!previewMode">
                     <span class="shop-label">vendu par</span>
                     <span class="shop-name">{{ p.shop.name }}</span>
                 </div>
@@ -115,8 +120,8 @@
                 </ng-container>
             </div>
 
-            <!-- ── Purchase box ── -->
-            <div class="purchase-box" *ngIf="p.stock > 0">
+            <!-- ── Purchase box (hidden in preview) ── -->
+            <div class="purchase-box" *ngIf="!previewMode && p.stock > 0">
 
                 <div class="purchase-qty">
                     <span class="purchase-qty-label">Quantité</span>
@@ -145,13 +150,13 @@
                 </button>
             </div>
 
-            <div class="out-of-stock-banner" *ngIf="p.stock === 0">
+            <div class="out-of-stock-banner" *ngIf="!previewMode && p.stock === 0">
                 <mat-icon>inventory_2</mat-icon>
                 <span>Ce produit est actuellement hors stock.</span>
             </div>
 
-            <!-- Meta row -->
-            <div class="meta-strip">
+            <!-- Meta row (boutique preview only – hidden from acheteurs) -->
+            <div class="meta-strip" *ngIf="previewMode">
                 <div class="meta-cell" *ngIf="p.createdAt">
                     <mat-icon>calendar_today</mat-icon>
                     <div>

@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, PageResult, ApiSingleResponse } from '../../shared/models/shared.model';
 import { ProductType, ProductTypeSelect } from '../../shared/models/product-type';
-import { CreateProductDto, Product } from '../../shared/models/product';
+import { CreateProductDto, MyProduct, Product } from '../../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -53,13 +53,13 @@ export class MyProductService {
     return this.http.get<PageResult<Product>>(`${this.apiUrl}/products`, { params });
   }
   //my-product
-  getMyProduct(page = 1, limit = 10): Observable<PageResult<Product>> {
+  getMyProduct(page = 1, limit = 10): Observable<PageResult<MyProduct>> {
     const params = {
       page: page.toString(),
       limit: limit.toString()
     };
 
-    return this.http.get<PageResult<Product>>(`${this.apiUrl}/products/my-product`, { params });
+    return this.http.get<PageResult<MyProduct>>(`${this.apiUrl}/products/my-product`, { params });
   }
 
   /**

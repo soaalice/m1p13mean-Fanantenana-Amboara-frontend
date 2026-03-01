@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +9,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Product, CreateProductDto } from '../../shared/models/product';
+import { MyProduct, Product, CreateProductDto } from '../../shared/models/product';
 import { CreateProductModalComponent } from './create-product-modal/create-product-modal.component';
 import { AddStockModalComponent } from './add-stock-modal/add-stock-modal.component';
 import { UpdatePhotoModalComponent } from './update-photo-modal/update-photo-modal.component';
@@ -40,10 +41,10 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
   styleUrl: './my-product.component.scss'
 })
 export class MyProductComponent implements OnInit {
-  displayedColumns = ['photo', 'id', 'name', 'price', 'stock', 'productType', 'shop', 'attributes', 'status', 'actions'];
+  displayedColumns = ['photo', 'id', 'name', 'price', 'stock', 'productType', 'attributes', 'status', 'actions'];
   pageSizeOptions = [5, 10, 25];
 
-  products: Product[] = [];
+  products: MyProduct[] = [];
   isLoading = false;
   loadError = '';
   page = 1;
@@ -54,7 +55,7 @@ export class MyProductComponent implements OnInit {
   isEditMode = false;
   isSubmitting = false;
   submitError = '';
-  selectedProduct: Product | null = null;
+  selectedProduct: MyProduct | null = null;
   selectedPhotoFile: File | null = null;
 
   statusOptions = ['ACTIVE', 'INACTIVE'];
@@ -74,6 +75,7 @@ export class MyProductComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private sidebarService: SidebarService,
     private myProductService: MyProductService) { }
 
@@ -166,7 +168,7 @@ export class MyProductComponent implements OnInit {
     this.fetchData();
   }
 
-  getAttributeBadges(product: Product): Array<{ label: string; key: string }> {
+  getAttributeBadges(product: MyProduct): Array<{ label: string; key: string }> {
     if (!product.attributes || Object.keys(product.attributes).length === 0) {
       return [{ label: 'No attributes', key: 'NONE' }];
     }
@@ -197,13 +199,18 @@ export class MyProductComponent implements OnInit {
     this.isModalOpen = true;
   }
 
+  // --- Preview navigation ---
+  navigateToPreview(product: MyProduct): void {
+    this.router.navigate(['/boutique/product-preview', product._id]);
+  }
+
   // --- Add stock modal handlers ---
   isStockModalOpen = false;
-  stockModalProduct: Product | null = null;
+  stockModalProduct: MyProduct | null = null;
   isStockSubmitting = false;
   stockSubmitError = '';
 
-  openStockModal(product: Product): void {
+  openStockModal(product: MyProduct): void {
     this.sidebarService.requestCloseSidebar();
     this.stockModalProduct = product;
     this.stockSubmitError = '';
@@ -222,7 +229,7 @@ export class MyProductComponent implements OnInit {
 
     this.myProductService.addStock(this.stockModalProduct._id, quantity).subscribe({
       next: (updatedProduct) => {
-        this.updateProductInList(updatedProduct);
+        this.patchProductField(updatedProduct._id, { stock: updatedProduct.stock });
         this.isStockSubmitting = false;
         this.closeStockModal();
       },
@@ -233,7 +240,7 @@ export class MyProductComponent implements OnInit {
     });
   }
 
-  onEdit(product: Product): void {
+  onEdit(product: MyProduct): void {
     this.isEditMode = true;
     this.selectedProduct = product;
     this.submitError = '';
@@ -256,12 +263,12 @@ export class MyProductComponent implements OnInit {
     this.isModalOpen = true;
   }
 
-  onDelete(product: Product): void {
+  onDelete(product: MyProduct): void {
     if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
       this.myProductService.deleteProduct(product._id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p._id !== product._id);
-          this.total = this.products.length;
+          this.total--;
         },
         error: () => {
           this.loadError = 'Failed to delete product. Please try again.';
@@ -292,8 +299,8 @@ export class MyProductComponent implements OnInit {
         updateData, 
         this.selectedPhotoFile || undefined
       ).subscribe({
-        next: (updatedProduct) => {
-          this.updateProductInList(updatedProduct);
+        next: () => {
+          this.fetchData();
           this.isSubmitting = false;
           this.isModalOpen = false;
         },
@@ -311,9 +318,8 @@ export class MyProductComponent implements OnInit {
       };
 
       this.myProductService.createProduct(createProductDto, this.selectedPhotoFile || undefined).subscribe({
-        next: (createdProduct) => {
-          this.products = [...this.products, createdProduct];
-          this.total = this.products.length;
+        next: () => {
+          this.fetchData();
           this.isModalOpen = false;
           this.isSubmitting = false;
         },
@@ -335,11 +341,11 @@ export class MyProductComponent implements OnInit {
 
   // --- Update photo modal handlers ---
   isPhotoModalOpen = false;
-  photoModalProduct: Product | null = null;
+  photoModalProduct: MyProduct | null = null;
   isPhotoSubmitting = false;
   photoSubmitError = '';
 
-  openPhotoModal(product: Product): void {
+  openPhotoModal(product: MyProduct): void {
     this.sidebarService.requestCloseSidebar();
     this.photoModalProduct = product;
     this.photoSubmitError = '';
@@ -358,7 +364,7 @@ export class MyProductComponent implements OnInit {
 
     this.myProductService.updatePhoto(this.photoModalProduct._id, photoFile).subscribe({
       next: (updatedProduct) => {
-        this.updateProductInList(updatedProduct);
+        this.patchProductField(updatedProduct._id, { photoUrl: updatedProduct.photoUrl });
         this.isPhotoSubmitting = false;
         this.closePhotoModal();
       },
@@ -369,13 +375,13 @@ export class MyProductComponent implements OnInit {
     });
   }
 
-  onRemovePhoto(product: Product): void {
+  onRemovePhoto(product: MyProduct): void {
     if (!product.photoUrl) return;
 
     if (confirm(`Are you sure you want to remove the photo for "${product.name}"?`)) {
       this.myProductService.removePhoto(product._id).subscribe({
-        next: (updatedProduct) => {
-          this.updateProductInList(updatedProduct);
+        next: () => {
+          this.patchProductField(product._id, { photoUrl: null });
         },
         error: () => {
           this.loadError = 'Failed to remove photo. Please try again.';
@@ -394,17 +400,14 @@ export class MyProductComponent implements OnInit {
     return this.selectedProductType.attributes.filter(attr => attr.type === 'BOOLEAN');
   }
 
-  /** Replace a product in the local list immutably for change detection */
-  private updateProductInList(updated: Product): void {
-    const idx = this.products.findIndex(p => p._id === updated._id);
+  /** Patch specific fields on a product in the list (immutable update for change detection) */
+  private patchProductField(id: string, patch: Partial<MyProduct>): void {
+    const idx = this.products.findIndex(p => p._id === id);
     if (idx !== -1) {
       const next = [...this.products];
-      next[idx] = updated;
+      next[idx] = { ...next[idx], ...patch };
       this.products = next;
-    } else {
-      this.products = [updated, ...this.products];
     }
-    this.total = this.products.length;
   }
 }
 
