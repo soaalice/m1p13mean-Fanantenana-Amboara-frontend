@@ -87,7 +87,10 @@ export class ProductDetailComponent implements OnInit {
       produitId: this.product._id,
       nom: this.product.name,
       prix: this.discountedPrice,
-      qte: 1
+      qte: 1,
+      shop: this.product.shop
+        ? { _id: this.product.shop._id, name: this.product.shop.name }
+        : undefined,
     }, this.quantity);
     this.addedToCart = true;
     setTimeout(() => (this.addedToCart = false), 2500);
