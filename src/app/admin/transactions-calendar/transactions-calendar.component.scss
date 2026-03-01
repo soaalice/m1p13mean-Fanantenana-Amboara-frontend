@@ -18,7 +18,7 @@
 
 	.subtitle {
 		margin: 4px 0 0;
-		color: #475569;
+		color: var(--text-secondary, #475569);
 	}
 }
 
@@ -27,21 +27,21 @@
 	align-items: center;
 	gap: 10px;
 	padding: 12px 16px;
-	border-radius: 14px;
+	border-radius: var(--radius-md, 14px);
 	font-weight: 500;
-	background: #f8fafc;
+	background: var(--surface-2, #f8fafc);
 	color: #334155;
 
 	&.error {
-		background: #fee2e2;
-		color: #b91c1c;
+		background: var(--status-error-bg, #fee2e2);
+		color: var(--status-error-text, #b91c1c);
 	}
 }
 
 .calendar-card {
 	padding: 24px;
-	border-radius: 20px;
-	border: 1px solid #e2e8f0;
+	border-radius: var(--radius-xl, 20px);
+	border: 1px solid var(--border-color, #e2e8f0);
 	box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
@@ -52,7 +52,7 @@
 	flex-wrap: wrap;
 	margin-bottom: 20px;
 	padding-bottom: 16px;
-	border-bottom: 1px solid #e2e8f0;
+	border-bottom: 1px solid var(--border-color, #e2e8f0);
 }
 
 .legend-item {
@@ -60,7 +60,7 @@
 	align-items: center;
 	gap: 8px;
 	font-size: 13px;
-	color: #475569;
+	color: var(--text-secondary, #475569);
 	font-weight: 500;
 }
 
@@ -85,14 +85,14 @@
 	}
 
 	.fc-button-primary {
-		background-color: #3f51b5 !important;
-		border-color: #3f51b5 !important;
+		background-color: var(--primary-color, #3f51b5) !important;
+		border-color: var(--primary-color, #3f51b5) !important;
 
 		&:hover,
 		&:not(:disabled):active,
 		&.fc-button-active {
-			background-color: #303f9f !important;
-			border-color: #303f9f !important;
+			background-color: var(--primary-700, #303f9f) !important;
+			border-color: var(--primary-700, #303f9f) !important;
 		}
 	}
 
@@ -107,7 +107,7 @@
 	}
 
 	.fc-event {
-		border-radius: 8px !important;
+		border-radius: var(--radius-sm, 8px) !important;
 		font-size: 12px !important;
 		font-weight: 500 !important;
 		border-width: 2px !important;
@@ -115,8 +115,8 @@
 	}
 
 	.fc-col-header-cell {
-		background: #f8fafc;
-		color: #64748b;
+		background: var(--surface-2, #f8fafc);
+		color: var(--text-muted, #64748b);
 		font-weight: 600;
 		font-size: 13px;
 	}
@@ -127,7 +127,7 @@
 	}
 
 	.fc-multimonth-title {
-		background: #f8fafc !important;
+		background: var(--surface-2, #f8fafc) !important;
 		color: #1e293b !important;
 		font-weight: 700 !important;
 		font-size: 14px !important;
