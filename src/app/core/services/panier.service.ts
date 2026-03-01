@@ -15,8 +15,12 @@ export interface PanierItemPayload {
 
 export interface Panier {
   _id: string;
+  acheteurId?: string;
   items: PanierItemPayload[];
+  total?: number;
+  date?: string;
   etat?: string;
+  createdAt?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -71,5 +75,10 @@ export class PanierService {
   /** GET /api/paniers/my-pending — panier PENDING de l'acheteur connecté */
   getMyPending(): Observable<ApiSingleResponse<Panier | null>> {
     return this.http.get<ApiSingleResponse<Panier | null>>(`${this.base}/my-pending`);
+  }
+
+  /** GET /api/paniers/transaction/:transactionId */
+  getByTransactionId(transactionId: string): Observable<ApiSingleResponse<Panier>> {
+    return this.http.get<ApiSingleResponse<Panier>>(`${this.base}/transaction/${transactionId}`);
   }
 }

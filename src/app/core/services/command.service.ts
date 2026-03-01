@@ -21,4 +21,8 @@ export class CommandService {
     };
     return this.http.get<PageResult<Command>>(`${this.apiUrl}/commands/my-commands`, { params });
   }
+
+  getByTransactionId(transactionId: string): Observable<{ success: boolean; data: Command }> {
+    return this.http.get<{ success: boolean; data: Command }>(`${this.apiUrl}/commands/transaction/${transactionId}`);
+  }
 }

@@ -1,60 +1,99 @@
-<div class="product-card" [class.is-out-of-stock]="product.stock === 0">
-  <div class="product-image-container">
-    <div *ngIf="hasPromotion()" class="discount-badge">
-      {{ product.promotion!.reduction }}% OFF
+<article class="pc" [class.pc--oos]="product.stock === 0">
+
+  <!-- ─── Image ─────────────────────────────────────────────── -->
+  <div class="pc-img-wrap">
+
+    <!-- Promo ribbon -->
+    <div class="pc-promo" *ngIf="hasPromotion()">
+      <span>−{{ product.promotion!.reduction }}%</span>
     </div>
-    <!-- Hors stock overlay -->
-    <div *ngIf="product.stock === 0" class="out-of-stock-overlay">
+
+    <!-- Out-of-stock scrim -->
+    <div class="pc-oos-scrim" *ngIf="product.stock === 0">
       <span>Hors stock</span>
     </div>
-    <img [src]="imageUrl" [alt]="product.name" class="product-image">
-  </div>
-  
-  <div class="product-details">
-    <h3 class="product-name">{{ product.name }}</h3>
-    
-    <div class="product-shop">
-      <span class="shop-label">from</span>
-      <span class="shop-name">{{ product.shop.name }}</span>
-    </div>
-    
-    <div class="attributes-badges-card" *ngIf="getAttributeEntries().length > 0">
-      <ng-container *ngFor="let attr of getAttributeEntries(); let i = index">
-        <span class="attr-badge" *ngIf="i < 2">{{ attr.key }}: {{ attr.value }}</span>
-      </ng-container>
-      <span class="more-badge" *ngIf="getAttributeEntries().length > 2">+{{ getAttributeEntries().length - 2 }}</span>
 
-      <div class="attributes-tooltip">
-        <div class="tooltip-row" *ngFor="let attr of getAttributeEntries()">{{ attr.key }}: {{ attr.value }}</div>
-      </div>
-    </div>
-    
-    <div class="price-rating-container">
-      <div class="price-container">
-        <span class="current-price">MGA {{ getDiscountedPrice() | number:'1.0-0' }}</span>
-        <span *ngIf="hasPromotion()" class="original-price">MGA {{ product.price }}</span>
-      </div>
-    </div>
-
-    <!-- Stock badge -->
-    <div class="stock-info" [class.low-stock]="product.stock > 0 && product.stock <= 5">
-      <ng-container *ngIf="product.stock === 0; else inStock">
-        <span class="stock-badge out">Hors stock</span>
-      </ng-container>
-      <ng-template #inStock>
-        <span class="stock-badge in" *ngIf="product.stock <= 5">Plus que {{ product.stock }} en stock</span>
-      </ng-template>
-    </div>
-    
-    <button
-      class="add-to-cart-btn"
-      (click)="onAddToCart()"
-      [disabled]="product.stock === 0"
-    >
-      <svg *ngIf="product.stock > 0" class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5.48C20.96 5.34 21 5.17 21 5C21 4.45 20.55 4 20 4H5.21L4.27 2H1ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z" fill="currentColor"/>
+    <!-- Photo -->
+    <img *ngIf="imageUrl" [src]="imageUrl" [alt]="product.name" class="pc-img" loading="lazy" />
+    <div *ngIf="!imageUrl" class="pc-no-img">
+      <svg viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="8" fill="#f1f5f9"/>
+        <path d="M14 34l8-10 6 7 4-5 8 8H14z" fill="#cbd5e1"/>
+        <circle cx="32" cy="18" r="4" fill="#e2e8f0"/>
       </svg>
-      {{ product.stock === 0 ? 'Hors stock' : 'Add to cart' }}
-    </button>
+    </div>
+
+    <!-- Bottom gradient for price overlay feel -->
+    <div class="pc-img-fade"></div>
   </div>
-</div>
+
+  <!-- ─── Body ──────────────────────────────────────────────── -->
+  <div class="pc-body">
+
+    <!-- Shop -->
+    <div class="pc-shop">
+      <svg class="pc-shop-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-.293.707L13 10.414V15a1 1 0 01-.553.894l-4 2A1 1 0 017 17v-6.586L3.293 6.707A1 1 0 013 6V4z"/>
+      </svg>
+      <span class="pc-shop-name">{{ product.shop.name }}</span>
+    </div>
+
+    <!-- Name -->
+    <h3 class="pc-name">{{ product.name }}</h3>
+
+    <!-- Attribute badges -->
+    <div class="pc-attrs" *ngIf="getAttributeEntries().length > 0">
+      <ng-container *ngFor="let attr of getAttributeEntries(); let i = index">
+        <span class="pc-badge" *ngIf="i < 2">{{ attr.key }}: {{ attr.value }}</span>
+      </ng-container>
+      <span class="pc-badge pc-badge--more" *ngIf="getAttributeEntries().length > 2">
+        +{{ getAttributeEntries().length - 2 }}
+      </span>
+      <div class="pc-tooltip">
+        <div class="pc-tooltip-row" *ngFor="let attr of getAttributeEntries()">
+          <span class="pc-tooltip-key">{{ attr.key }}</span>
+          <span class="pc-tooltip-val">{{ attr.value }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div class="pc-spacer"></div>
+
+    <!-- Price -->
+    <div class="pc-price-row">
+      <span class="pc-price">{{ getDiscountedPrice() | number:'1.0-0' }}<span class="pc-currency">&nbsp;MGA</span></span>
+      <span class="pc-original" *ngIf="hasPromotion()">{{ product.price | number:'1.0-0' }}</span>
+    </div>
+
+    <!-- Stock indicator -->
+    <div class="pc-stock" *ngIf="product.stock <= 5">
+      <span class="pc-stock-dot"
+        [class.pc-stock-dot--out]="product.stock === 0"
+        [class.pc-stock-dot--low]="product.stock > 0 && product.stock <= 5">
+      </span>
+      <span class="pc-stock-text"
+        [class.pc-stock-text--out]="product.stock === 0"
+        [class.pc-stock-text--low]="product.stock > 0">
+        {{ product.stock === 0 ? 'Hors stock' : 'Plus que ' + product.stock + ' en stock' }}
+      </span>
+    </div>
+
+    <!-- Actions -->
+    <div class="pc-actions">
+      <button class="pc-btn-cart" (click)="onAddToCart()" [disabled]="product.stock === 0">
+        <svg class="pc-btn-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ product.stock === 0 ? 'Indisponible' : 'Ajouter au panier' }}
+      </button>
+      <a class="pc-btn-detail" [routerLink]="[detailBasePath, product._id]">
+        Voir les détails
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</article>
