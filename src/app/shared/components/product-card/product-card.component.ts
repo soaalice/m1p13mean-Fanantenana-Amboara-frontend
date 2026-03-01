@@ -38,13 +38,15 @@ export class ProductCardComponent {
   onAddToCart(): void {
     if (this.product.stock === 0) return;
     const item = {
-      produitId: (this.product._id || this.product._id || '').toString(),
-      nom: this.product.name || this.product.name || 'Produit',
-      prix: this.product.price || this.product.price || 0,
+      produitId: (this.product._id || '').toString(),
+      nom: this.product.name || 'Produit',
+      prix: this.getDiscountedPrice(),
       qte: 1,
+      shop: this.product.shop
+        ? { _id: this.product.shop._id, name: this.product.shop.name }
+        : undefined,
     };
     this.cartService.addItem(item, 1);
-    // small feedback for now
     console.log('Added to cart:', item);
   }
 }

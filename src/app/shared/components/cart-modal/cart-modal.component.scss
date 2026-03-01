@@ -206,7 +206,24 @@
     flex: 1;
     min-width: 0;
     .item-name { font-weight: 600; font-size: 15px; color: #1a1d29; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .item-unit-price { font-size: 12px; color: #999; margin-top: 2px; }
+    .item-shop-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+      padding: 2px 8px;
+      background: #e8f4fd;
+      color: #1976d2;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      svg { width: 11px; height: 11px; flex-shrink: 0; }
+    }
+    .item-unit-price { font-size: 12px; color: #999; margin-top: 4px; }
   }
 
   .item-qty {
