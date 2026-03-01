@@ -1,14 +1,78 @@
 <div class="products-page">
-  <header class="page-header">
-    <h1 class="page-title">Discover Our Products</h1>
-    <p class="page-subtitle">Explore our curated collection of premium products</p>
+
+  <!-- ── Hero banner ─────────────────────────────────────────── -->
+  <header class="page-hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Catalogue</p>
+      <h1 class="hero-title">Découvrez nos produits</h1>
+      <p class="hero-sub">Des milliers d'articles sélectionnés pour vous</p>
+
+      <!-- Search bar -->
+      <div class="search-bar">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Rechercher un produit ou une boutique…"
+          [(ngModel)]="searchQuery"
+        />
+        <button *ngIf="searchQuery" class="search-clear" (click)="searchQuery = ''">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   </header>
 
-  <div class="products-grid">
+  <!-- ── Toolbar ──────────────────────────────────────────────── -->
+  <div class="page-toolbar">
+    <span class="results-count" *ngIf="!isLoading">
+      <strong>{{ filteredProducts.length }}</strong> produit{{ filteredProducts.length !== 1 ? 's' : '' }}
+      <span *ngIf="searchQuery"> pour « {{ searchQuery }} »</span>
+    </span>
+    <span class="results-count skeleton-text" *ngIf="isLoading"></span>
+  </div>
+
+  <!-- ── Skeleton loading ─────────────────────────────────────── -->
+  <div class="products-grid" *ngIf="isLoading">
+    <div class="card-skeleton" *ngFor="let s of skeletons">
+      <div class="sk-image"></div>
+      <div class="sk-body">
+        <div class="sk-line sk-title"></div>
+        <div class="sk-line sk-sub"></div>
+        <div class="sk-line sk-price"></div>
+        <div class="sk-line sk-btn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Products grid ────────────────────────────────────────── -->
+  <div class="products-grid" *ngIf="!isLoading && filteredProducts.length > 0">
     <app-product-card
-      *ngFor="let product of products"
+      *ngFor="let product of filteredProducts"
       [product]="product"
       [imageUrl]="product.imageUrl">
     </app-product-card>
   </div>
+
+  <!-- ── Empty state ──────────────────────────────────────────── -->
+  <div class="empty-state" *ngIf="!isLoading && filteredProducts.length === 0">
+    <div class="empty-icon">
+      <svg viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="28" stroke="#e2e8f0" stroke-width="3"/>
+        <path d="M20 28h24M20 36h16" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="44" cy="44" r="10" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="2"/>
+        <path d="M41 44h6M44 41v6" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="empty-title">Aucun produit trouvé</h3>
+    <p class="empty-sub" *ngIf="searchQuery">Essayez un autre terme de recherche</p>
+    <p class="empty-sub" *ngIf="!searchQuery">Aucun produit disponible pour le moment</p>
+    <button *ngIf="searchQuery" class="empty-reset" (click)="searchQuery = ''">Effacer la recherche</button>
+  </div>
+
 </div>
