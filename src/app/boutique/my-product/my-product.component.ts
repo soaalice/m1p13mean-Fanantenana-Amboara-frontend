@@ -153,9 +153,9 @@ export class MyProductComponent implements OnInit {
         this.total = res.pagination?.total ?? res.data.length;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.loadError = 'Unable to load products from server.';
+        this.loadError = err.error?.message || 'Unable to load products from server.';
       }
     });
   }

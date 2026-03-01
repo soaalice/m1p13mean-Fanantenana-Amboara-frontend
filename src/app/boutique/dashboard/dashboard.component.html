@@ -34,7 +34,7 @@
 				icon="trending_up"
 				title="Net sales"
 				[text]="(dashboard.netSales.total | number) ?? '0'"
-				[description]="selectedYear + ' • Ar'"
+				[description]="selectedYear + ' • MGA'"
 				color="#f59e0b"
 			></app-dashboard-card>
 		</div>
@@ -94,7 +94,7 @@
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#f59e0b"></span>
 						<span class="chart-card-label">Net sales by month</span>
-						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Evolution in Ar' }}</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Evolution in MGA' }}</span>
 					</div>
 
 					<app-dashboard-graph
