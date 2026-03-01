@@ -11,20 +11,22 @@ import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
 import { AddUserModalComponent } from './add-user-modal/add-user-modal.component';
 import { UserStatusModalComponent } from './user-status-modal/user-status-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    ReactiveFormsModule, 
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AddUserModalComponent,
     UserStatusModalComponent,
-    MatTableModule, 
-    MatPaginatorModule, 
+    MatTableModule,
+    MatPaginatorModule,
     MatButtonModule,
-    ListFiltersComponent
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'

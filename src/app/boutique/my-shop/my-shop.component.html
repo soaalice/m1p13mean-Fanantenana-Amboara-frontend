@@ -4,10 +4,7 @@
 		<p class="subtitle">Manage your shop information and activity.</p>
 	</div>
 
-	<div *ngIf="isLoading" class="state loading">
-		<mat-icon>hourglass_top</mat-icon>
-		Loading your shop...
-	</div>
+	<app-loader *ngIf="isLoading" message="Loading your shop…"></app-loader>
 
 	<div *ngIf="loadError && !isLoading" class="state error">
 		<mat-icon>error</mat-icon>
@@ -17,13 +14,33 @@
 	<ng-container *ngIf="!isLoading && !loadError">
 		<mat-card *ngIf="shop; else emptyState" class="shop-card">
 			<div class="shop-overview">
-				<div class="shop-title">
-					<p class="eyebrow">Shop Overview</p>
-					<h2>{{ shop.name }}</h2>
+				<div class="shop-overview-left">
+					<div class="shop-photo-container">
+						<img *ngIf="shop.photoUrl" [src]="shop.photoUrl" [alt]="shop.name" class="shop-photo" />
+						<div *ngIf="!shop.photoUrl" class="shop-photo-placeholder">
+							<mat-icon>storefront</mat-icon>
+						</div>
+					</div>
+					<div class="shop-title">
+						<p class="eyebrow">Shop Overview</p>
+						<h2>{{ shop.name }}</h2>
+					</div>
 				</div>
-				<span class="status" [class.active]="shop.status === 'ACTIVE'">
-					{{ shop.status === 'ACTIVE' ? 'Active' : 'Inactive' }}
-				</span>
+				<div class="shop-overview-right">
+					<div class="photo-actions">
+						<button mat-stroked-button type="button" (click)="openPhotoModal()">
+							<mat-icon>photo_camera</mat-icon>
+							{{ shop.photoUrl ? 'Update Photo' : 'Add Photo' }}
+						</button>
+						<button mat-stroked-button type="button" color="warn" (click)="onRemovePhoto()" *ngIf="shop.photoUrl">
+							<mat-icon>hide_image</mat-icon>
+							Remove Photo
+						</button>
+					</div>
+					<span class="status" [class.active]="shop.status === 'ACTIVE'">
+						{{ shop.status === 'ACTIVE' ? 'Active' : 'Inactive' }}
+					</span>
+				</div>
 			</div>
 
 			<div class="sections-grid">
@@ -92,10 +109,7 @@
 					</label>
 				</app-list-filters>
 
-				<div *ngIf="isLoadingTransactions" class="state loading">
-					<mat-icon>hourglass_top</mat-icon>
-					Loading rent transactions...
-				</div>
+				<app-loader *ngIf="isLoadingTransactions" message="Loading rent transactions…" [inline]="true"></app-loader>
 
 				<div *ngIf="loadTransactionsError && !isLoadingTransactions" class="state error">
 					<mat-icon>error</mat-icon>
@@ -184,3 +198,12 @@
 		</div>
 	</form>
 </app-modal-forms>
+
+<app-update-shop-photo-modal
+	[isOpen]="isPhotoModalOpen"
+	[shop]="shop"
+	[isSubmitting]="isPhotoSubmitting"
+	[error]="photoSubmitError"
+	(close)="closePhotoModal()"
+	(update)="onUpdatePhoto($event)">
+</app-update-shop-photo-modal>

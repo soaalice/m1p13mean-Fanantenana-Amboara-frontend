@@ -15,6 +15,7 @@ import { UpdatePhotoModalComponent } from './update-photo-modal/update-photo-mod
 import { SidebarService } from '../../core/services/sidebar.service';
 import { MyProductService } from '../../core/services/my-product.service';
 import { ProductTypeSelect } from '../../shared/models/product-type';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-my-product',
@@ -31,7 +32,8 @@ import { ProductTypeSelect } from '../../shared/models/product-type';
     MatCheckboxModule,
     CreateProductModalComponent,
     AddStockModalComponent,
-    UpdatePhotoModalComponent
+    UpdatePhotoModalComponent,
+    LoaderComponent
   ],
   templateUrl:
    './my-product.component.html',

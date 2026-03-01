@@ -95,6 +95,55 @@
 	border-bottom: 1px solid #e2e8f0;
 }
 
+.shop-overview-left {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.shop-overview-right {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.photo-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.shop-photo-container {
+	flex-shrink: 0;
+}
+
+.shop-photo {
+	width: 72px;
+	height: 72px;
+	border-radius: 14px;
+	object-fit: cover;
+	border: 2px solid #e2e8f0;
+}
+
+.shop-photo-placeholder {
+	width: 72px;
+	height: 72px;
+	border-radius: 14px;
+	border: 2px dashed #cbd5e1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #f8fafc;
+
+	mat-icon {
+		font-size: 32px;
+		width: 32px;
+		height: 32px;
+		color: #94a3b8;
+	}
+}
+
 .shop-title {
 	display: flex;
 	flex-direction: column;

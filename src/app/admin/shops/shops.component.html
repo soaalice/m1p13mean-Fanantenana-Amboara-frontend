@@ -24,11 +24,21 @@
         </app-list-filters>
     </div>
 
-    <div class="state" *ngIf="isLoading">Loading shops...</div>
+    <app-loader *ngIf="isLoading" message="Loading shops…" [inline]="true"></app-loader>
     <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
         <table mat-table [dataSource]="shops" class="shops-table">
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef>Photo</th>
+                <td mat-cell *matCellDef="let shop">
+                    <div class="shop-photo">
+                        <img *ngIf="shop.photoUrl" [src]="shop.photoUrl" [alt]="shop.name" class="shop-thumbnail" />
+                        <div *ngIf="!shop.photoUrl" class="no-photo"><mat-icon>storefront</mat-icon></div>
+                    </div>
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let shop">{{ shop.name }}</td>

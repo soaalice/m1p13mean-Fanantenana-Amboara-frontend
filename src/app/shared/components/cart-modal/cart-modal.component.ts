@@ -4,11 +4,12 @@ import { CartService } from '../../../core/services/cart.service';
 import { PanierService } from '../../../core/services/panier.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   selector: 'app-cart-modal',
   standalone: true,
-  imports: [CommonModule, NgFor, NgIf, AsyncPipe],
+  imports: [CommonModule, NgFor, NgIf, AsyncPipe, LoaderComponent],
   templateUrl: './cart-modal.component.html',
   styleUrls: ['./cart-modal.component.scss']
 })

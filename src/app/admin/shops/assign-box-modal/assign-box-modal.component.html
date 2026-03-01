@@ -20,7 +20,7 @@
 		</label>
 	</div>
 
-	<div class="state" *ngIf="boxesLoading">Loading boxes...</div>
+	<app-loader *ngIf="boxesLoading" message="Loading boxes…" [inline]="true" size="sm"></app-loader>
 	<div class="state error" *ngIf="!boxesLoading && boxesLoadError">{{ boxesLoadError }}</div>
 
 	<div class="table-wrap" *ngIf="!boxesLoading && !boxesLoadError">

@@ -55,14 +55,35 @@ export class ShopsService {
       .pipe(map(response => response.data));
   }
 
-  createShop(shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops`, shopData)
+  createShop(shopData: Partial<Shop>, photoFile?: File): Observable<Shop> {
+    const formData = new FormData();
+    if (shopData.name) formData.append('name', shopData.name);
+    if (photoFile) formData.append('photo', photoFile, photoFile.name);
+    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops`, formData)
       .pipe(map(response => response.data));
   }
 
-  updateShop(shopId: number, shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.put<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}`, shopData)
+  updateShop(shopId: string, shopData: Partial<Shop>, photoFile?: File): Observable<Shop> {
+    const formData = new FormData();
+    if (shopData.name !== undefined) formData.append('name', shopData.name);
+    if (shopData.status !== undefined) formData.append('status', shopData.status);
+    if (photoFile) formData.append('photo', photoFile, photoFile.name);
+    return this.http.put<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}`, formData)
       .pipe(map(response => response.data));
+  }
+
+  /** POST /shops/:id/photo — update only the photo */
+  updatePhoto(shopId: string, photoFile: File): Observable<Shop> {
+    const formData = new FormData();
+    formData.append('photo', photoFile, photoFile.name);
+    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}/photo`, formData)
+      .pipe(map(res => res.data));
+  }
+
+  /** DELETE /shops/:id/photo — remove the photo */
+  removePhoto(shopId: string): Observable<Shop> {
+    return this.http.delete<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}/photo`)
+      .pipe(map(res => res.data));
   }
 
   assignateShopToBox(payload: {

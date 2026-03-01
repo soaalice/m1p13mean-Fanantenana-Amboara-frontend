@@ -11,6 +11,7 @@ import { SidebarService } from '../../core/services/sidebar.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ProductTypesService } from '../../core/services/product-types.service';
 import { ProductTypeModalComponent } from './product-type-modal/product-type-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-product-types',
@@ -23,7 +24,8 @@ import { ProductTypeModalComponent } from './product-type-modal/product-type-mod
     MatButtonModule,
     ProductTypeModalComponent,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    LoaderComponent
   ],
   templateUrl: './product-types.component.html',
   styleUrl: './product-types.component.scss'

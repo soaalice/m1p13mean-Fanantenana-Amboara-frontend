@@ -7,6 +7,7 @@ import { DashboardCardComponent } from '../../shared/components/dashboard-card/d
 import { DashboardGraphComponent } from '../../shared/components/dashboard-graph/dashboard-graph.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
 import { BoutiqueDashboardData } from '../../shared/models/dashboard';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,7 @@ import { BoutiqueDashboardData } from '../../shared/models/dashboard';
     MatButtonModule,
     DashboardCardComponent,
     DashboardGraphComponent,
+    LoaderComponent,
     ListFiltersComponent
   ],
   templateUrl: './dashboard.component.html',
