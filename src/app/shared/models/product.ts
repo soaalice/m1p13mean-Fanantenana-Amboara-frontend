@@ -14,7 +14,29 @@ export interface Product {
     reduction?: number;
   };
   status: 'ACTIVE' | 'INACTIVE';
-  photoUrl?: string;
+  photoUrl?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * DTO retourné par GET /api/products/my-product
+ * Allégé : pas de shop (toujours celui de l'utilisateur), productTypeName résolu côté serveur.
+ */
+export interface MyProduct {
+  _id: string;
+  name: string;
+  price: number;
+  stock: number;
+  productTypeId: string;
+  productTypeName: string;
+  attributes?: Record<string, unknown>;
+  promotion?: {
+    active: boolean;
+    reduction?: number;
+  };
+  status: 'ACTIVE' | 'INACTIVE';
+  photoUrl?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
