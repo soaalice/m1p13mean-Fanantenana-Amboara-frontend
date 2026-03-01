@@ -35,3 +35,68 @@
 }
 
 @include p.responsive-page('.shops-page', '.shops-table');
+
+.mdc-data-table__cell {
+    padding: 1.25rem !important;
+}
+
+// ── Rent cell ────────────────────────────────────────────────────────────────
+.rent-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rent-amount {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary, #0f172a);
+}
+
+.rent-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-muted, #64748b);
+
+    mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+.rent-overdue {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--status-error-bg, #fef2f2);
+    color: var(--status-error-text, #b91c1c);
+    font-weight: 700;
+    border: 1px solid #fecaca;
+
+    mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        animation: pulse-icon 1.5s ease-in-out infinite;
+    }
+}
+
+.overdue-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.no-rent {
+    color: var(--text-muted, #94a3b8);
+}
+
+@keyframes pulse-icon {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.5; }
+}

@@ -67,15 +67,26 @@
 						<h3>Active Rent</h3>
 					</div>
 					<div class="section-content" *ngIf="shop?.activeRent; else noActiveRent">
+						<div class="overdue-banner" *ngIf="isRentOverdue">
+							<mat-icon>warning</mat-icon>
+							<span>Rent deadline has passed — please pay as soon as possible.</span>
+						</div>
 						<div class="meta-row">
 							<span class="label">Amount</span>
 							<span class="value">{{ shop.activeRent?.amount }} MGA</span>
 						</div>
 						<div class="meta-row">
 							<span class="label">Next deadline</span>
-							<span class="value">{{ shop.activeRent?.nextDeadline | date:'shortDate' }}</span>
+							<span class="value deadline-value" [class.deadline-overdue]="isRentOverdue">
+								<mat-icon>{{ isRentOverdue ? 'warning' : 'event' }}</mat-icon>
+								{{ shop.activeRent?.nextDeadline | date:'shortDate' }}
+							</span>
 						</div>
-						<button mat-raised-button color="primary" type="button" (click)="openPaymentModal()">
+						<button mat-raised-button color="warn" type="button" (click)="openPaymentModal()" *ngIf="isRentOverdue">
+							<mat-icon>payment</mat-icon>
+							Pay now
+						</button>
+						<button mat-raised-button color="primary" type="button" (click)="openPaymentModal()" *ngIf="!isRentOverdue">
 							Pay rent
 						</button>
 					</div>
