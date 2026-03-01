@@ -11,6 +11,10 @@ export interface PanierItemPayload {
   name: string;
   price: number;
   qte: number;
+  shop?: {
+    _id: string;
+    name: string;
+  };
 }
 
 export interface Panier {
@@ -36,6 +40,7 @@ export class PanierService {
       name: item.nom,
       price: item.prix,
       qte: item.qte,
+      shop: item.shop ? { _id: item.shop._id, name: item.shop.name } : undefined,
     };
   }
 
