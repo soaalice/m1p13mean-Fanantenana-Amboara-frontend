@@ -48,32 +48,6 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
     return this.productTypeForm.get('attributes') as FormArray;
   }
 
-  formatAttributes(productType: ProductType): string {
-    if (!productType.attributes || productType.attributes.length === 0) {
-      return '-';
-    }
-
-    return productType.attributes
-      .map(attribute => {
-        const code = attribute.code || '-';
-        const type = attribute.type || '-';
-
-        if (type === 'ENUM') {
-          const values = (attribute.values ?? []).join(', ');
-          return `${code} (${type}${values ? `: ${values}` : ''})`;
-        }
-
-        if (type === 'NUMBER') {
-          const min = attribute.min ?? '-';
-          const max = attribute.max ?? '-';
-          return `${code} (${type}: ${min} - ${max})`;
-        }
-
-        return `${code} (${type})`;
-      })
-      .join(' | ');
-  }
-
   getAttributeBadges(productType: ProductType): Array<{ label: string; type: ProductTypeAttribute['type'] | 'NONE' }> {
     if (!productType.attributes || productType.attributes.length === 0) {
       return [{ label: 'No attributes', type: 'NONE' }];

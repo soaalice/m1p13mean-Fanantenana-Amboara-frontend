@@ -57,27 +57,15 @@ export class DashboardComponent implements OnInit {
   }
 
   get boxStates(): [string, number][] {
-    if (!this.data) {
-      return [];
-    }
-
-    return Object.entries(this.data.boxes.byState);
+    return Object.entries(this.data?.boxes.byState ?? {});
   }
 
   get userRoles(): [string, number][] {
-    if (!this.data) {
-      return [];
-    }
-
-    return Object.entries(this.data.users.byRole);
+    return Object.entries(this.data?.users.byRole ?? {});
   }
 
   get netSales(): [string, number][] {
-    if (!this.data) {
-      return [];
-    }
-
-    return Object.entries(this.data.netSales.byPeriode);
+    return Object.entries(this.data?.netSales.byPeriode ?? {});
   }
 
   onNetSalesYearChange(yearValue: string): void {

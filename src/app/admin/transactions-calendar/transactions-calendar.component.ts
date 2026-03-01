@@ -12,7 +12,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { AuthService } from '../../core/services/auth.service';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
-import { cA } from '@fullcalendar/core/internal-common';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 const TYPE_COLORS: Record<string, { bg: string; border: string }> = {
@@ -115,19 +114,17 @@ export class TransactionsCalendarComponent implements OnInit {
   private toCalendarEvents(transactions: Transaction[]): EventInput[] {
     return transactions.map(tx => {
       const colors = TYPE_COLORS[tx.type] ?? { bg: '#f1f5f9', border: '#94a3b8' };
-      const date = tx.date ? new Date(tx.date) : new Date();
+      const label = this.getLabel(tx);
       return {
         id:              tx._id,
-        title:          `${this.getLabel(tx)}`,
-        start:          date,
-        allDay:         false,
+        title:           label,
+        start:           tx.date ? new Date(tx.date) : new Date(),
+        allDay:          false,
         backgroundColor: colors.bg,
-        borderColor:    colors.border,
-        textColor:      colors.border,
-        extendedProps:  { tooltip: `${this.getLabel(tx)}` },
+        borderColor:     colors.border,
+        textColor:       colors.border,
+        extendedProps:   { tooltip: label },
       } as EventInput;
     });
   }
-
-
 }

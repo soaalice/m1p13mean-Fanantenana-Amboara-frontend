@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +32,8 @@ import { Transaction } from '../../shared/models/transaction';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   user: User | null = null;
   transactions: Transaction[] = [];
   isRechargeModalOpen = false;
@@ -45,12 +48,12 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Abonnement réactif : se met à jour dès que refreshCurrentUser() émet
-    this.authService.currentUser$.subscribe(u => {
+    this.authService.currentUser$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(u => {
       this.user = u;
       if (u?._id) this.loadRecentTransactions();
     });
-    // Charge les données fraîches depuis le backend (GET /users/me)
     this.authService.refreshCurrentUser();
   }
 

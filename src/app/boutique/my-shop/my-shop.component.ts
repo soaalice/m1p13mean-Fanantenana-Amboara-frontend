@@ -266,17 +266,15 @@ export class MyShopComponent implements OnInit {
   }
 
   onRemovePhoto(): void {
-    if (!this.shop?.photoUrl) {
-      alert('This shop has no photo to remove.');
-      return;
-    }
+    if (!this.shop?.photoUrl) return;
+
     if (confirm(`Are you sure you want to remove the photo for "${this.shop.name}"?`)) {
       this.shopsService.removePhoto(this.shop._id).subscribe({
         next: (updatedShop) => {
           this.shop = updatedShop;
         },
         error: () => {
-          alert('Failed to remove photo. Please try again.');
+          this.photoSubmitError = 'Failed to remove photo. Please try again.';
         }
       });
     }

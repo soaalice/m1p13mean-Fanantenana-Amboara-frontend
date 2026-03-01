@@ -116,23 +116,11 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.submitError = '';
 
     const value = this.boxForm.getRawValue();
-    const state = this.isEditMode
-      ? (this.selectedBox?.state ?? this.defaultState)
-      : this.defaultState;
-    const rent = this.isEditMode
-      ? (this.selectedBox?.rent ?? this.defaultRent)
-      : this.defaultRent;
-    const payload: Omit<Box, '_id'> = this.isEditMode
-      ? {
-          label: value.label ?? '',
-          state,
-          rent
-        }
-      : {
-          label: value.label ?? '',
-          state,
-          rent
-        };
+    const payload: Omit<Box, '_id'> = {
+      label: value.label ?? '',
+      state: this.isEditMode ? (this.selectedBox?.state ?? this.defaultState) : this.defaultState,
+      rent: this.isEditMode ? (this.selectedBox?.rent ?? this.defaultRent) : this.defaultRent,
+    };
 
     const request$ = this.isEditMode && this.selectedBox?._id
       ? this.boxService.updateBox(this.selectedBox._id, payload)

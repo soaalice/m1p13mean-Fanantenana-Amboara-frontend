@@ -27,6 +27,7 @@
 					<span>Upload Image</span>
 				</button>
 				<p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+				<p class="state error" *ngIf="imageError">{{ imageError }}</p>
 			</div>
 			<div class="image-preview-container" *ngIf="imagePreview">
 				<img [src]="imagePreview" alt="Shop preview" class="image-preview" />

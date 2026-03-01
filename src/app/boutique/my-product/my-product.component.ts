@@ -89,8 +89,7 @@ export class MyProductComponent implements OnInit {
         this.productTypes = types;
         this.isLoadingProductTypes = false;
       },
-      error: (err) => {
-        console.error('Error loading product types:', err);
+      error: () => {
         this.isLoadingProductTypes = false;
       }
     });
@@ -154,11 +153,9 @@ export class MyProductComponent implements OnInit {
         this.total = res.pagination?.total ?? res.data.length;
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Error loading products:', err);
-        // Fallback to static data when API fails
+      error: () => {
         this.isLoading = false;
-        this.loadError = 'Unable to load products from server, showing local data.';
+        this.loadError = 'Unable to load products from server.';
       }
     });
   }
@@ -222,25 +219,14 @@ export class MyProductComponent implements OnInit {
     if (!this.stockModalProduct) return;
     this.isStockSubmitting = true;
     this.stockSubmitError = '';
-    // Call backend API to add stock
+
     this.myProductService.addStock(this.stockModalProduct._id, quantity).subscribe({
       next: (updatedProduct) => {
-        const idx = this.products.findIndex(p => p._id === updatedProduct._id);
-        if (idx !== -1) {
-          // replace immutably so Angular change detection updates the table
-          const next = [...this.products];
-          next[idx] = updatedProduct;
-          this.products = next;
-        } else {
-          // if not found, prepend to keep newest first
-          this.products = [updatedProduct, ...this.products];
-        }
-        this.total = this.products.length;
+        this.updateProductInList(updatedProduct);
         this.isStockSubmitting = false;
         this.closeStockModal();
       },
-      error: (err) => {
-        console.error('Error adding stock:', err);
+      error: () => {
         this.stockSubmitError = 'Failed to add stock. Please try again.';
         this.isStockSubmitting = false;
       }
@@ -266,9 +252,7 @@ export class MyProductComponent implements OnInit {
     if (product.attributes) {
       this.attributesForm.patchValue(product.attributes);
     }
-    
-   
-    
+
     this.isModalOpen = true;
   }
 
@@ -276,15 +260,11 @@ export class MyProductComponent implements OnInit {
     if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
       this.myProductService.deleteProduct(product._id).subscribe({
         next: () => {
-          // Remove product from local list after successful deletion
           this.products = this.products.filter(p => p._id !== product._id);
           this.total = this.products.length;
-          console.log('Product deleted successfully');
         },
-        error: (err) => {
-          console.error('Error deleting product:', err);
-          // Could add a toast notification here
-          alert('Failed to delete product. Please try again.');
+        error: () => {
+          this.loadError = 'Failed to delete product. Please try again.';
         }
       });
     }
@@ -299,7 +279,6 @@ export class MyProductComponent implements OnInit {
     const attributes = this.attributesForm.value;
     
     if (this.isEditMode && this.selectedProduct) {
-      // Mode édition - appel API pour mettre à jour
       const updateData: Partial<CreateProductDto> & { status?: string } = {
         name: val.name!,
         price: val.price!,
@@ -314,23 +293,16 @@ export class MyProductComponent implements OnInit {
         this.selectedPhotoFile || undefined
       ).subscribe({
         next: (updatedProduct) => {
-          console.log('Product updated successfully:', updatedProduct);
-          const idx = this.products.findIndex(p => p._id === updatedProduct._id);
-          if (idx !== -1) {
-            this.products[idx] = updatedProduct;
-            this.products = [...this.products];
-          }
+          this.updateProductInList(updatedProduct);
           this.isSubmitting = false;
           this.isModalOpen = false;
         },
-        error: (err) => {
-          console.error('Error updating product:', err);
+        error: () => {
           this.submitError = 'Failed to update product. Please try again.';
           this.isSubmitting = false;
         }
       });
     } else {
-      // Mode création - utilise le service
       const createProductDto: CreateProductDto = {
         name: val.name!,
         price: val.price!,
@@ -340,14 +312,12 @@ export class MyProductComponent implements OnInit {
 
       this.myProductService.createProduct(createProductDto, this.selectedPhotoFile || undefined).subscribe({
         next: (createdProduct) => {
-          console.log('Product created successfully:', createdProduct);
           this.products = [...this.products, createdProduct];
           this.total = this.products.length;
           this.isModalOpen = false;
           this.isSubmitting = false;
         },
-        error: (err) => {
-          console.error('Error creating product:', err);
+        error: () => {
           this.submitError = 'Failed to create product. Please try again.';
           this.isSubmitting = false;
         }
@@ -388,17 +358,11 @@ export class MyProductComponent implements OnInit {
 
     this.myProductService.updatePhoto(this.photoModalProduct._id, photoFile).subscribe({
       next: (updatedProduct) => {
-        console.log('Photo updated successfully:', updatedProduct);
-        const idx = this.products.findIndex(p => p._id === updatedProduct._id);
-        if (idx !== -1) {
-          this.products[idx] = updatedProduct;
-          this.products = [...this.products];
-        }
+        this.updateProductInList(updatedProduct);
         this.isPhotoSubmitting = false;
         this.closePhotoModal();
       },
-      error: (err) => {
-        console.error('Error updating photo:', err);
+      error: () => {
         this.photoSubmitError = 'Failed to update photo. Please try again.';
         this.isPhotoSubmitting = false;
       }
@@ -406,24 +370,15 @@ export class MyProductComponent implements OnInit {
   }
 
   onRemovePhoto(product: Product): void {
-    if (!product.photoUrl) {
-      alert('This product has no photo to remove.');
-      return;
-    }
+    if (!product.photoUrl) return;
 
     if (confirm(`Are you sure you want to remove the photo for "${product.name}"?`)) {
       this.myProductService.removePhoto(product._id).subscribe({
         next: (updatedProduct) => {
-          console.log('Photo removed successfully');
-          const idx = this.products.findIndex(p => p._id === updatedProduct._id);
-          if (idx !== -1) {
-            this.products[idx] = updatedProduct;
-            this.products = [...this.products];
-          }
+          this.updateProductInList(updatedProduct);
         },
-        error: (err) => {
-          console.error('Error removing photo:', err);
-          alert('Failed to remove photo. Please try again.');
+        error: () => {
+          this.loadError = 'Failed to remove photo. Please try again.';
         }
       });
     }
@@ -437,6 +392,19 @@ export class MyProductComponent implements OnInit {
   get booleanAttributes() {
     if (!this.selectedProductType?.attributes) return [];
     return this.selectedProductType.attributes.filter(attr => attr.type === 'BOOLEAN');
+  }
+
+  /** Replace a product in the local list immutably for change detection */
+  private updateProductInList(updated: Product): void {
+    const idx = this.products.findIndex(p => p._id === updated._id);
+    if (idx !== -1) {
+      const next = [...this.products];
+      next[idx] = updated;
+      this.products = next;
+    } else {
+      this.products = [updated, ...this.products];
+    }
+    this.total = this.products.length;
   }
 }
 

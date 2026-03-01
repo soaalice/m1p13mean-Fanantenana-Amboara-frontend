@@ -24,8 +24,11 @@ import { ShopsService } from '../../core/services/shops.service';
   styleUrl: './create-shop.component.scss'
 })
 export class CreateShopComponent {
+  private static readonly MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+
   isSubmitting = false;
   submitError = '';
+  imageError = '';
   selectedPhotoFile: File | null = null;
   imagePreview: string | null = null;
 
@@ -40,24 +43,24 @@ export class CreateShopComponent {
   ) {}
 
   onImageSelected(event: Event): void {
+    this.imageError = '';
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB');
-        return;
-      }
-      this.selectedPhotoFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.imageError = 'Please select an image file.';
+      return;
     }
+    if (file.size > CreateShopComponent.MAX_PHOTO_SIZE) {
+      this.imageError = 'Image size should be less than 5 MB.';
+      return;
+    }
+
+    this.selectedPhotoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => this.imagePreview = e.target?.result as string;
+    reader.readAsDataURL(file);
   }
 
   removeImage(): void {

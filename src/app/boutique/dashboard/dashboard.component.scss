@@ -140,19 +140,6 @@
 	white-space: nowrap;
 }
 
-.section-badge {
-	display: inline-flex;
-	align-items: center;
-	padding: 4px 12px;
-	background: #eff6ff;
-	border: 1px solid #bfdbfe;
-	border-radius: 999px;
-	font-size: 0.78rem;
-	font-weight: 700;
-	color: #1d4ed8;
-	white-space: nowrap;
-}
-
 .charts-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));

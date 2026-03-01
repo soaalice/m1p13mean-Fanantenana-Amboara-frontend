@@ -47,8 +47,7 @@ export class ProductComponent implements OnInit {
         this.products = res.data.map(p => ({ ...p, imageUrl: (p as any).photoUrl ?? '' }));
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Failed to load products:', err);
+      error: () => {
         this.isLoading = false;
       }
     });
