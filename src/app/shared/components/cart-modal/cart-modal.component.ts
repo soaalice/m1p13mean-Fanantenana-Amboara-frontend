@@ -5,6 +5,14 @@ import { PanierService } from '../../../core/services/panier.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
+import { CartItem } from '../../models/cart';
+import { map } from 'rxjs';
+
+export interface ShopGroup {
+  shopId: string;
+  shopName: string;
+  items: CartItem[];
+}
 
 @Component({
   selector: 'app-cart-modal',
@@ -18,6 +26,10 @@ export class CartModalComponent implements OnInit {
 
   items$ = this.cartService.items$;
   activePanierId$ = this.cartService.activePanierId$;
+
+  groupedItems$ = this.cartService.items$.pipe(
+    map(items => this.groupByShop(items))
+  );
 
   saving = false;
   buying = false;
@@ -51,6 +63,7 @@ export class CartModalComponent implements OnInit {
               nom: it.name,
               prix: it.price,
               qte: it.qte,
+              shop: it.shop ? { _id: it.shop._id, name: it.shop.name } : undefined,
             }));
             this.cartService.setItems(mapped);
           }
@@ -91,6 +104,26 @@ export class CartModalComponent implements OnInit {
 
   getTotal(): number {
     return this.cartService.getTotal();
+  }
+
+  getGroupTotal(items: CartItem[]): number {
+    return items.reduce((acc, it) => acc + (it.prix || 0) * (it.qte || 0), 0);
+  }
+
+  private groupByShop(items: CartItem[]): ShopGroup[] {
+    const map = new Map<string, ShopGroup>();
+    for (const item of items) {
+      const key = item.shop?._id ?? '__no_shop__';
+      if (!map.has(key)) {
+        map.set(key, {
+          shopId: key,
+          shopName: item.shop?.name ?? 'Sans boutique',
+          items: [],
+        });
+      }
+      map.get(key)!.items.push(item);
+    }
+    return Array.from(map.values());
   }
 
   onClose() {

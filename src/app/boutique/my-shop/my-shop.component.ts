@@ -97,6 +97,12 @@ export class MyShopComponent implements OnInit {
     private rentsService: RentsService
   ) {}
 
+  get isRentOverdue(): boolean {
+    const deadline = this.shop?.activeRent?.nextDeadline;
+    if (!deadline) return false;
+    return new Date(deadline) < new Date();
+  }
+
   ngOnInit(): void {
     this.fetchShop();
   }

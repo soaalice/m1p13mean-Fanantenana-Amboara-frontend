@@ -6,12 +6,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
-import { Panier, PanierService } from '../../core/services/panier.service';
+import { Panier, PanierItemPayload, PanierService } from '../../core/services/panier.service';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+
+export interface PanierShopGroup {
+  shopId: string;
+  shopName: string;
+  items: PanierItemPayload[];
+}
 
 @Component({
   selector: 'app-transactions',
@@ -131,5 +137,26 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
     return this.selectedPanier.items.reduce(
       (sum, item) => sum + item.price * item.qte, 0
     );
+  }
+
+  get groupedPanierItems(): PanierShopGroup[] {
+    if (!this.selectedPanier) return [];
+    const map = new Map<string, PanierShopGroup>();
+    for (const item of this.selectedPanier.items) {
+      const key = item.shop?._id ?? '__no_shop__';
+      if (!map.has(key)) {
+        map.set(key, {
+          shopId: key,
+          shopName: item.shop?.name ?? 'Sans boutique',
+          items: [],
+        });
+      }
+      map.get(key)!.items.push(item);
+    }
+    return Array.from(map.values());
+  }
+
+  getShopGroupSubtotal(items: PanierItemPayload[]): number {
+    return items.reduce((sum, i) => sum + i.price * i.qte, 0);
   }
 }

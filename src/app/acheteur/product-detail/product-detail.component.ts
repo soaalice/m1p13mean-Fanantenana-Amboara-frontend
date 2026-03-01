@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
-import { Product } from '../../shared/models/product';
+import { MyProduct, Product } from '../../shared/models/product';
 import { MyProductService } from '../../core/services/my-product.service';
 import { CartService } from '../../core/services/cart.service';
 
@@ -17,6 +17,17 @@ import { CartService } from '../../core/services/cart.service';
   styleUrl: './product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit {
+  /** Pass a product directly to skip route loading (boutique preview mode) */
+  @Input() set previewData(p: Product | MyProduct | null) {
+    if (p) {
+      this.product = p as Product;
+      this.isLoading = false;
+    }
+  }
+  /** When true: hides breadcrumb, cart section, and shows a close button */
+  @Input() previewMode = false;
+  @Output() closed = new EventEmitter<void>();
+
   product: Product | null = null;
   isLoading = true;
   loadError = '';
@@ -31,6 +42,7 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.previewMode) return; // product supplied via @Input(), skip route
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.router.navigate(['/acheteur/product']);

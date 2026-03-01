@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ModalFormsComponent } from '../../../shared/components/modal-forms/modal-forms.component';
-import { Product } from '../../../shared/models/product';
+import { Product, MyProduct } from '../../../shared/models/product';
 
 @Component({
   selector: 'app-update-photo-modal',
@@ -19,7 +19,7 @@ import { Product } from '../../../shared/models/product';
 })
 export class UpdatePhotoModalComponent {
   @Input() isOpen = false;
-  @Input() product: Product | null = null;
+  @Input() product: Product | MyProduct | null = null;
   @Input() isSubmitting = false;
   @Input() error = '';
 

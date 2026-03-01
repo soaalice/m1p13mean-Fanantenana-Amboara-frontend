@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserRole } from '../../shared/models/user';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-login',
@@ -21,12 +22,14 @@ import { UserRole } from '../../shared/models/user';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    LoaderComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  isLoading = false;
   loginForm: FormGroup;
   errorMessage: string = '';
 
@@ -49,6 +52,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       this.authService.login(this.loginForm.value.login, this.loginForm.value.password).subscribe({
         next: () => {
           const role = this.authService.getRoleFromToken();
@@ -57,6 +61,9 @@ export class LoginComponent {
         },
         error: (error) => {
           this.errorMessage = error.error?.message || 'An error occurred during login. Please try again.';
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }

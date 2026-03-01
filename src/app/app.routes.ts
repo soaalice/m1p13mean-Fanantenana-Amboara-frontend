@@ -93,6 +93,10 @@ export const routes: Routes = [
       {
         path: 'my-command',
         loadComponent: () => import('./boutique/my-command/my-command.component').then(m => m.MyCommandComponent)
+      },
+      {
+        path: 'product-preview/:id',
+        loadComponent: () => import('./boutique/product-preview/product-preview.component').then(m => m.BoutiqueProductPreviewComponent)
       }
     ]
   },

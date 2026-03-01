@@ -1,21 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Command, CommandItem } from '../../shared/models/command.model';
 import { CommandService } from '../../core/services/command.service';
+import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-my-command',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './my-command.component.html',
   styleUrl: './my-command.component.scss'
@@ -27,6 +33,8 @@ export class MyCommandComponent implements OnInit {
   limit = 10;
   total = 0;
   dataSource: Command[] = [];
+  startDate = '';
+  endDate = '';
 
   isLoading = false;
   loadError = '';
@@ -43,7 +51,10 @@ export class MyCommandComponent implements OnInit {
     this.loadError = '';
     this.expandedCommand = null;
 
-    this.commandService.getMyCommands(this.page, this.limit).subscribe({
+    this.commandService.getMyCommands(this.page, this.limit, {
+      startDate: this.startDate || undefined,
+      endDate: this.endDate || undefined
+    }).subscribe({
       next: (result) => {
         this.dataSource = result.data;
         this.total = result.pagination.total;
@@ -59,6 +70,18 @@ export class MyCommandComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.page = event.pageIndex + 1;
     this.limit = event.pageSize;
+    this.fetchData();
+  }
+
+  applyFilters(): void {
+    this.page = 1;
+    this.fetchData();
+  }
+
+  resetFilters(): void {
+    this.startDate = '';
+    this.endDate = '';
+    this.page = 1;
     this.fetchData();
   }
 

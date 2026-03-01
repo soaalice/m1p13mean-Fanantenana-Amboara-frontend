@@ -1,8 +1,99 @@
-.product-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px; }
-.product-grid .left p, .product-grid .right p { margin:4px 0; }
-.stock-input { margin-bottom: 12px; display:flex; flex-direction:column; gap:6px; }
-.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
-.field-error { color:#c62828; font-size:13px; }
-.modal-header-row { display:flex; align-items:center; justify-content:space-between; }
-.close-btn { height:36px; width:36px; }
+.stock-modal {
+	display: grid;
+	gap: 16px;
+}
+
+.modal-subtitle {
+	margin: 0;
+	color: var(--text-muted, #64748b);
+	font-size: 0.92rem;
+	line-height: 1.5;
+}
+
+.product-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.info-card {
+	background: var(--surface-2, #f8fafc);
+	border: 1px solid var(--border-color, #e2e8f0);
+	border-radius: var(--radius-md, 12px);
+	padding: 14px;
+	display: grid;
+	gap: 6px;
+}
+
+.label {
+	margin: 0;
+	color: var(--text-muted, #64748b);
+	font-size: 0.76rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.value {
+	margin: 0 0 4px;
+	color: var(--text-primary, #0f172a);
+	font-weight: 600;
+	font-size: 0.94rem;
+	line-height: 1.4;
+}
+
+.value.mono {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 0.85rem;
+	word-break: break-all;
+}
+
+.value.stock {
+	display: inline-flex;
+	width: fit-content;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: var(--status-info-bg, #eff6ff);
+	color: var(--status-info-text, #1d4ed8);
+}
+
+.stock-input {
+	margin-top: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.stock-input mat-form-field {
+	width: 100%;
+}
+
+.field-error {
+	color: var(--status-error-text, #b91c1c);
+	font-size: 0.82rem;
+	font-weight: 600;
+	margin: 0;
+}
+
+.modal-actions {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+	margin-top: 4px;
+}
+
+@media (max-width: 680px) {
+	.product-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.modal-actions {
+		justify-content: stretch;
+	}
+
+	.btn-cancel,
+	.btn-submit {
+		flex: 1;
+	}
+}
 

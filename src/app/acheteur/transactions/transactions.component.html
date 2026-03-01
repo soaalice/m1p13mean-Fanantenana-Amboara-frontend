@@ -102,84 +102,105 @@
 		<!-- Header -->
 		<div class="cmd-modal-header">
 			<div class="cmd-modal-title">
-				<mat-icon>shopping_bag</mat-icon>
-				<span>Détails du panier</span>
+				<span class="cmd-modal-icon">
+					<svg viewBox="0 0 24 24" fill="none"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2"/><path d="M16 10a4 4 0 0 1-8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+				</span>
+				<div>
+					<h2 class="cmd-modal-heading">Détails du panier</h2>
+					<p class="cmd-modal-sub" *ngIf="selectedPanier">{{ selectedPanier._id }}</p>
+				</div>
 			</div>
-			<button class="cmd-modal-close" (click)="closePanierModal()">
-				<mat-icon>close</mat-icon>
+			<button class="cmd-modal-close" (click)="closePanierModal()" aria-label="Fermer">
+				<svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
 			</button>
 		</div>
 
 		<!-- Loading -->
 		<div class="cmd-modal-loading" *ngIf="panierLoading">
 			<span class="cmd-spinner"></span>
-			<span>Chargement…</span>
+			<span>Chargement du panier…</span>
 		</div>
 
 		<!-- Error -->
 		<div class="cmd-modal-error" *ngIf="!panierLoading && panierError">
-			<mat-icon>error_outline</mat-icon>
+			<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
 			{{ panierError }}
 		</div>
 
 		<!-- Content -->
 		<ng-container *ngIf="!panierLoading && !panierError && selectedPanier">
 
-			<!-- Meta row -->
+			<!-- Meta pills -->
 			<div class="cmd-meta">
 				<div class="cmd-meta-cell">
-					<span class="cmd-meta-label">Réf. panier</span>
+					<span class="cmd-meta-label">Référence</span>
 					<span class="cmd-meta-value cmd-id">{{ selectedPanier._id }}</span>
 				</div>
+				<div class="cmd-meta-divider"></div>
 				<div class="cmd-meta-cell">
 					<span class="cmd-meta-label">Statut</span>
 					<span class="cmd-meta-value">
-						<span class="type-chip"
-							[class.type-chip--purchase]="selectedPanier.etat === 'VALIDATED'"
-							[class.type-chip--rent]="selectedPanier.etat === 'PENDING'">
+						<span class="status-pill"
+							[class.status-pill--validated]="selectedPanier.etat === 'VALIDATED'"
+							[class.status-pill--pending]="selectedPanier.etat === 'PENDING'">
+							<span class="status-dot"></span>
 							{{ selectedPanier.etat }}
 						</span>
 					</span>
 				</div>
+				<div class="cmd-meta-divider"></div>
 				<div class="cmd-meta-cell">
 					<span class="cmd-meta-label">Date</span>
 					<span class="cmd-meta-value">{{ (selectedPanier.date || selectedPanier.createdAt) | date:'dd MMM yyyy – HH:mm' }}</span>
 				</div>
 			</div>
 
-			<!-- Items table -->
-			<div class="cmd-items-wrap">
-				<table class="cmd-items-table">
-					<thead>
-						<tr>
-							<th>Produit</th>
-							<th class="text-right">Prix unit.</th>
-							<th class="text-center">Qté</th>
-							<th class="text-right">Sous-total</th>
-						</tr>
-					</thead>
-					<tbody>
-					<tr *ngFor="let item of selectedPanier.items; let odd = odd" [class.cmd-row-odd]="odd">
-						<td class="cmd-product-name">{{ item.name }}</td>
-						<td class="text-right">{{ item.price | number:'1.0-0' }}&nbsp;MGA</td>
-						<td class="text-center">
-							<span class="cmd-qty-badge">× {{ item.qte }}</span>
-						</td>
-						<td class="text-right cmd-subtotal">
-							{{ item.price * item.qte | number:'1.0-0' }}&nbsp;MGA
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<!-- Shop groups -->
+			<div class="cmd-groups">
+				<div class="cmd-shop-card" *ngFor="let group of groupedPanierItems">
+
+					<!-- Shop card header -->
+					<div class="cmd-shop-header">
+						<div class="cmd-shop-identity">
+							<span class="cmd-shop-avatar">
+								<svg viewBox="0 0 24 24" fill="none"><path d="M6.5 10h-2v7h2v-7zm7 0h-2v7h2v-7zm8.5 9H2v2h20v-2zm-3.5-9h-2v7h2v-7zM11.99 1L2 6v2h20V6l-10.01-5z" fill="currentColor"/></svg>
+							</span>
+							<div>
+								<span class="cmd-shop-name">{{ group.shopName }}</span>
+								<span class="cmd-shop-count">{{ group.items.length }}&nbsp;article{{ group.items.length > 1 ? 's' : '' }}</span>
+							</div>
+						</div>
+						<span class="cmd-shop-total">{{ getShopGroupSubtotal(group.items) | number:'1.0-0' }}&nbsp;<span class="cmd-shop-currency">MGA</span></span>
+					</div>
+
+					<!-- Items list -->
+					<div class="cmd-items-list">
+						<div class="cmd-item-row" *ngFor="let item of group.items">
+							<div class="cmd-item-name">{{ item.name }}</div>
+							<div class="cmd-item-right">
+								<span class="cmd-item-unit">{{ item.price | number:'1.0-0' }}&nbsp;MGA</span>
+								<span class="cmd-item-qty">&times;&nbsp;{{ item.qte }}</span>
+								<span class="cmd-item-subtotal">{{ item.price * item.qte | number:'1.0-0' }}&nbsp;<span class="cmd-cur">MGA</span></span>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 
 			<!-- Total footer -->
 			<div class="cmd-footer">
-				<div class="cmd-footer-row">
-					<span>{{ selectedPanier.items.length }} article{{ selectedPanier.items.length > 1 ? 's' : '' }}</span>
-					<span class="cmd-total">{{ (selectedPanier.total ?? panierSubtotal) | number:'1.0-0' }}&nbsp;<span class="cmd-total-currency">MGA</span></span>
+				<div class="cmd-footer-left">
+					<svg viewBox="0 0 24 24" fill="none"><path d="M9 14l-4-4 4-4M5 10h14M15 14l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					{{ selectedPanier.items.length }}&nbsp;article{{ selectedPanier.items.length > 1 ? 's' : '' }}
+					<span class="cmd-footer-shops" *ngIf="groupedPanierItems.length > 1">&middot;&nbsp;{{ groupedPanierItems.length }}&nbsp;boutiques</span>
+				</div>
+				<div class="cmd-footer-total">
+					<span class="cmd-footer-total-label">Total</span>
+					<span class="cmd-footer-total-amount">{{ (selectedPanier.total ?? panierSubtotal) | number:'1.0-0' }}&nbsp;<span class="cmd-footer-total-cur">MGA</span></span>
 				</div>
 			</div>
+
 		</ng-container>
 
 	</div>

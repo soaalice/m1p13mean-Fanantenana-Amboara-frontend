@@ -25,16 +25,166 @@
           </svg>
         </button>
       </div>
+
+      <!-- Type select -->
+      <div class="type-select-wrap">
+        <svg class="type-select-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <select
+          class="type-select"
+          [(ngModel)]="selectedTypeId"
+          (ngModelChange)="onTypeChange()"
+          [disabled]="loadingTypes"
+        >
+          <option value="">{{ loadingTypes ? 'Chargement…' : 'Tous les types de produit' }}</option>
+          <option *ngFor="let t of productTypes" [value]="t._id">{{ t.label }}</option>
+        </select>
+        <svg class="type-chevron" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+
     </div>
   </header>
+
+  <!-- ── Shop navbar ─────────────────────────────────────────── -->
+  <nav class="shop-nav" *ngIf="shopsForSelect.length > 0">
+    <div class="shop-nav-inner">
+
+      <!-- « Toutes » pill -->
+      <button
+        class="shop-tab"
+        [class.shop-tab--active]="!selectedShopId"
+        (click)="selectShop('')">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        Toutes
+      </button>
+
+      <!-- One pill per shop -->
+      <button
+        class="shop-tab"
+        [class.shop-tab--active]="selectedShopId === s._id"
+        *ngFor="let s of shopsForSelect"
+        (click)="selectShop(s._id)">
+        {{ s.name }}
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ── Attribute filters panel ──────────────────────────────── -->
+  <section class="filters-panel" *ngIf="selectedTypeId && attributeFilters.length > 0">
+    <div class="filters-inner">
+      <div class="filters-header">
+        <span class="filters-label">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18M6 12h12M9 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Filtres · <strong>{{ selectedTypeName }}</strong>
+        </span>
+        <div class="filters-actions">
+          <button class="filters-apply-btn" (click)="applyAttributeFilters()">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Appliquer
+          </button>
+          <button class="filters-reset-btn" *ngIf="activeAttributeFilterCount > 0" (click)="resetAttributeFilters()">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Effacer ({{ activeAttributeFilterCount }})
+          </button>
+        </div>
+      </div>
+
+      <div class="filters-row">
+
+        <!-- ENUM -->
+        <div class="filter-item" *ngFor="let f of attributeFilters">
+          <label class="filter-label">{{ f.label }}</label>
+
+          <ng-container [ngSwitch]="f.type">
+
+            <!-- ENUM → select -->
+            <div class="filter-control" *ngSwitchCase="'ENUM'">
+              <select class="filter-select" [(ngModel)]="f.selectedEnum">
+                <option value="">Tous</option>
+                <option *ngFor="let v of f.enumValues" [value]="v">{{ v }}</option>
+              </select>
+            </div>
+
+            <!-- STRING → text -->
+            <div class="filter-control" *ngSwitchCase="'STRING'">
+              <input class="filter-input" type="text" [(ngModel)]="f.textValue" placeholder="Filtrer…" />
+            </div>
+
+            <!-- NUMBER → range min / max -->
+            <div class="filter-control filter-range" *ngSwitchCase="'NUMBER'">
+              <input
+                class="filter-input filter-input--sm"
+                type="number"
+                [(ngModel)]="f.numMin"
+                [attr.min]="f.numAttrMin"
+                [attr.max]="f.numAttrMax"
+                placeholder="Min"
+              />
+              <span class="range-sep">–</span>
+              <input
+                class="filter-input filter-input--sm"
+                type="number"
+                [(ngModel)]="f.numMax"
+                [attr.min]="f.numAttrMin"
+                [attr.max]="f.numAttrMax"
+                placeholder="Max"
+              />
+            </div>
+
+            <!-- BOOLEAN → Oui / Non -->
+            <div class="filter-control" *ngSwitchCase="'BOOLEAN'">
+              <select class="filter-select" [(ngModel)]="f.boolValue">
+                <option value="">Tous</option>
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+              </select>
+            </div>
+
+            <!-- DATE → text fallback -->
+            <div class="filter-control" *ngSwitchCase="'DATE'">
+              <input class="filter-input" type="date" [(ngModel)]="f.textValue" />
+            </div>
+
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
   <!-- ── Toolbar ──────────────────────────────────────────────── -->
   <div class="page-toolbar">
     <span class="results-count" *ngIf="!isLoading">
-      <strong>{{ filteredProducts.length }}</strong> produit{{ filteredProducts.length !== 1 ? 's' : '' }}
-      <span *ngIf="searchQuery"> pour « {{ searchQuery }} »</span>
+      <strong>{{ totalProducts }}</strong> produit{{ totalProducts !== 1 ? 's' : '' }}
+      <span *ngIf="searchQuery"> &middot; filtrés par «&nbsp;{{ searchQuery }}&nbsp;»</span>
+      <span *ngIf="selectedTypeName"> &middot; {{ selectedTypeName }}</span>
+      <span *ngIf="selectedShopName"> &middot; {{ selectedShopName }}</span>
+      <span class="filter-chip" *ngIf="activeAttributeFilterCount > 0">
+        {{ activeAttributeFilterCount }} filtre{{ activeAttributeFilterCount > 1 ? 's' : '' }} actif{{ activeAttributeFilterCount > 1 ? 's' : '' }}
+      </span>
     </span>
     <span class="results-count skeleton-text" *ngIf="isLoading"></span>
+
+    <button class="toolbar-reset" *ngIf="selectedTypeId || searchQuery || selectedShopId || activeAttributeFilterCount > 0" (click)="resetAll()">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Tout effacer
+    </button>
   </div>
 
   <!-- ── Skeleton loading ─────────────────────────────────────── -->
@@ -70,9 +220,18 @@
       </svg>
     </div>
     <h3 class="empty-title">Aucun produit trouvé</h3>
-    <p class="empty-sub" *ngIf="searchQuery">Essayez un autre terme de recherche</p>
-    <p class="empty-sub" *ngIf="!searchQuery">Aucun produit disponible pour le moment</p>
-    <button *ngIf="searchQuery" class="empty-reset" (click)="searchQuery = ''">Effacer la recherche</button>
+    <p class="empty-sub" *ngIf="searchQuery || selectedTypeId || selectedShopId">Essayez d'autres critères de recherche</p>
+    <p class="empty-sub" *ngIf="!searchQuery && !selectedTypeId && !selectedShopId">Aucun produit disponible pour le moment</p>
+    <button *ngIf="searchQuery || selectedTypeId || selectedShopId" class="empty-reset" (click)="resetAll()">Effacer tous les filtres</button>
   </div>
+
+  <!-- ── Infinite scroll: loading more ───────────────────────── -->
+  <div class="load-more-wrap" *ngIf="isLoadingMore">
+    <span class="load-more-spinner"></span>
+    <span class="load-more-text">Chargement…</span>
+  </div>
+
+  <!-- Sentinel observed by IntersectionObserver -->
+  <div #scrollSentinel class="scroll-sentinel"></div>
 
 </div>

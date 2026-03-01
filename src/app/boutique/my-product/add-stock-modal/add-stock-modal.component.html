@@ -1,20 +1,22 @@
 <app-modal-forms [isOpen]="isOpen" [title]="'Add stock to product'" (close)="emitClose()">
   <div class="stock-modal" *ngIf="product">
-    <div class="modal-header-row">
-      <h3>Add stock to product</h3>
-      <button class="close-btn" mat-icon-button type="button" (click)="emitClose()" aria-label="Close">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
+    <p class="modal-subtitle">Update inventory quantity for this product.</p>
 
     <div class="product-grid">
-      <div class="left">
-        <p><strong>ID:</strong> {{ product._id }}</p>
-        <p><strong>Name:</strong> {{ product.name }}</p>
-        <p><strong>Current stock:</strong> {{ product.stock || 0 }}</p>
+      <div class="info-card">
+        <p class="label">Product ID</p>
+        <p class="value mono">{{ product._id }}</p>
+
+        <p class="label">Name</p>
+        <p class="value">{{ product.name }}</p>
       </div>
-      <div class="right">
-        <p *ngIf="product.price"><strong>Price:</strong> {{ product.price | number }} Ar</p>
+
+      <div class="info-card">
+        <p class="label">Current stock</p>
+        <p class="value stock">{{ product.stock || 0 }} units</p>
+
+        <p class="label" *ngIf="product.price">Price</p>
+        <p class="value" *ngIf="product.price">{{ product.price | number }} Ar</p>
       </div>
     </div>
 
@@ -28,7 +30,7 @@
     </div>
 
     <div class="modal-actions">
-      <button mat-stroked-button color="primary" type="button" (click)="emitClose()">Cancel</button>
+      <button mat-stroked-button color="primary" type="button" (click)="emitClose()" class="ghost">Cancel</button>
       <button mat-raised-button color="primary" type="button" (click)="doAdd()" [disabled]="isSubmitting">
         <span *ngIf="!isSubmitting">Add</span>
         <span *ngIf="isSubmitting">Adding...</span>
