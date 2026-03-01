@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PageResult } from '../../shared/models/shared.model';
@@ -14,11 +14,26 @@ export class CommandService {
 
   constructor(private http: HttpClient) { }
 
-  getMyCommands(page = 1, limit = 10): Observable<PageResult<Command>> {
-    const params = {
-      page: page.toString(),
-      limit: limit.toString()
-    };
+  getMyCommands(
+    page = 1,
+    limit = 10,
+    filters?: {
+      startDate?: string;
+      endDate?: string;
+    }
+  ): Observable<PageResult<Command>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    if (filters?.startDate) {
+      params = params.set('startDate', filters.startDate);
+    }
+
+    if (filters?.endDate) {
+      params = params.set('endDate', filters.endDate);
+    }
+
     return this.http.get<PageResult<Command>>(`${this.apiUrl}/commands/my-commands`, { params });
   }
 

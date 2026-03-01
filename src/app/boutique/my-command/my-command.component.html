@@ -12,23 +12,19 @@
     </button>
   </div>
 
-  <!-- Summary -->
-  <div class="summary-row">
-    <div class="summary-chip">
-      <mat-icon>receipt_long</mat-icon>
-      <span><strong>{{ total }}</strong> orders total</span>
-    </div>
-    <div class="summary-chip accent">
-      <mat-icon>payments</mat-icon>
-      <span><strong>{{ 0 | number }} Ar</strong> total revenue</span>
-    </div>
-  </div>
+  <app-list-filters [showApply]="false" (reset)="resetFilters()">
+    <label class="filter-item">
+      <span>Date début</span>
+      <input type="date" [(ngModel)]="startDate" />
+    </label>
+    <label class="filter-item">
+      <span>Date fin</span>
+      <input type="date" [(ngModel)]="endDate" />
+    </label>
+  </app-list-filters>
 
   <!-- Loading -->
-  <div class="state" *ngIf="isLoading">
-    <mat-icon>hourglass_empty</mat-icon>
-    Loading orders...
-  </div>
+  <app-loader *ngIf="isLoading" message="Loading orders…" [inline]="true"></app-loader>
 
   <!-- Error -->
   <div class="state error" *ngIf="!isLoading && loadError">
