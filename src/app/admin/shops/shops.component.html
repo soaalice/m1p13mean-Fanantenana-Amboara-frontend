@@ -34,7 +34,7 @@
                 <td mat-cell *matCellDef="let shop">
                     <div class="shop-photo">
                         <img *ngIf="shop.photoUrl" [src]="shop.photoUrl" [alt]="shop.name" class="shop-thumbnail" />
-                        <div *ngIf="!shop.photoUrl" class="no-photo"><mat-icon>storefront</mat-icon></div>
+                        <div *ngIf="!shop.photoUrl" class="no-photo"><mat-icon>image_not_supported</mat-icon></div>
                     </div>
                 </td>
             </ng-container>
