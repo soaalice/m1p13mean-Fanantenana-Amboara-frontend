@@ -53,33 +53,43 @@
           <span>Ajoutez des produits pour commencer</span>
         </div>
 
-        <!-- Item list -->
-        <div class="cart-item" *ngFor="let item of items">
-          <div class="item-info">
-            <div class="item-name">{{ item.nom }}</div>
-            <div class="item-shop-badge" *ngIf="item.shop?.name">
+        <!-- Item list grouped by shop -->
+        <ng-container *ngIf="items.length > 0">
+          <div class="shop-group" *ngFor="let group of (groupedItems$ | async)">
+
+            <!-- Shop header -->
+            <div class="shop-group-header">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.5 10h-2v7h2v-7zm7 0h-2v7h2v-7zm8.5 9H2v2h20v-2zm-3.5-9h-2v7h2v-7zM11.99 1L2 6v2h20V6l-10.01-5z" fill="currentColor"/>
               </svg>
-              {{ item.shop?.name }}
+              <span class="shop-group-name">{{ group.shopName }}</span>
+              <span class="shop-group-subtotal">{{ getGroupTotal(group.items) | number:'1.0-0' }} MGA</span>
             </div>
-            <div class="item-unit-price">{{ item.prix | number:'1.0-0' }} MGA / pièce</div>
+
+            <!-- Items of this shop -->
+            <div class="cart-item" *ngFor="let item of group.items">
+              <div class="item-info">
+                <div class="item-name">{{ item.nom }}</div>
+                <div class="item-unit-price">{{ item.prix | number:'1.0-0' }} MGA / pièce</div>
+              </div>
+
+              <div class="item-qty">
+                <button class="qty-btn" (click)="decrement(item)">−</button>
+                <input type="number" class="qty-input" [value]="item.qte" min="1" (change)="onQtyChange(item, $event)" />
+                <button class="qty-btn" (click)="increment(item)">+</button>
+              </div>
+
+              <div class="item-subtotal">{{ (item.prix * item.qte) | number:'1.0-0' }} MGA</div>
+
+              <button class="delete-btn" (click)="remove(item)" title="Supprimer">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+
           </div>
-
-          <div class="item-qty">
-            <button class="qty-btn" (click)="decrement(item)">−</button>
-            <input type="number" class="qty-input" [value]="item.qte" min="1" (change)="onQtyChange(item, $event)" />
-            <button class="qty-btn" (click)="increment(item)">+</button>
-          </div>
-
-          <div class="item-subtotal">{{ (item.prix * item.qte) | number:'1.0-0' }} MGA</div>
-
-          <button class="delete-btn" (click)="remove(item)" title="Supprimer">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/>
-            </svg>
-          </button>
-        </div>
+        </ng-container>
       </div>
 
       <!-- Summary -->

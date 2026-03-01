@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Shop } from '../../shared/models/shop';
 import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
@@ -11,6 +11,15 @@ import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model'
 export class ShopsService {
 
   private apiUrl = environment.apiUrl;
+
+  // ── Shop filter state (replaces ShopFilterService) ─────────────
+  private _selectedShopId = new BehaviorSubject<string>('');
+  readonly selectedShopId$ = this._selectedShopId.asObservable();
+
+  setShopFilter(id: string): void { this._selectedShopId.next(id); }
+  get shopFilterValue(): string   { return this._selectedShopId.getValue(); }
+  resetShopFilter(): void         { this._selectedShopId.next(''); }
+  // ────────────────────────────────────────────────────────────────
 
   constructor(private http: HttpClient) { }
 
@@ -83,6 +92,12 @@ export class ShopsService {
   /** DELETE /shops/:id/photo — remove the photo */
   removePhoto(shopId: string): Observable<Shop> {
     return this.http.delete<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}/photo`)
+      .pipe(map(res => res.data));
+  }
+
+  getShopsForSelect(): Observable<{ _id: string; name: string }[]> {
+    return this.http
+      .get<{ success: boolean; data: { _id: string; name: string }[] }>(`${this.apiUrl}/shops/select`)
       .pipe(map(res => res.data));
   }
 

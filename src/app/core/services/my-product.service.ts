@@ -44,6 +44,14 @@ export class MyProductService {
 
     return this.http.get<PageResult<Product>>(`${this.apiUrl}/products`, { params });
   }
+
+  /**
+   * Récupère les produits avec filtres serveur (type, boutique, attributs) + pagination
+   * @param params - clés/valeurs envoyées telles quelles en query string
+   */
+  getProductsFiltered(params: Record<string, string>): Observable<PageResult<Product>> {
+    return this.http.get<PageResult<Product>>(`${this.apiUrl}/products`, { params });
+  }
   //my-product
   getMyProduct(page = 1, limit = 10): Observable<PageResult<Product>> {
     const params = {
