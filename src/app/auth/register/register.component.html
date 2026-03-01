@@ -1,85 +1,78 @@
-<main class="register-container">
-    <mat-card class="register-card">
-        <mat-card-header>
-            <mat-card-title>
-                <h1>Register</h1>
-                <p class="mat-small">Create a new account by filling in the information below.</p>
-                <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-            </mat-card-title>
-        </mat-card-header>
+<main class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1>Inscription</h1>
+        <p class="mat-small">Créez votre compte en remplissant les informations ci-dessous.</p>
+        <p class="auth-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      </mat-card-title>
+    </mat-card-header>
 
-        <mat-card-content>
-            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label for="fullName">Full Name</mat-label>
-                    <input matInput id="fullName" formControlName="fullName" required autocomplete="name"/>
-                    <mat-icon matPrefix>person</mat-icon>
+    <mat-card-content>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom complet</mat-label>
+          <input matInput id="fullName" formControlName="fullName" required autocomplete="name" />
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="registerForm.get('fullName')?.hasError('required')">
+            Le nom complet est requis
+          </mat-error>
+        </mat-form-field>
 
-                    <mat-error *ngIf="registerForm.get('fullName')?.hasError('required')">
-                        Full Name is required
-                    </mat-error>
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput id="email" formControlName="email" autocomplete="email" />
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+            Veuillez entrer un email valide
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label for="email">Email</mat-label>
-                    <input matInput id="email" formControlName="email" autocomplete="email"/>
-                    <mat-icon matPrefix>email</mat-icon>
+        <mat-form-field appearance="fill">
+          <mat-label>Téléphone</mat-label>
+          <input matInput id="tel" formControlName="tel" required autocomplete="tel" />
+          <mat-icon matPrefix>phone</mat-icon>
+          <mat-error *ngIf="registerForm.get('tel')?.hasError('required')">
+            Le numéro de téléphone est requis
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('tel')?.hasError('minlength')">
+            10 chiffres minimum
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('tel')?.hasError('pattern')">
+            Numéro invalide
+          </mat-error>
+        </mat-form-field>
 
-                    <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-                        Please enter a valid email address
-                    </mat-error>
-                </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Login</mat-label>
+          <input matInput id="login" formControlName="login" required autocomplete="username" />
+          <mat-icon matPrefix>account_circle</mat-icon>
+          <mat-error *ngIf="registerForm.get('login')?.hasError('required')">
+            Le login est requis
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label for="tel">Phone Number</mat-label>
-                    <input matInput id="tel" formControlName="tel" required autocomplete="tel"/>
-                    <mat-icon matPrefix>phone</mat-icon>
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput id="password" type="password" formControlName="password" required autocomplete="new-password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+            Le mot de passe est requis
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+            6 caractères minimum
+          </mat-error>
+        </mat-form-field>
 
-                    <mat-error *ngIf="registerForm.get('tel')?.hasError('required')">
-                        Phone Number is required
-                    </mat-error>
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
+          S'inscrire
+        </button>
 
-                    <mat-error *ngIf="registerForm.get('tel')?.hasError('minlength')">
-                        Phone Number must be at least 10 digits long
-                    </mat-error>
-
-                    <mat-error *ngIf="registerForm.get('tel')?.hasError('pattern')">
-                        Please enter a valid phone number
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label for="login">Login</mat-label>
-                    <input matInput id="login" formControlName="login" required autocomplete="email"/>
-                    <mat-icon matPrefix>email</mat-icon>
-
-                    <mat-error *ngIf="registerForm.get('login')?.hasError('required')">
-                        Login is required
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" class="full-width">
-                    <mat-label for="password">Password</mat-label>
-                    <input matInput id="password" type="password" formControlName="password" required autocomplete="new-password"/>
-                    <mat-icon matPrefix>lock</mat-icon>
-
-                    <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-                        Password is required
-                    </mat-error>
-                    <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-                        Password must be at least 6 characters long
-                    </mat-error>
-                </mat-form-field>
-
-                <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
-                    Register
-                </button>
-
-                <div class="links">
-                    <span>Already have an account?</span>
-                    <a routerLink="/login">Log in</a>
-                </div>
-            </form>
-        </mat-card-content>
-    </mat-card>
+        <div class="auth-links">
+          <span>Déjà un compte ?</span>
+          <a routerLink="/login">Se connecter</a>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </main>

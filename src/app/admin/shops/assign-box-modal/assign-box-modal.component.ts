@@ -6,11 +6,12 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { ModalFormsComponent } from '../../../shared/components/modal-forms/modal-forms.component';
 import { Box } from '../../../shared/models/box';
+import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-assign-box-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatPaginatorModule, MatButtonModule, ModalFormsComponent],
+  imports: [CommonModule, FormsModule, MatTableModule, MatPaginatorModule, MatButtonModule, ModalFormsComponent, LoaderComponent],
   templateUrl: './assign-box-modal.component.html',
   styleUrl: './assign-box-modal.component.scss'
 })

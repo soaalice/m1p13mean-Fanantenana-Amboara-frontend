@@ -11,6 +11,7 @@ import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-transactions',
@@ -22,7 +23,8 @@ import { ListFiltersComponent } from '../../shared/components/list-filters/list-
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    ListFiltersComponent
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss'
