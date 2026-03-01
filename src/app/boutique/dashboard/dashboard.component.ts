@@ -50,8 +50,8 @@ export class DashboardComponent implements OnInit {
         this.selectedYear = response.netSales.year;
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Impossible de charger les statistiques de la boutique.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger les statistiques de la boutique.';
         this.isLoading = false;
       }
     });

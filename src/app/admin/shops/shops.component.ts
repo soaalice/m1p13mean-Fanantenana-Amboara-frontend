@@ -76,6 +76,18 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return `${amount} / due ${next}`;
   }
 
+  isRentOverdue(shop: Shop): boolean {
+    const deadline = shop.activeRent?.nextDeadline;
+    if (!deadline) return false;
+    return new Date(deadline) < new Date();
+  }
+
+  getRentDeadlineLabel(shop: Shop): string {
+    const deadline = shop.activeRent?.nextDeadline;
+    if (!deadline) return '—';
+    return new Date(deadline).toLocaleDateString();
+  }
+
   protected fetchData(page = this.page): void {
       this.isLoading = true;
       this.loadError = '';

@@ -7,7 +7,7 @@
 @mixin dashboard-shell {
 	display: grid;
 	gap: 28px;
-	padding: 32px;
+	padding: clamp(16px, 3vw, 32px);
 }
 
 // ── Page header (title + subtitle + actions) ─────────────────────────────────
@@ -230,12 +230,67 @@
 		}
 
 		.header-actions {
+			flex-wrap: wrap;
 			justify-content: flex-start;
+		}
+
+		.section-header {
+			align-items: stretch;
+			flex-direction: column;
+		}
+
+		.section-badge {
+			width: fit-content;
 		}
 
 		.cards-grid,
 		.charts-grid {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.page-header h1 {
+			font-size: clamp(1.35rem, 6vw, 1.7rem);
+		}
+
+		.heading-copy p {
+			font-size: 0.86rem;
+		}
+
+		.error-banner {
+			padding: 12px 14px;
+			font-size: 0.84rem;
+		}
+
+		.chart-card {
+			padding: 14px;
+			border-radius: var(--radius-lg, 16px);
+		}
+
+		.chart-card-header {
+			flex-wrap: wrap;
+			margin-bottom: 12px;
+		}
+
+		.chart-card-hint {
+			margin-left: 0;
+			width: 100%;
+		}
+
+		.chart-empty {
+			min-height: 200px;
+			padding: 8px;
+		}
+
+		.skeleton-card {
+			height: 92px;
+			border-radius: var(--radius-lg, 16px);
+		}
+
+		.skeleton-chart {
+			height: 200px;
+			border-radius: var(--radius-lg, 16px);
 		}
 	}
 }
