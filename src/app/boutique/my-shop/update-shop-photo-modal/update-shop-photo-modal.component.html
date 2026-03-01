@@ -1,0 +1,80 @@
+<app-modal-forms
+  [isOpen]="isOpen"
+  [title]="'Update Shop Photo'"
+  (close)="onClose()">
+  
+  <div class="update-photo-content">
+    <div class="shop-info" *ngIf="shop">
+      <h3>{{ shop.name }}</h3>
+    </div>
+
+    <div class="current-photo" *ngIf="shop?.photoUrl && !selectedFile">
+      <label class="section-label">Current Photo</label>
+      <img [src]="shop!.photoUrl" [alt]="shop!.name" class="current-photo-img" />
+    </div>
+
+    <div class="image-upload-section">
+      <label class="section-label">{{ selectedFile ? 'New Photo Preview' : 'Upload New Photo' }}</label>
+      
+      <div class="image-upload-container" *ngIf="!imagePreview || (!selectedFile && !shop?.photoUrl)">
+        <input 
+          type="file" 
+          #fileInput
+          accept="image/*" 
+          (change)="onImageSelected($event)"
+          style="display: none" />
+        <button 
+          mat-stroked-button 
+          type="button" 
+          class="upload-button"
+          (click)="fileInput.click()">
+          <mat-icon>add_photo_alternate</mat-icon>
+          <span>Choose Photo</span>
+        </button>
+        <p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+      </div>
+
+      <div class="image-preview-container" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Photo preview" class="image-preview" />
+        <div class="preview-actions">
+          <button 
+            mat-stroked-button 
+            type="button" 
+            (click)="fileInput.click()">
+            <mat-icon>swap_horiz</mat-icon>
+            <span>Change Photo</span>
+          </button>
+          <button 
+            mat-stroked-button 
+            type="button" 
+            color="warn"
+            (click)="removeImage()"
+            *ngIf="selectedFile">
+            <mat-icon>close</mat-icon>
+            <span>Cancel</span>
+          </button>
+        </div>
+        <input 
+          type="file" 
+          #fileInput
+          accept="image/*" 
+          (change)="onImageSelected($event)"
+          style="display: none" />
+      </div>
+    </div>
+
+    <div class="form-error" *ngIf="error">{{ error }}</div>
+
+    <div class="modal-actions">
+      <button mat-stroked-button type="button" (click)="onClose()">Cancel</button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="button" 
+        [disabled]="!selectedFile || isSubmitting"
+        (click)="onSubmit()">
+        {{ isSubmitting ? 'Updating...' : 'Update Photo' }}
+      </button>
+    </div>
+  </div>
+</app-modal-forms>

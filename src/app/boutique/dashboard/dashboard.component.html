@@ -1,1 +1,116 @@
-<p>dashboard works!</p>
+<section class="boutique-dashboard">
+	<header class="page-header">
+		<div class="heading-copy">
+			<h1>Boutique Dashboard</h1>
+			<p>Overview of customer activity and sales trends</p>
+		</div>
+
+		<div class="header-actions">
+			<button mat-stroked-button type="button" (click)="fetchDashboard()" [disabled]="isLoading">
+				{{ isLoading ? 'Loading…' : 'Refresh' }}
+			</button>
+		</div>
+	</header>
+
+	<div class="error-banner" *ngIf="loadError">
+		<mat-icon>error_outline</mat-icon>
+		<p>{{ loadError }}</p>
+	</div>
+
+	<ng-container *ngIf="isLoading && !data">
+		<app-loader message="Loading dashboard…"></app-loader>
+	</ng-container>
+
+	<ng-container *ngIf="data as dashboard">
+		<div class="cards-grid">
+			<app-dashboard-card
+				icon="groups"
+				title="Total customers"
+				[text]="(dashboard.customers.total | number) ?? '0'"
+				color="#3b82f6"
+			></app-dashboard-card>
+
+			<app-dashboard-card
+				icon="trending_up"
+				title="Net sales"
+				[text]="(dashboard.netSales.total | number) ?? '0'"
+				[description]="selectedYear + ' • Ar'"
+				color="#f59e0b"
+			></app-dashboard-card>
+		</div>
+
+		<section class="analytics-section">
+			<div class="section-header">
+				<div class="section-title">
+					<h2>Analytics</h2>
+					<p>Track customer activity and sales trends over time.</p>
+				</div>
+				<span class="section-badge">{{ selectedYear }}</span>
+			</div>
+
+			<app-list-filters
+				class="year-filter"
+				[showApply]="false"
+				[showReset]="true"
+				resetLabel="Current year"
+				(reset)="resetYear()"
+			>
+				<div class="filter-item">
+					<label for="dashboard-year">Year</label>
+					<select
+						id="dashboard-year"
+						[value]="selectedYear"
+						(change)="onYearChange($any($event.target).value)"
+						[disabled]="isLoading"
+					>
+						<option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+					</select>
+				</div>
+			</app-list-filters>
+
+			<div class="charts-grid">
+				<div class="chart-card">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#3b82f6"></span>
+						<span class="chart-card-label">Customers by month</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Current distribution' }}</span>
+					</div>
+
+					<app-dashboard-graph
+						*ngIf="customersByMonth.length > 0"
+						title="Customers by month"
+						[data]="customersByMonth"
+						type="line"
+						color="#3b82f6"
+					></app-dashboard-graph>
+
+					<div class="chart-empty" *ngIf="customersByMonth.length === 0">
+						<mat-icon>insights</mat-icon>
+						<p>No customer data available yet.</p>
+					</div>
+				</div>
+
+				<div class="chart-card">
+					<div class="chart-card-header">
+						<span class="chart-dot" style="background:#f59e0b"></span>
+						<span class="chart-card-label">Net sales by month</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Evolution in Ar' }}</span>
+					</div>
+
+					<app-dashboard-graph
+						*ngIf="netSalesByMonth.length > 0"
+						title="Net sales by month"
+						[data]="netSalesByMonth"
+						type="line"
+						color="#f59e0b"
+					></app-dashboard-graph>
+
+					<div class="chart-empty" *ngIf="netSalesByMonth.length === 0">
+						<mat-icon>insights</mat-icon>
+						<p>No net sales data available yet.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	</ng-container>
+</section>

@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Shop } from '../../shared/models/shop';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,15 +50,40 @@ export class ShopsService {
   }
 
   getShopByOwner(ownerId: string | number): Observable<Shop | Shop[] | null> {
-    return this.http.get<Shop | Shop[] | null>(`${this.apiUrl}/shops/owner/${ownerId}`);
+    return this.http
+      .get<ApiSingleResponse<Shop | Shop[] | null>>(`${this.apiUrl}/shops/owner/${ownerId}`)
+      .pipe(map(response => response.data));
   }
 
-  createShop(shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.post<Shop>(`${this.apiUrl}/shops`, shopData);
+  createShop(shopData: Partial<Shop>, photoFile?: File): Observable<Shop> {
+    const formData = new FormData();
+    if (shopData.name) formData.append('name', shopData.name);
+    if (photoFile) formData.append('photo', photoFile, photoFile.name);
+    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops`, formData)
+      .pipe(map(response => response.data));
   }
 
-  updateShop(shopId: number, shopData: Partial<Shop>): Observable<Shop> {
-    return this.http.put<Shop>(`${this.apiUrl}/shops/${shopId}`, shopData);
+  updateShop(shopId: string, shopData: Partial<Shop>, photoFile?: File): Observable<Shop> {
+    const formData = new FormData();
+    if (shopData.name !== undefined) formData.append('name', shopData.name);
+    if (shopData.status !== undefined) formData.append('status', shopData.status);
+    if (photoFile) formData.append('photo', photoFile, photoFile.name);
+    return this.http.put<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}`, formData)
+      .pipe(map(response => response.data));
+  }
+
+  /** POST /shops/:id/photo — update only the photo */
+  updatePhoto(shopId: string, photoFile: File): Observable<Shop> {
+    const formData = new FormData();
+    formData.append('photo', photoFile, photoFile.name);
+    return this.http.post<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}/photo`, formData)
+      .pipe(map(res => res.data));
+  }
+
+  /** DELETE /shops/:id/photo — remove the photo */
+  removePhoto(shopId: string): Observable<Shop> {
+    return this.http.delete<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/${shopId}/photo`)
+      .pipe(map(res => res.data));
   }
 
   assignateShopToBox(payload: {
@@ -68,6 +93,7 @@ export class ShopsService {
     rent?: number | null;
     startDate?: string;
   }): Observable<Shop> {
-    return this.http.patch<Shop>(`${this.apiUrl}/shops/assignate`, payload);
+    return this.http.patch<ApiSingleResponse<Shop>>(`${this.apiUrl}/shops/assignate`, payload)
+      .pipe(map(response => response.data));
   }
 }

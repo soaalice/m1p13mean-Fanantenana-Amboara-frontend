@@ -10,7 +10,8 @@ import { ProductType, ProductTypeAttribute, CreateProductTypeDto } from '../../s
 import { SidebarService } from '../../core/services/sidebar.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ProductTypesService } from '../../core/services/product-types.service';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
+import { ProductTypeModalComponent } from './product-type-modal/product-type-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-product-types',
@@ -21,9 +22,10 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
-    ModalFormsComponent,
+    ProductTypeModalComponent,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    LoaderComponent
   ],
   templateUrl: './product-types.component.html',
   styleUrl: './product-types.component.scss'
@@ -44,32 +46,6 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
 
   get attributes(): FormArray {
     return this.productTypeForm.get('attributes') as FormArray;
-  }
-
-  formatAttributes(productType: ProductType): string {
-    if (!productType.attributes || productType.attributes.length === 0) {
-      return '-';
-    }
-
-    return productType.attributes
-      .map(attribute => {
-        const code = attribute.code || '-';
-        const type = attribute.type || '-';
-
-        if (type === 'ENUM') {
-          const values = (attribute.values ?? []).join(', ');
-          return `${code} (${type}${values ? `: ${values}` : ''})`;
-        }
-
-        if (type === 'NUMBER') {
-          const min = attribute.min ?? '-';
-          const max = attribute.max ?? '-';
-          return `${code} (${type}: ${min} - ${max})`;
-        }
-
-        return `${code} (${type})`;
-      })
-      .join(' | ');
   }
 
   getAttributeBadges(productType: ProductType): Array<{ label: string; type: ProductTypeAttribute['type'] | 'NONE' }> {

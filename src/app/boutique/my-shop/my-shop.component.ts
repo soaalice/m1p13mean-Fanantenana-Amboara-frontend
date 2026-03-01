@@ -16,6 +16,8 @@ import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-f
 import { RentsService } from '../../core/services/rents.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { RouterLink } from '@angular/router';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { UpdateShopPhotoModalComponent } from './update-shop-photo-modal/update-shop-photo-modal.component';
 
 interface ShopResponse {
   success: boolean;
@@ -36,7 +38,9 @@ interface ShopResponse {
     MatPaginatorModule,
     ListFiltersComponent,
     ModalFormsComponent,
-    RouterLink
+    RouterLink,
+    LoaderComponent,
+    UpdateShopPhotoModalComponent
   ],
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.scss'
@@ -227,6 +231,53 @@ export class MyShopComponent implements OnInit {
         this.paymentError = error?.error?.message || 'Erreur lors du paiement du loyer.';
       }
     });
+  }
+
+  // --- Photo modal ---
+  isPhotoModalOpen = false;
+  isPhotoSubmitting = false;
+  photoSubmitError = '';
+
+  openPhotoModal(): void {
+    if (!this.shop) return;
+    this.sidebarService.requestCloseSidebar();
+    this.photoSubmitError = '';
+    this.isPhotoModalOpen = true;
+  }
+
+  closePhotoModal(): void {
+    this.isPhotoModalOpen = false;
+  }
+
+  onUpdatePhoto(photoFile: File): void {
+    if (!this.shop) return;
+    this.isPhotoSubmitting = true;
+    this.shopsService.updatePhoto(this.shop._id, photoFile).subscribe({
+      next: (updatedShop) => {
+        this.shop = updatedShop;
+        this.isPhotoSubmitting = false;
+        this.closePhotoModal();
+      },
+      error: () => {
+        this.photoSubmitError = 'Failed to update photo. Please try again.';
+        this.isPhotoSubmitting = false;
+      }
+    });
+  }
+
+  onRemovePhoto(): void {
+    if (!this.shop?.photoUrl) return;
+
+    if (confirm(`Are you sure you want to remove the photo for "${this.shop.name}"?`)) {
+      this.shopsService.removePhoto(this.shop._id).subscribe({
+        next: (updatedShop) => {
+          this.shop = updatedShop;
+        },
+        error: () => {
+          this.photoSubmitError = 'Failed to remove photo. Please try again.';
+        }
+      });
+    }
   }
 
   trackById(index: number, item: Transaction): string | number {

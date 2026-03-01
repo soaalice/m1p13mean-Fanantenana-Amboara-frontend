@@ -6,10 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
+import { Panier, PanierService } from '../../core/services/panier.service';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-transactions',
@@ -21,7 +23,8 @@ import { ListFiltersComponent } from '../../shared/components/list-filters/list-
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    ListFiltersComponent
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss'
@@ -29,7 +32,6 @@ import { ListFiltersComponent } from '../../shared/components/list-filters/list-
 export class TransactionsComponent extends PaginatedComponent<Transaction> {
   userId: string | null = null;
 
-  // Alias pour items du parent
   get transactions(): Transaction[] {
     return this.items;
   }
@@ -39,11 +41,20 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
   endDate = '';
   typeOptions = ['', TransactionType.PURCHASE, TransactionType.RECHARGE, TransactionType.RENT];
 
-  displayedColumns = ['type', 'amount', 'date'];
+  displayedColumns = ['type', 'amount', 'date', 'actions'];
+
+  readonly TransactionType = TransactionType;
+
+  // ── Panier modal state ──────────────────────────────────────────────────
+  panierModalOpen = false;
+  panierLoading = false;
+  panierError = '';
+  selectedPanier: Panier | null = null;
 
   constructor(
-    private transactionsService: TransactionsService, 
-    private authService: AuthService
+    private transactionsService: TransactionsService,
+    private authService: AuthService,
+    private panierService: PanierService
   ) {
     super();
   }
@@ -88,5 +99,37 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
     this.startDate = '';
     this.endDate = '';
     this.fetchData(1);
+  }
+
+  openPanierModal(transaction: Transaction): void {
+    if (!transaction._id) return;
+    this.panierModalOpen = true;
+    this.panierLoading = true;
+    this.panierError = '';
+    this.selectedPanier = null;
+
+    this.panierService.getByTransactionId(transaction._id).subscribe({
+      next: (res) => {
+        this.selectedPanier = res.data;
+        this.panierLoading = false;
+      },
+      error: () => {
+        this.panierError = 'Aucun panier trouvé pour cette transaction.';
+        this.panierLoading = false;
+      }
+    });
+  }
+
+  closePanierModal(): void {
+    this.panierModalOpen = false;
+    this.selectedPanier = null;
+    this.panierError = '';
+  }
+
+  get panierSubtotal(): number {
+    if (!this.selectedPanier) return 0;
+    return this.selectedPanier.items.reduce(
+      (sum, item) => sum + item.price * item.qte, 0
+    );
   }
 }

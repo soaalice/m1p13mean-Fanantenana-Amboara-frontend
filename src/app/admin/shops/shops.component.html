@@ -24,11 +24,21 @@
         </app-list-filters>
     </div>
 
-    <div class="state" *ngIf="isLoading">Loading shops...</div>
+    <app-loader *ngIf="isLoading" message="Loading shops…" [inline]="true"></app-loader>
     <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
         <table mat-table [dataSource]="shops" class="shops-table">
+            <ng-container matColumnDef="photo">
+                <th mat-header-cell *matHeaderCellDef>Photo</th>
+                <td mat-cell *matCellDef="let shop">
+                    <div class="shop-photo">
+                        <img *ngIf="shop.photoUrl" [src]="shop.photoUrl" [alt]="shop.name" class="shop-thumbnail" />
+                        <div *ngIf="!shop.photoUrl" class="no-photo"><mat-icon>image_not_supported</mat-icon></div>
+                    </div>
+                </td>
+            </ng-container>
+
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
                 <td mat-cell *matCellDef="let shop">{{ shop.name }}</td>
@@ -93,82 +103,26 @@
     </div>
 </section>
 
-<app-modal-forms [isOpen]="isAssignModalOpen" title="Assignate box" (close)="closeAssignModal()">
-    <div class="form-grid" style="margin: 16px;">
-        <label>
-            Rent
-            <input type="number" min="0" [(ngModel)]="assignRent" placeholder="0" />
-        </label>
-        <label>
-            Start date
-            <input type="date" [(ngModel)]="assignStartDate" />
-        </label>
-    </div>
-
-    <div class="state" *ngIf="boxesLoading">Loading boxes...</div>
-    <div class="state error" *ngIf="!boxesLoading && boxesLoadError">{{ boxesLoadError }}</div>
-
-    <div class="table-wrap" *ngIf="!boxesLoading && !boxesLoadError">
-        <table mat-table [dataSource]="availableBoxes" class="boxes-table">
-            <ng-container matColumnDef="select">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let box">
-                    <input
-                        type="radio"
-                        name="boxSelect"
-                        [value]="box._id"
-                        [(ngModel)]="selectedBoxId"
-                        (click)="$event.stopPropagation()" />
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="label">
-                <th mat-header-cell *matHeaderCellDef>Label</th>
-                <td mat-cell *matCellDef="let box">{{ box.label }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="state">
-                <th mat-header-cell *matHeaderCellDef>State</th>
-                <td mat-cell *matCellDef="let box">
-                    <span [class]="getStateClass(box.state)">{{ box.state || 'UNKNOWN' }}</span>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="boxesDisplayedColumns"></tr>
-            <tr
-                mat-row
-                *matRowDef="let row; columns: boxesDisplayedColumns"
-                class="selectable-row"
-                [class.is-selected]="row._id === selectedBoxId"
-                (click)="selectBox(row)">
-            </tr>
-        </table>
-
-        <div class="empty" *ngIf="availableBoxes.length === 0">No available boxes.</div>
-
-        <mat-paginator
-            class="paginator"
-            [length]="boxesTotal"
-            [pageIndex]="boxesPage - 1"
-            [pageSize]="boxesLimit"
-            [pageSizeOptions]="boxesPageSizeOptions"
-            (page)="onBoxesPageChange($event)">
-        </mat-paginator>
-    </div>
-
-    <div class="form-error" *ngIf="assignError">{{ assignError }}</div>
-
-    <div class="modal-actions">
-        <button mat-stroked-button color="primary" type="button" class="ghost" (click)="closeAssignModal()">
-            Cancel
-        </button>
-        <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            [disabled]="!selectedBoxId || isAssignSubmitting"
-            (click)="submitAssignation()">
-            {{ isAssignSubmitting ? 'Assigning...' : 'Assignate' }}
-        </button>
-    </div>
-</app-modal-forms>
+<app-assign-box-modal
+    [isOpen]="isAssignModalOpen"
+    [isSubmitting]="isAssignSubmitting"
+    [boxesLoading]="boxesLoading"
+    [boxesLoadError]="boxesLoadError"
+    [assignError]="assignError"
+    [boxesDisplayedColumns]="boxesDisplayedColumns"
+    [availableBoxes]="availableBoxes"
+    [selectedBoxId]="selectedBoxId"
+    [assignRent]="assignRent"
+    [assignStartDate]="assignStartDate"
+    [boxesTotal]="boxesTotal"
+    [boxesPage]="boxesPage"
+    [boxesLimit]="boxesLimit"
+    [boxesPageSizeOptions]="boxesPageSizeOptions"
+    (close)="closeAssignModal()"
+    (submit)="submitAssignation()"
+    (selectBox)="selectBox($event)"
+    (boxesPageChange)="onBoxesPageChange($event)"
+    (selectedBoxIdChange)="selectedBoxId = $event"
+    (assignRentChange)="assignRent = $event"
+    (assignStartDateChange)="assignStartDate = $event">
+</app-assign-box-modal>

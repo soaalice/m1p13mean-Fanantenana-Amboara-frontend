@@ -41,29 +41,21 @@ export class LoginComponent {
     });
   }
 
+  private static readonly ROLE_ROUTES: Record<string, string> = {
+    [UserRole.ADMIN]: '/admin',
+    [UserRole.BOUTIQUE]: '/boutique',
+    [UserRole.ACHETEUR]: '/acheteur',
+  };
+
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value.login, this.loginForm.value.password).subscribe({
-        next: (response) => {
+        next: () => {
           const role = this.authService.getRoleFromToken();
-
-          switch (role) {
-            case UserRole.ADMIN:
-              this.router.navigate(['/admin']);
-              break;
-            case UserRole.BOUTIQUE:
-              this.router.navigate(['/boutique']);
-              break;
-            case UserRole.ACHETEUR:
-              this.router.navigate(['/acheteur']);
-              break;
-            default:
-              this.router.navigate(['/login']);
-              break;
-          }
+          const route = role ? LoginComponent.ROLE_ROUTES[role] : null;
+          this.router.navigate([route ?? '/login']);
         },
         error: (error) => {
-          console.error('Login error:', error);
           this.errorMessage = error.error?.message || 'An error occurred during login. Please try again.';
         }
       });

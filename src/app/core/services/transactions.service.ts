@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Transaction } from '../../shared/models/transaction';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +79,7 @@ export class TransactionsService {
     return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions`, { params });
   }
 
-  getTransactionById(transactionId: string): Observable<{ success: boolean; message: string; data: Transaction }> {
-    return this.http.get<{ success: boolean; message: string; data: Transaction }>(`${environment.apiUrl}/transactions/${transactionId}`);
+  getTransactionById(transactionId: string): Observable<ApiSingleResponse<Transaction>> {
+    return this.http.get<ApiSingleResponse<Transaction>>(`${environment.apiUrl}/transactions/${transactionId}`);
   }
 }

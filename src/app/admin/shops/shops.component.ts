@@ -9,13 +9,12 @@ import { PaginatedComponent } from '../../shared/base/paginated.component';
 import { Shop } from '../../shared/models/shop';
 import { ShopsService } from '../../core/services/shops.service';
 import { BoxService } from '../../core/services/boxes.service';
-import { RentsService } from '../../core/services/rents.service';
-import { AuthService } from '../../core/services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { Box } from '../../shared/models/box';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { AssignBoxModalComponent } from './assign-box-modal/assign-box-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-shops',
@@ -28,8 +27,9 @@ import { SidebarService } from '../../core/services/sidebar.service';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    ModalFormsComponent,
-    ListFiltersComponent
+    AssignBoxModalComponent,
+    ListFiltersComponent,
+    LoaderComponent
   ],
   templateUrl: './shops.component.html',
   styleUrl: './shops.component.scss'
@@ -40,7 +40,7 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
     return this.items;
   }
 
-  displayedColumns = ['name', 'ownerFullName', 'status', 'activeRent', 'assignedBox', 'actions'];
+  displayedColumns = ['photo', 'name', 'ownerFullName', 'status', 'activeRent', 'assignedBox', 'actions'];
   statusOptions = ['ACTIVE', 'INACTIVE'];
   statusFilter = '';
   ownerNameFilter = '';
@@ -63,9 +63,7 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
   constructor(
     private shopsService: ShopsService, 
     private boxService: BoxService,
-    private sidebarService: SidebarService,
-    private rentsService: RentsService,
-    private authService: AuthService
+    private sidebarService: SidebarService
   ) {
     super();
   }

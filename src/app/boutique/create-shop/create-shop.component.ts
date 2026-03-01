@@ -24,8 +24,13 @@ import { ShopsService } from '../../core/services/shops.service';
   styleUrl: './create-shop.component.scss'
 })
 export class CreateShopComponent {
+  private static readonly MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+
   isSubmitting = false;
   submitError = '';
+  imageError = '';
+  selectedPhotoFile: File | null = null;
+  imagePreview: string | null = null;
 
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]]
@@ -36,6 +41,32 @@ export class CreateShopComponent {
     private shopsService: ShopsService,
     private router: Router
   ) {}
+
+  onImageSelected(event: Event): void {
+    this.imageError = '';
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.imageError = 'Please select an image file.';
+      return;
+    }
+    if (file.size > CreateShopComponent.MAX_PHOTO_SIZE) {
+      this.imageError = 'Image size should be less than 5 MB.';
+      return;
+    }
+
+    this.selectedPhotoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => this.imagePreview = e.target?.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(): void {
+    this.selectedPhotoFile = null;
+    this.imagePreview = null;
+  }
 
   submit(): void {
     this.submitError = '';
@@ -49,7 +80,7 @@ export class CreateShopComponent {
       name: this.form.value.name?.trim()
     };
 
-    this.shopsService.createShop(payload).subscribe({
+    this.shopsService.createShop(payload, this.selectedPhotoFile || undefined).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.router.navigate(['/boutique/my-shop']);

@@ -1,40 +1,209 @@
+:host {
+  --ml-sidebar-width:  260px;
+  --ml-toolbar-height: 64px;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Layout shell
+// ─────────────────────────────────────────────────────────────────────────────
 .layout-container {
   height: 100vh;
-  display: flex;
 }
 
 .layout-sidenav {
-  width: 250px;
-  padding: 0;
+  width: var(--ml-sidebar-width);
+  border-right: none;
+  box-shadow: 2px 0 20px rgba(0,0,0,.22);
 }
 
 .layout-content {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
+  min-height: 100vh;
+  background: var(--surface-bg);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Toolbar
+// ─────────────────────────────────────────────────────────────────────────────
 .layout-toolbar {
   position: sticky;
   top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  height: var(--ml-toolbar-height);
+  padding: 0 16px 0 4px;
+  background: var(--primary-800) !important; // override Material primary; aligns with sidebar gradient
+  color: #ffffff;
+  box-shadow: 0 1px 16px rgba(0,0,0,.28);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+
+  // Acheteur desktop: no hamburger → more left padding, tighter gap
+  &--acheteur {
+    padding: 0 12px 0 16px;
+    gap: 0;
+  }
 }
 
-.toolbar-title {
-  font-size: 1.25rem;
+.menu-toggle-btn {
+  flex-shrink: 0;
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+
+  .brand-icon {
+    font-size: 21px;
+    width: 21px;
+    height: 21px;
+    opacity: 0.9;
+  }
+
+  .brand-name {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    @media (max-width: 400px) { display: none; }
+  }
+}
+
+.spacer { flex: 1 1 auto; }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Toolbar nav — acheteur desktop
+// ─────────────────────────────────────────────────────────────────────────────
+.toolbar-acheteur-nav {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  margin-left: 20px;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+.toolbar-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 100%;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 0.875rem;
   font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color        0.18s ease,
+    border-color 0.18s ease,
+    background   0.18s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  &.active {
+    color: var(--primary-100);            // indigo-100 : cohérent avec sidebar .active
+    font-weight: 600;
+    border-bottom-color: var(--primary-100);
+  }
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Main content area
+// ─────────────────────────────────────────────────────────────────────────────
 .main-content {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px;
-  background-color: #f5f5f5;
+  padding: 24px;
+  background: var(--surface-bg);
+
+  @media (max-width: 768px) { padding: 16px 12px; }
+  @media (max-width: 400px) { padding: 12px 8px; }
+
+  // Acheteur mobile: clear bottom-nav
+  &--acheteur {
+    @media (max-width: 768px) {
+      padding-bottom: calc(60px + 16px);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Cart FAB (acheteur only)
+// ─────────────────────────────────────────────────────────────────────────────
+.cart-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 200;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-700, #4338ca);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(67, 56, 202, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    transform: scale(1.08);
+    background: var(--primary-800, #3730a3);
+    box-shadow: 0 6px 24px rgba(67, 56, 202, 0.55);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  @media (max-width: 768px) {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  pointer-events: none;
 }

@@ -1,0 +1,188 @@
+<div class="pdp-root">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <button class="breadcrumb-link" (click)="goBack()">
+            <mat-icon>storefront</mat-icon>
+            <span>Produits</span>
+        </button>
+        <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+        <span class="breadcrumb-current" *ngIf="product">{{ product.name }}</span>
+        <span class="breadcrumb-current breadcrumb-current--loading" *ngIf="isLoading">Chargement…</span>
+    </nav>
+
+    <!-- Loader -->
+    <div class="skeleton-layout" *ngIf="isLoading">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-info">
+            <div class="skeleton-line" style="width:40%;height:13px"></div>
+            <div class="skeleton-line" style="width:75%;height:32px;margin-top:4px"></div>
+            <div class="skeleton-line" style="width:50%;height:13px"></div>
+            <div class="skeleton-line" style="width:45%;height:42px;margin-top:12px"></div>
+            <div class="skeleton-line" style="width:100%;height:52px;margin-top:8px"></div>
+            <div class="skeleton-line" style="width:100%;height:52px"></div>
+            <div class="skeleton-line" style="width:100%;height:52px"></div>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-banner" *ngIf="!isLoading && loadError">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+            <strong>Oups, une erreur est survenue</strong>
+            <p>{{ loadError }}</p>
+        </div>
+        <button class="error-retry" (click)="goBack()">Retour</button>
+    </div>
+
+    <!-- Product body -->
+    <div class="pdp-body" *ngIf="!isLoading && !loadError && product as p">
+
+        <!-- ══ LEFT: Photo ══ -->
+        <aside class="photo-panel">
+            <div class="photo-frame" [class.photo-frame--no-stock]="p.stock === 0">
+
+                <div class="promo-ribbon" *ngIf="hasPromotion">
+                    <span>{{ p.promotion!.reduction }}% OFF</span>
+                </div>
+
+                <img *ngIf="p.photoUrl; else noPhoto" [src]="p.photoUrl" [alt]="p.name" class="product-photo" />
+                <ng-template #noPhoto>
+                    <div class="no-photo-placeholder">
+                        <mat-icon>image_not_supported</mat-icon>
+                        <span>Aucune photo</span>
+                    </div>
+                </ng-template>
+
+                <div class="photo-sold-out" *ngIf="p.stock === 0">
+                    <span>Hors stock</span>
+                </div>
+            </div>
+
+            <!-- Shop chip under photo -->
+
+        </aside>
+
+        <!-- ══ RIGHT: Info ══ -->
+        <div class="info-panel">
+
+            <!-- Header block -->
+            <div class="info-header">
+                <div class="info-header-top">
+                    <span class="status-pill" [class.status-pill--active]="p.status === 'ACTIVE'"
+                        [class.status-pill--inactive]="p.status === 'INACTIVE'">
+                        <span class="status-dot"></span>
+                        {{ p.status === 'ACTIVE' ? 'Disponible' : 'Indisponible' }}
+                    </span>
+                </div>
+
+                <h1 class="product-name">{{ p.name }}</h1>
+                <div class="product-shop">
+                    <span class="shop-label">vendu par</span>
+                    <span class="shop-name">{{ p.shop.name }}</span>
+                </div>
+            </div>
+
+            <!-- Price block -->
+            <div class="price-block">
+                <div class="price-main">
+                    <span class="price-current">{{ discountedPrice | number:'1.0-0' }}<span
+                            class="price-currency">&nbsp;MGA</span></span>
+                    <ng-container *ngIf="hasPromotion">
+                        <span class="price-original">{{ p.price | number:'1.0-0' }} MGA</span>
+                        <span class="price-save-badge">&minus;{{ p.promotion!.reduction }}%</span>
+                    </ng-container>
+                </div>
+                <p class="price-save-note" *ngIf="hasPromotion">
+                    Vous économisez&nbsp;<strong>{{ (p.price - discountedPrice) | number:'1.0-0' }} MGA</strong>
+                </p>
+            </div>
+
+            <!-- Stock indicator -->
+            <div class="stock-indicator">
+                <ng-container *ngIf="p.stock === 0">
+                    <span class="stock-dot stock-dot--out"></span>
+                    <span class="stock-text stock-text--out">Hors stock</span>
+                </ng-container>
+                <ng-container *ngIf="p.stock > 0 && p.stock <= 5">
+                    <span class="stock-dot stock-dot--low"></span>
+                    <span class="stock-text stock-text--low">Plus que&nbsp;<strong>{{ p.stock }}</strong>&nbsp;en stock
+                        — commandez vite !</span>
+                </ng-container>
+                <ng-container *ngIf="p.stock > 5">
+                    <span class="stock-dot stock-dot--ok"></span>
+                    <span class="stock-text"><strong>{{ p.stock | number }}</strong>&nbsp;en stock</span>
+                </ng-container>
+            </div>
+
+            <!-- ── Purchase box ── -->
+            <div class="purchase-box" *ngIf="p.stock > 0">
+
+                <div class="purchase-qty">
+                    <span class="purchase-qty-label">Quantité</span>
+                    <div class="qty-stepper">
+                        <button class="qty-step-btn" (click)="decrementQty()" [disabled]="quantity <= 1"
+                            aria-label="Diminuer">
+                            <mat-icon>remove</mat-icon>
+                        </button>
+                        <span class="qty-step-value">{{ quantity }}</span>
+                        <button class="qty-step-btn" (click)="incrementQty()" [disabled]="quantity >= p.stock"
+                            aria-label="Augmenter">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="purchase-subtotal" *ngIf="quantity > 1">
+                    <span>Sous-total</span>
+                    <strong>{{ (discountedPrice * quantity) | number:'1.0-0' }} MGA</strong>
+                </div>
+
+                <button class="btn-add-to-cart" [class.btn-add-to-cart--success]="addedToCart" (click)="addToCart()"
+                    [disabled]="addedToCart">
+                    <mat-icon>{{ addedToCart ? 'check_circle' : 'shopping_cart' }}</mat-icon>
+                    {{ addedToCart ? 'Ajouté au panier !' : 'Ajouter au panier' }}
+                </button>
+            </div>
+
+            <div class="out-of-stock-banner" *ngIf="p.stock === 0">
+                <mat-icon>inventory_2</mat-icon>
+                <span>Ce produit est actuellement hors stock.</span>
+            </div>
+
+            <!-- Meta row -->
+            <div class="meta-strip">
+                <div class="meta-cell" *ngIf="p.createdAt">
+                    <mat-icon>calendar_today</mat-icon>
+                    <div>
+                        <span class="meta-cell-label">Ajouté le</span>
+                        <span class="meta-cell-value">{{ p.createdAt | date:'dd MMM yyyy' }}</span>
+                    </div>
+                </div>
+                <div class="meta-cell" *ngIf="p.updatedAt">
+                    <mat-icon>update</mat-icon>
+                    <div>
+                        <span class="meta-cell-label">Mis à jour</span>
+                        <span class="meta-cell-value">{{ p.updatedAt | date:'dd MMM yyyy' }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══ Attributes ══ -->
+    <div class="attrs-section" *ngIf="!isLoading && !loadError && product && attributeEntries.length > 0">
+        <h2 class="attrs-title">
+            <mat-icon>tune</mat-icon>
+            Caractéristiques
+        </h2>
+        <div class="attrs-table">
+            <div class="attrs-row" *ngFor="let attr of attributeEntries; let odd = odd" [class.attrs-row--odd]="odd">
+                <span class="attrs-key">{{ attr.key }}</span>
+                <span class="attrs-val">{{ attr.value }}</span>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -3,13 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '../../shared/models/user';
-import { PageResult } from '../../shared/models/shared.model';
-
-export interface UserSoldeResponse {
-  success: boolean;
-  message: string;
-  data: User;
-}
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +42,8 @@ export class UsersService {
     return this.http.patch<User>(`${environment.apiUrl}/users/${userId}/status`, { status });
   }
 
-  rechargeUserSolde(userId: string, amount: number): Observable<UserSoldeResponse> {
-    return this.http.patch<UserSoldeResponse>(`${environment.apiUrl}/users/${userId}/solde`, {
+  rechargeUserSolde(userId: string, amount: number): Observable<ApiSingleResponse<User>> {
+    return this.http.patch<ApiSingleResponse<User>>(`${environment.apiUrl}/users/${userId}/solde`, {
       amount,
       type: 'RECHARGE'
     });

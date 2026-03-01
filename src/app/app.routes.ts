@@ -34,8 +34,12 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'users',
+        redirectTo: 'dashboard',
         pathMatch: 'full'
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
       {
         path: 'users',
@@ -85,6 +89,10 @@ export const routes: Routes = [
       {
         path: 'my-product',
         loadComponent: () => import('./boutique/my-product/my-product.component').then(m => m.MyProductComponent)
+      },
+      {
+        path: 'my-command',
+        loadComponent: () => import('./boutique/my-command/my-command.component').then(m => m.MyCommandComponent)
       }
     ]
   },
@@ -110,6 +118,10 @@ export const routes: Routes = [
       {
         path: 'product',
         loadComponent: () => import('./acheteur/product/product.component').then(m => m.ProductComponent)
+      },
+      {
+        path: 'product/:id',
+        loadComponent: () => import('./acheteur/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
       }
     ]
   },

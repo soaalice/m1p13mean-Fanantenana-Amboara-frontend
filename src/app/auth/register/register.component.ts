@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { User, UserRole, UserStatus } from '../../shared/models/user';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -33,10 +34,12 @@ export class RegisterComponent {
   constructor (
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private toast: ToastService,
   ) {
     this.registerForm = this.fb.group({
       fullName: ['', Validators.required],
+      email: ['', [Validators.email]],
       tel: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.minLength(10)]],
       login: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -48,6 +51,7 @@ export class RegisterComponent {
       const user : User = {
         profile : {
           fullName: this.registerForm.value.fullName,
+          email: this.registerForm.value.email,
           tel: this.registerForm.value.tel,
           solde: 0
         },
@@ -58,12 +62,19 @@ export class RegisterComponent {
       }
 
       this.authService.register(user).subscribe({
-        next: (response) => {
-          this.router.navigate(['/login']);
+        next: () => {
+          this.router.navigate(['/login']).then(() => {
+            this.toast.success('Votre compte a bien été créé. Connectez-vous pour continuer.', {
+              title: 'Inscription réussie',
+              duration: 6000,
+            });
+          });
         },
         error: (error) => {
           console.error('Registration error:', error);
-          this.errorMessage = error.error?.message || 'An error occurred during registration. Please try again.';
+          const message = error.error?.message || 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.';
+          this.errorMessage = message;
+          this.toast.error(message, { title: 'Échec de l\'inscription' });
         }
       });
     }

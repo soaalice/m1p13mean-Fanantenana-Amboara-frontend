@@ -18,6 +18,25 @@
 			</mat-error>
 		</mat-form-field>
 
+		<div class="image-upload-section">
+			<label class="image-upload-label">Shop Photo</label>
+			<div class="image-upload-container" *ngIf="!imagePreview">
+				<input type="file" #fileInput accept="image/*" (change)="onImageSelected($event)" style="display: none" />
+				<button mat-stroked-button type="button" class="upload-button" (click)="fileInput.click()">
+					<mat-icon>add_photo_alternate</mat-icon>
+					<span>Upload Image</span>
+				</button>
+				<p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+				<p class="state error" *ngIf="imageError">{{ imageError }}</p>
+			</div>
+			<div class="image-preview-container" *ngIf="imagePreview">
+				<img [src]="imagePreview" alt="Shop preview" class="image-preview" />
+				<button mat-icon-button type="button" class="remove-image-button" (click)="removeImage()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</div>
+		</div>
+
 		<div class="actions">
 			<button mat-stroked-button type="button" routerLink="/boutique/my-shop">
 				Cancel

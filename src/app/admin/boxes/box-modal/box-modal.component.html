@@ -1,0 +1,19 @@
+<app-modal-forms [isOpen]="isOpen" [title]="isEditMode ? 'Edit box' : 'Add box'" (close)="onClose()">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()">
+		<div class="form-grid">
+			<label>
+				Label
+				<input type="text" formControlName="label" placeholder="Box A1" />
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="error">{{ error }}</div>
+
+		<div class="modal-actions">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Cancel</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting">
+				{{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>

@@ -1,10 +1,10 @@
 // box.service.ts
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Box } from '../../shared/models/box';
 import { environment } from '../../../environments/environment';
-import { PageResult } from '../../shared/models/shared.model';
+import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({ providedIn: 'root' })
 export class BoxService {
@@ -27,14 +27,17 @@ export class BoxService {
   }
 
   createBox(payload: Omit<Box, '_id'>): Observable<Box> {
-    return this.http.post<Box>(`${this.apiUrl}/boxes`, payload);
+    return this.http.post<ApiSingleResponse<Box>>(`${this.apiUrl}/boxes`, payload)
+      .pipe(map(response => response.data));
   }
 
   updateBox(id: string, payload: Omit<Box, '_id'>): Observable<Box> {
-    return this.http.put<Box>(`${this.apiUrl}/boxes/${id}`, payload);
+    return this.http.put<ApiSingleResponse<Box>>(`${this.apiUrl}/boxes/${id}`, payload)
+      .pipe(map(response => response.data));
   }
 
   deleteBox(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/boxes/${id}`);
+    return this.http.delete<ApiSingleResponse<null>>(`${this.apiUrl}/boxes/${id}`)
+      .pipe(map(() => undefined));
   }
 }

@@ -9,8 +9,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BoxService } from '../../core/services/boxes.service';
 import { Box } from '../../shared/models/box';
 import { PaginatedComponent } from '../../shared/base/paginated.component';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { SidebarService } from '../../core/services/sidebar.service';
+import { BoxModalComponent } from './box-modal/box-modal.component';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-boxes',
@@ -23,7 +24,8 @@ import { SidebarService } from '../../core/services/sidebar.service';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    ModalFormsComponent
+    BoxModalComponent,
+    LoaderComponent
   ],
   templateUrl: './boxes.component.html',
   styleUrls: ['./boxes.component.scss']
@@ -114,23 +116,11 @@ export class BoxesComponent extends PaginatedComponent<Box> {
     this.submitError = '';
 
     const value = this.boxForm.getRawValue();
-    const state = this.isEditMode
-      ? (this.selectedBox?.state ?? this.defaultState)
-      : this.defaultState;
-    const rent = this.isEditMode
-      ? (this.selectedBox?.rent ?? this.defaultRent)
-      : this.defaultRent;
-    const payload: Omit<Box, '_id'> = this.isEditMode
-      ? {
-          label: value.label ?? '',
-          state,
-          rent
-        }
-      : {
-          label: value.label ?? '',
-          state,
-          rent
-        };
+    const payload: Omit<Box, '_id'> = {
+      label: value.label ?? '',
+      state: this.isEditMode ? (this.selectedBox?.state ?? this.defaultState) : this.defaultState,
+      rent: this.isEditMode ? (this.selectedBox?.rent ?? this.defaultRent) : this.defaultRent,
+    };
 
     const request$ = this.isEditMode && this.selectedBox?._id
       ? this.boxService.updateBox(this.selectedBox._id, payload)

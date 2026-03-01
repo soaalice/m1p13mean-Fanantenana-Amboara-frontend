@@ -85,8 +85,6 @@ export class MyProductService {
    * PATCH /products/:id
    */
   updateProduct(productId: string, productData: Partial<CreateProductDto> & { status?: string }, photoFile?: File): Observable<Product> {
-    console.log('Updating product with id:', productId, 'data:', productData);
-
     const formData = new FormData();
 
     // Ajouter les données du produit si présentes
@@ -134,8 +132,10 @@ export class MyProductService {
    * DELETE /products/:id
    */
   deleteProduct(productId: string): Observable<void> {
-    console.log('Deleting product with id:', productId);
-    return this.http.delete<void>(`${this.apiUrl}/products/${productId}`);
+    return this.http.delete<ApiSingleResponse<null>>(`${this.apiUrl}/products/${productId}`)
+      .pipe(
+        map(() => undefined)
+      );
   }
 
   /**
@@ -143,8 +143,6 @@ export class MyProductService {
    * POST /products/:id/photo
    */
   updatePhoto(productId: string, photoFile: File): Observable<Product> {
-    console.log('Updating photo for product:', productId);
-
     const formData = new FormData();
     formData.append('photo', photoFile, photoFile.name);
 
@@ -159,10 +157,18 @@ export class MyProductService {
    * DELETE /products/:id/photo
    */
   removePhoto(productId: string): Observable<Product> {
-    console.log('Removing photo for product:', productId);
     return this.http.delete<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${productId}/photo`)
       .pipe(
         map(res => res.data)
       );
+  }
+
+  /**
+   * Récupère un produit par son ID
+   * GET /products/:id
+   */
+  getProductById(id: string): Observable<Product> {
+    return this.http.get<ApiSingleResponse<Product>>(`${this.apiUrl}/products/${id}`)
+      .pipe(map(res => res.data));
   }
 }

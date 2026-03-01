@@ -1,0 +1,135 @@
+<section class="my-commands-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>My Commands</h1>
+      <p class="subtitle">List of orders received by your shop</p>
+    </div>
+    <button mat-stroked-button type="button" (click)="fetchData()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-row">
+    <div class="summary-chip">
+      <mat-icon>receipt_long</mat-icon>
+      <span><strong>{{ total }}</strong> orders total</span>
+    </div>
+    <div class="summary-chip accent">
+      <mat-icon>payments</mat-icon>
+      <span><strong>{{ 0 | number }} Ar</strong> total revenue</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="state" *ngIf="isLoading">
+    <mat-icon>hourglass_empty</mat-icon>
+    Loading orders...
+  </div>
+
+  <!-- Error -->
+  <div class="state error" *ngIf="!isLoading && loadError">
+    <mat-icon>error_outline</mat-icon>
+    {{ loadError }}
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-state" *ngIf="!isLoading && !loadError && dataSource.length === 0">
+    <mat-icon>inbox</mat-icon>
+    <p>No orders found for your shop.</p>
+  </div>
+
+  <!-- Command Cards -->
+  <div class="commands-list" *ngIf="!isLoading && !loadError && dataSource.length > 0">
+    <div
+      class="command-card"
+      *ngFor="let cmd of dataSource"
+      [class.is-expanded]="expandedCommand?._id === cmd._id">
+
+      <!-- Card Header (clickable) -->
+      <div class="card-header" (click)="toggleDetails(cmd)">
+        <div class="card-header-left">
+          <div class="customer-avatar">{{ cmd.acheteur.name.charAt(0) }}</div>
+          <div class="card-meta">
+            <span class="customer-name">{{ cmd.acheteur.name }}</span>
+            <span class="order-ref">{{ cmd._id }}</span>
+          </div>
+        </div>
+
+        <div class="card-header-center">
+          <div class="meta-item">
+            <span class="meta-label">Transaction</span>
+            <span class="meta-value mono">{{ cmd.transactionId }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Date</span>
+            <span class="meta-value">{{ cmd.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Items</span>
+            <span class="badge-items">{{ cmd.totalItems }}</span>
+          </div>
+        </div>
+
+        <div class="card-header-right">
+          <span class="total-amount">{{ cmd.totalAmount | number }} Ar</span>
+          <button
+            mat-icon-button
+            [matTooltip]="expandedCommand?._id === cmd._id ? 'Collapse' : 'View details'"
+            (click)="$event.stopPropagation(); toggleDetails(cmd)">
+            <mat-icon>{{ expandedCommand?._id === cmd._id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Expanded detail -->
+      <div class="card-detail" *ngIf="expandedCommand?._id === cmd._id">
+        <p class="detail-title">
+          <mat-icon>shopping_bag</mat-icon>
+          Order items
+        </p>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Unit price</th>
+              <th>Qty</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of cmd.items">
+              <td>{{ item.produit.name }}</td>
+              <td>{{ item.produit.price | number }} Ar</td>
+              <td><span class="badge-items">× {{ item.produit.qte }}</span></td>
+              <td class="subtotal">{{ getItemSubtotal(item) | number }} Ar</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="3">Total</td>
+              <td class="subtotal">{{ cmd.totalAmount | number }} Ar</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Paginator -->
+  <mat-paginator
+    *ngIf="!isLoading && !loadError && total > 0"
+    class="paginator"
+    [length]="total"
+    [pageSize]="limit"
+    [pageIndex]="page - 1"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageChange($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+
+</section>

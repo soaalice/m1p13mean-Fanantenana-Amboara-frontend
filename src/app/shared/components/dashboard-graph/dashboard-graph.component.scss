@@ -1,0 +1,24 @@
+.graph-panel {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.graph-panel h2 {
+  margin: 0 0 14px;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+}
+
+.empty {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.7);
+}
