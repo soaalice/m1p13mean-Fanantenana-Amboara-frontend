@@ -17,12 +17,12 @@
     margin: 0 0 4px;
     font-size: 28px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary, #0f172a);
   }
 
   .subtitle {
     margin: 0;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-size: 14px;
   }
 }
@@ -40,16 +40,16 @@
   gap: 8px;
   padding: 8px 18px;
   border-radius: 999px;
-  background: #f1f5f9;
+  background: var(--surface-3, #f1f5f9);
   color: #334155;
   font-size: 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color, #e2e8f0);
 
   mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
   }
 
   &.accent {
@@ -67,17 +67,17 @@
   align-items: center;
   gap: 10px;
   padding: 14px 18px;
-  border-radius: 12px;
-  background: #f8fafc;
+  border-radius: var(--radius-md, 12px);
+  background: var(--surface-2, #f8fafc);
   color: #334155;
   font-weight: 500;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color, #e2e8f0);
 
-  mat-icon { color: #64748b; }
+  mat-icon { color: var(--text-muted, #64748b); }
 
   &.error {
     background: #fef2f2;
-    color: #b91c1c;
+    color: var(--status-error-text, #b91c1c);
     border-color: #fecaca;
     mat-icon { color: #ef4444; }
   }
@@ -92,9 +92,9 @@
   gap: 12px;
   padding: 60px 24px;
   color: #94a3b8;
-  background: #f8fafc;
-  border-radius: 16px;
-  border: 1px dashed #e2e8f0;
+  background: var(--surface-2, #f8fafc);
+  border-radius: var(--radius-lg, 16px);
+  border: 1px dashed var(--border-color, #e2e8f0);
 
   mat-icon {
     font-size: 52px;
@@ -116,10 +116,10 @@
 }
 
 .command-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  background: var(--surface-1, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: var(--shadow-sm, 0 1px 4px rgba(15, 23, 42, 0.06));
   overflow: hidden;
   transition: box-shadow 0.2s, border-color 0.2s;
 
@@ -144,7 +144,7 @@
   user-select: none;
 
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-2, #f8fafc);
   }
 }
 
@@ -177,7 +177,7 @@
   .customer-name {
     font-weight: 600;
     font-size: 14px;
-    color: #0f172a;
+    color: var(--text-primary, #0f172a);
   }
 
   .order-ref {
@@ -226,7 +226,7 @@
 .total-amount {
   font-size: 16px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary, #0f172a);
   white-space: nowrap;
 }
 
@@ -282,10 +282,10 @@
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-color, #e2e8f0);
 
   thead tr {
-    background: #f1f5f9;
+    background: var(--surface-3, #f1f5f9);
   }
 
   th {
@@ -294,15 +294,15 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-weight: 600;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
   }
 
   td {
     padding: 10px 14px;
     color: #334155;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--surface-3, #f1f5f9);
   }
 
   tbody tr:last-child td {
@@ -311,9 +311,9 @@
 
   tfoot .total-row td {
     font-weight: 700;
-    color: #0f172a;
-    border-top: 2px solid #e2e8f0;
-    background: #f8fafc;
+    color: var(--text-primary, #0f172a);
+    border-top: 2px solid var(--border-color, #e2e8f0);
+    background: var(--surface-2, #f8fafc);
   }
 
   .subtotal {
@@ -325,9 +325,9 @@
 
 // ── Paginator ─────────────────────────────────────────────────────────────────
 .paginator {
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: #fff;
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: var(--surface-1, #fff);
 }
 
 // ── Responsive ───────────────────────────────────────────────────────────────
@@ -351,28 +351,26 @@
   }
 }
 
-
-
-
+// ── Duplicate state removed — using first declaration ──
 
 .state {
   padding: 12px 16px;
-  border-radius: 12px;
-  background: #f1f5f9;
+  border-radius: var(--radius-md, 12px);
+  background: var(--surface-3, #f1f5f9);
   margin-bottom: 16px;
 
   &.error {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: var(--status-error-bg, #fee2e2);
+    color: var(--status-error-text, #b91c1c);
   }
 }
 
 // ── Table wrapper ────────────────────────────────────────────────────────────
 .table-wrap {
   overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.06));
 }
 
 .commands-table {
@@ -385,7 +383,7 @@
   transition: background 0.15s;
 
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-2, #f8fafc);
   }
 
   &.expanded-row {
@@ -399,7 +397,7 @@
   font-family: monospace;
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-primary, #0f172a);
 }
 
 .customer-cell {
@@ -425,7 +423,7 @@
 .transaction-id {
   font-family: monospace;
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-muted, #64748b);
   cursor: default;
 }
 
@@ -444,12 +442,12 @@
 
 .amount {
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary, #0f172a);
 }
 
 .date {
   font-size: 13px;
-  color: #64748b;
+  color: var(--text-muted, #64748b);
 }
 
 // ── Empty state ───────────────────────────────────────────────────────────────
@@ -528,14 +526,14 @@
   th, td {
     padding: 8px 12px;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
   }
 
   th {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-weight: 600;
   }
 
@@ -545,7 +543,7 @@
 
   tfoot .total-row td {
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-primary, #0f172a);
     border-top: 2px solid #cbd5e1;
   }
 }
@@ -553,7 +551,7 @@
 // ── Paginator ─────────────────────────────────────────────────────────────────
 .paginator {
   margin-top: 4px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color, #e2e8f0);
 }
 
 // ── Responsive ───────────────────────────────────────────────────────────────

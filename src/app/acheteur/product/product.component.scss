@@ -1,9 +1,4 @@
-﻿// ── Tokens ──────────────────────────────────────────────────────────────────
-$ink:       #0f172a;
-$ink-muted: #64748b;
-$ink-faint: #94a3b8;
-$border:    #e2e8f0;
-$primary:   #4338ca;
+﻿// ── Tokens (using global CSS custom properties) ─────────────────────────────
 
 @keyframes shimmer {
   0%   { background-position: -700px 0; }
@@ -11,16 +6,16 @@ $primary:   #4338ca;
 }
 
 %sk {
-  background: linear-gradient(90deg, #f1f5f9 25%, #e8edf4 50%, #f1f5f9 75%);
+  background: linear-gradient(90deg, var(--surface-3, #f1f5f9) 25%, #e8edf4 50%, var(--surface-3, #f1f5f9) 75%);
   background-size: 700px 100%;
   animation: shimmer 1.5s infinite linear;
-  border-radius: 8px;
+  border-radius: var(--radius-sm, 8px);
 }
 
 // ── Page shell ───────────────────────────────────────────────────────────────
 .products-page {
   min-height: 100vh;
-  background: #f1f5f9;
+  background: var(--surface-3, #f1f5f9);
 }
 
 // ── Hero ─────────────────────────────────────────────────────────────────────
@@ -79,7 +74,7 @@ $primary:   #4338ca;
   transform: translateY(-50%);
   width: 18px;
   height: 18px;
-  color: $ink-faint;
+  color: #94a3b8;
   pointer-events: none;
 }
 
@@ -91,12 +86,12 @@ $primary:   #4338ca;
   border: none;
   outline: none;
   font-size: 0.95rem;
-  color: $ink;
-  background: #fff;
+  color: var(--text-primary, #0f172a);
+  background: var(--surface-1, #fff);
   box-shadow: 0 4px 24px rgba(15,23,42,.18);
   transition: box-shadow 0.2s;
 
-  &::placeholder { color: $ink-faint; }
+  &::placeholder { color: #94a3b8; }
   &:focus        { box-shadow: 0 6px 32px rgba(15,23,42,.24); }
 }
 
@@ -108,13 +103,13 @@ $primary:   #4338ca;
   background: none;
   border: none;
   cursor: pointer;
-  color: $ink-faint;
+  color: #94a3b8;
   padding: 4px;
   display: flex;
   align-items: center;
 
   svg { width: 16px; height: 16px; }
-  &:hover { color: $ink; }
+  &:hover { color: var(--text-primary, #0f172a); }
 }
 
 // ── Toolbar ───────────────────────────────────────────────────────────────────
@@ -130,9 +125,9 @@ $primary:   #4338ca;
 
 .results-count {
   font-size: 0.87rem;
-  color: $ink-muted;
+  color: var(--text-muted, #64748b);
 
-  strong { color: $ink; font-weight: 700; }
+  strong { color: var(--text-primary, #0f172a); font-weight: 700; }
 
   &.skeleton-text {
     @extend %sk;
@@ -159,10 +154,10 @@ $primary:   #4338ca;
 
 // ── Skeleton cards ────────────────────────────────────────────────────────────
 .card-skeleton {
-  background: #fff;
-  border-radius: 16px;
+  background: var(--surface-1, #fff);
+  border-radius: var(--radius-lg, 16px);
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(15,23,42,.06);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(15,23,42,.06));
 
   .sk-image {
     @extend %sk;
@@ -203,26 +198,26 @@ $primary:   #4338ca;
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
-  color: $ink;
+  color: var(--text-primary, #0f172a);
 }
 
 .empty-sub {
   margin: 0;
   font-size: 0.9rem;
-  color: $ink-muted;
+  color: var(--text-muted, #64748b);
 }
 
 .empty-reset {
   margin-top: 6px;
   background: none;
-  border: 1.5px solid $border;
+  border: 1.5px solid var(--border-color, #e2e8f0);
   border-radius: 10px;
   padding: 9px 22px;
   font-size: 0.87rem;
   font-weight: 600;
-  color: $ink-muted;
+  color: var(--text-muted, #64748b);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 
-  &:hover { background: #fff; color: $ink; }
+  &:hover { background: var(--surface-1, #fff); color: var(--text-primary, #0f172a); }
 }

@@ -16,9 +16,9 @@
   width: 100%;
   max-width: 420px;
   padding: 32px;
-  border-radius: 12px;
+  border-radius: var(--radius-lg, 12px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-  background: #fff;
+  background: var(--surface-1, #fff);
 }
 
 // ── Card header ──
@@ -39,7 +39,7 @@
   }
 
   .mat-small {
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     line-height: 1.4;
   }
 }
@@ -72,10 +72,10 @@
   text-align: center;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--border-color, #e2e8f0);
 
   span {
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-size: 0.875rem;
   }
 
@@ -94,9 +94,9 @@
 // ── Error ──
 .auth-error {
   color: var(--warn-color);
-  background: #fef2f2;
+  background: var(--status-error-bg, #fef2f2);
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm, 8px);
   border-left: 3px solid var(--warn-color);
   text-align: center;
   font-size: 0.875rem;

@@ -27,7 +27,7 @@
   }
 
   circle {
-    stroke: #6366f1;
+    stroke: var(--primary-color, #6366f1);
     stroke-linecap: round;
     animation: dash 1.4s ease-in-out infinite;
   }
@@ -65,7 +65,7 @@
 }
 
 .loader-message {
-  color: #64748b;
+  color: var(--text-muted, #64748b);
   font-weight: 500;
 }
 
