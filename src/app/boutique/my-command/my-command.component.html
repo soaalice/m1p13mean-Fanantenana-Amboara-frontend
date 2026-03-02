@@ -60,6 +60,10 @@
             <span class="meta-label">Transaction</span>
             <span class="meta-value mono">{{ cmd.transactionId }}</span>
           </div>
+          <div class="meta-item" *ngIf="cmd.couponId">
+            <span class="meta-label">Coupon</span>
+            <span class="meta-value mono">{{ cmd.couponId }}</span>
+          </div>
           <div class="meta-item">
             <span class="meta-label">Date</span>
             <span class="meta-value">{{ cmd.createdAt | date:'dd/MM/yyyy' }}</span>
@@ -105,9 +109,17 @@
             </tr>
           </tbody>
           <tfoot>
+            <tr class="total-row" *ngIf="getCommandDiscount(cmd) > 0">
+              <td colspan="3">Sous-total</td>
+              <td class="subtotal">{{ getCommandTotalBeforeDiscount(cmd) | number }} Ar</td>
+            </tr>
+            <tr class="total-row total-row-discount" *ngIf="getCommandDiscount(cmd) > 0">
+              <td colspan="3">Remise</td>
+              <td class="subtotal">-{{ getCommandDiscount(cmd) | number }} Ar</td>
+            </tr>
             <tr class="total-row">
               <td colspan="3">Total</td>
-              <td class="subtotal">{{ cmd.totalAmount | number }} Ar</td>
+              <td class="subtotal">{{ getCommandFinalTotal(cmd) | number }} Ar</td>
             </tr>
           </tfoot>
         </table>

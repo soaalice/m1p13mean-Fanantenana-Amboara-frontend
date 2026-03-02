@@ -94,9 +94,79 @@
 
       <!-- Summary -->
       <div class="cart-summary" *ngIf="(items$ | async)?.length">
+
+        <!-- Coupon input -->
+        <div class="coupon-section">
+          <div class="coupon-input-row" *ngIf="!appliedCoupon">
+            <div class="coupon-field">
+              <svg class="coupon-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" fill="currentColor"/>
+              </svg>
+              <input
+                type="text"
+                class="coupon-input"
+                placeholder="Code coupon"
+                [(ngModel)]="couponCode"
+                (keyup.enter)="applyCoupon()"
+              />
+            </div>
+            <button class="btn-apply-coupon" (click)="applyCoupon()" [disabled]="couponLoading || !couponCode.trim()">
+              {{ couponLoading ? 'Vérification...' : 'Appliquer' }}
+            </button>
+          </div>
+          <div class="coupon-error" *ngIf="couponError">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/></svg>
+            {{ couponError }}
+          </div>
+
+          <!-- Coupon applied -->
+          <div class="coupon-applied" *ngIf="appliedCoupon">
+            <div class="coupon-applied-header">
+              <div class="coupon-badge">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58s1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41s-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" fill="currentColor"/>
+                </svg>
+                <span class="coupon-code-label">{{ appliedCoupon.code }}</span>
+                <span class="coupon-type-tag">{{ appliedCoupon.type }}</span>
+                <span class="coupon-pct">-{{ appliedCoupon.percentage }}%</span>
+              </div>
+              <button class="coupon-remove-btn" (click)="removeCoupon()" title="Retirer le coupon">✕</button>
+            </div>
+
+            <!-- Discount details -->
+            <div class="coupon-details">
+              <ng-container *ngIf="appliedCoupon.type === 'SINGLE'">
+                <div class="discount-line" *ngFor="let d of getDiscountDetails()">
+                  <span class="discount-item-name">{{ d.item.nom }}</span>
+                  <span class="discount-amount">-{{ d.discount | number:'1.0-0' }} MGA</span>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="appliedCoupon.type === 'PACK'">
+                <div class="discount-line pack-line">
+                  <span class="discount-item-name">
+                    Pack :
+                    <span *ngFor="let ci of appliedCoupon.items; let last = last">
+                      {{ ci.name }}<ng-container *ngIf="!last">, </ng-container>
+                    </span>
+                  </span>
+                  <span class="discount-amount">-{{ getTotalDiscount() | number:'1.0-0' }} MGA</span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
         <div class="summary-row">
+          <span>Sous-total</span>
+          <span class="summary-subtotal">{{ getTotal() | number:'1.0-0' }} MGA</span>
+        </div>
+        <div class="summary-row discount-row" *ngIf="appliedCoupon && getTotalDiscount() > 0">
+          <span>Réduction ({{ appliedCoupon.percentage }}%)</span>
+          <span class="summary-discount">-{{ getTotalDiscount() | number:'1.0-0' }} MGA</span>
+        </div>
+        <div class="summary-row total-row">
           <span>Total</span>
-          <strong>{{ getTotal() | number:'1.0-0' }} MGA</strong>
+          <strong>{{ (appliedCoupon ? getDiscountedTotal() : getTotal()) | number:'1.0-0' }} MGA</strong>
         </div>
       </div>
 

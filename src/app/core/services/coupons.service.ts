@@ -28,4 +28,9 @@ export class CouponsService {
     return this.http.post<ApiSingleResponse<Coupon>>(`${this.apiUrl}/coupons`, payload)
       .pipe(map(response => response.data));
   }
+
+  getValidCouponByCode(code: string): Observable<Coupon> {
+    return this.http.get<ApiSingleResponse<Coupon>>(`${this.apiUrl}/coupons/code/${code}`)
+      .pipe(map(response => response.data));
+  }
 }
