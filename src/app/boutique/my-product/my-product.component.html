@@ -2,17 +2,17 @@
     <div class="header">
         <div class="header-main">
             <div>
-                <h1>My Products</h1>
-                <p class="subtitle">Manage your products</p>
+                <h1>Mes produits</h1>
+                <p class="subtitle">Gérez vos produits</p>
             </div>
             <div class="actions">
-                <button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
-                <button mat-raised-button color="primary" type="button" (click)="openProductModal()">Add Product</button>
+                <button mat-stroked-button type="button" (click)="fetchData()">Actualiser</button>
+                <button mat-raised-button color="primary" type="button" (click)="openProductModal()">Ajouter un produit</button>
             </div>
         </div>
     </div>
 
-    <app-loader *ngIf="isLoading" message="Loading products…" [inline]="true"></app-loader>
+    <app-loader *ngIf="isLoading" message="Chargement des produits…" [inline]="true"></app-loader>
     <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
@@ -40,12 +40,12 @@
             </ng-container>
 
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <th mat-header-cell *matHeaderCellDef>Nom</th>
                 <td mat-cell *matCellDef="let product">{{ product.name }}</td>
             </ng-container>
 
             <ng-container matColumnDef="price">
-                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <th mat-header-cell *matHeaderCellDef>Prix</th>
                 <td mat-cell *matCellDef="let product">{{ product.price | number }} Ar</td>
             </ng-container>
 
@@ -55,12 +55,12 @@
             </ng-container>
 
             <ng-container matColumnDef="productType">
-                <th mat-header-cell *matHeaderCellDef>Product Type</th>
+                <th mat-header-cell *matHeaderCellDef>Type de produit</th>
                 <td mat-cell *matCellDef="let product">{{ product.productTypeName }}</td>
             </ng-container>
 
             <ng-container matColumnDef="attributes">
-                <th mat-header-cell *matHeaderCellDef>Attributes</th>
+                <th mat-header-cell *matHeaderCellDef>Attributs</th>
                 <td mat-cell *matCellDef="let product" class="attributes-cell">
                     <div class="attributes-badges">
                         <span
@@ -74,7 +74,7 @@
             </ng-container>
 
             <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
                 <td mat-cell *matCellDef="let product">
                     <span [class]="getStatusClass(product.status)">{{ product.status }}</span>
                 </td>
@@ -93,23 +93,23 @@
                         </button>
                         <button mat-menu-item (click)="onEdit(product)">
                             <mat-icon>edit</mat-icon>
-                            <span>Edit</span>
+                            <span>Modifier</span>
                         </button>
                         <button mat-menu-item (click)="openStockModal(product)">
                             <mat-icon>inventory_2</mat-icon>
-                            <span>Add Stock</span>
+                            <span>Ajouter du stock</span>
                         </button>
                         <button mat-menu-item (click)="openPhotoModal(product)">
                             <mat-icon>photo_camera</mat-icon>
-                            <span>Update Photo</span>
+                            <span>Modifier la photo</span>
                         </button>
                         <button mat-menu-item (click)="onRemovePhoto(product)" [disabled]="!product.photoUrl">
                             <mat-icon>hide_image</mat-icon>
-                            <span>Remove Photo</span>
+                            <span>Supprimer la photo</span>
                         </button>
                         <button mat-menu-item (click)="onDelete(product)">
                             <mat-icon>delete</mat-icon>
-                            <span>Delete</span>
+                            <span>Supprimer</span>
                         </button>
                     </mat-menu>
                 </td>
@@ -119,7 +119,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
 
-        <div class="empty" *ngIf="products.length === 0">No products found.</div>
+        <div class="empty" *ngIf="products.length === 0">Aucun produit trouvé.</div>
 
         <mat-paginator
             class="paginator"
@@ -134,7 +134,7 @@
 
 <app-create-product-modal
   [isOpen]="isModalOpen"
-  [title]="isEditMode ? 'Edit product' : 'Add product'"
+  [title]="isEditMode ? 'Modifier le produit' : 'Ajouter un produit'"
   [productForm]="productForm"
   [attributesForm]="attributesForm"
   [productTypes]="productTypes"

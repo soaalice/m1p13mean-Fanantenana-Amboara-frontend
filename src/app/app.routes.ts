@@ -60,6 +60,10 @@ export const routes: Routes = [
       {
         path: 'transactions-calendar',
         loadComponent: () => import('./admin/transactions-calendar/transactions-calendar.component').then(m => m.TransactionsCalendarComponent)
+      },
+      {
+        path: 'change-password',
+        loadComponent: () => import('./shared/components/change-password/change-password.component').then(m => m.ChangePasswordComponent)
       }
     ]
   },
@@ -97,6 +101,10 @@ export const routes: Routes = [
       {
         path: 'product-preview/:id',
         loadComponent: () => import('./boutique/product-preview/product-preview.component').then(m => m.BoutiqueProductPreviewComponent)
+      },
+      {
+        path: 'change-password',
+        loadComponent: () => import('./shared/components/change-password/change-password.component').then(m => m.ChangePasswordComponent)
       }
     ]
   },
@@ -126,6 +134,10 @@ export const routes: Routes = [
       {
         path: 'product/:id',
         loadComponent: () => import('./acheteur/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+      },
+      {
+        path: 'change-password',
+        loadComponent: () => import('./shared/components/change-password/change-password.component').then(m => m.ChangePasswordComponent)
       }
     ]
   },
