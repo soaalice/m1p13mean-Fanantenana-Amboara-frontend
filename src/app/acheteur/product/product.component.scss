@@ -176,7 +176,7 @@
 // ── Shop navbar ──────────────────────────────────────────────────────────────
 .shop-nav {
   position: sticky;
-  top: 0;
+  top: -25px;
   z-index: 20;
   background: var(--surface-1, #fff);
   border-bottom: 1px solid var(--border-color, #e2e8f0);
@@ -184,11 +184,10 @@
 }
 
 .shop-nav-inner {
-  max-width: 1440px;
-  margin: 0 auto;
   padding: 0 24px;
   display: flex;
   align-items: center;
+  flex-wrap: nowrap;
   gap: 6px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
