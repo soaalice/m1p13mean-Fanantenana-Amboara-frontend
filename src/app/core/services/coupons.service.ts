@@ -15,11 +15,13 @@ export class CouponsService {
 
   constructor(private http: HttpClient) { }
 
-  getMyCoupons(page = 1, limit = 10): Observable<PageResult<Coupon>> {
-    const params = {
+  getMyCoupons(page = 1, limit = 10, filters: { type?: string; status?: string } = {}): Observable<PageResult<Coupon>> {
+    const params: Record<string, string> = {
       page: page.toString(),
       limit: limit.toString(),
     };
+    if (filters.type) params['type'] = filters.type;
+    if (filters.status) params['status'] = filters.status;
 
     return this.http.get<PageResult<Coupon>>(`${this.apiUrl}/coupons/my-coupons`, { params });
   }

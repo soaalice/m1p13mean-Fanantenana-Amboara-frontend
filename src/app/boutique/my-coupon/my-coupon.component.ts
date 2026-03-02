@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { CouponsService } from '../../core/services/coupons.service';
 import { Coupon, CreateCouponDto } from '../../shared/models/coupon';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
 import { AddCouponModalComponent } from './add-coupon-modal/add-coupon-modal.component';
 
 @Component({
@@ -13,10 +15,12 @@ import { AddCouponModalComponent } from './add-coupon-modal/add-coupon-modal.com
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatPaginatorModule,
     MatTableModule,
     LoaderComponent,
+    ListFiltersComponent,
     AddCouponModalComponent
   ],
   templateUrl: './my-coupon.component.html',
@@ -37,6 +41,9 @@ export class MyCouponComponent implements OnInit {
   isSubmitting = false;
   submitError = '';
 
+  filterType = '';
+  filterStatus = '';
+
   constructor(private couponsService: CouponsService) {}
 
   ngOnInit(): void {
@@ -47,7 +54,10 @@ export class MyCouponComponent implements OnInit {
     this.isLoading = true;
     this.loadError = '';
 
-    this.couponsService.getMyCoupons(this.page, this.limit).subscribe({
+    this.couponsService.getMyCoupons(this.page, this.limit, {
+      type: this.filterType || undefined,
+      status: this.filterStatus || undefined
+    }).subscribe({
       next: (result) => {
         this.coupons = result.data;
         this.total = result.pagination?.total ?? result.data.length;
@@ -63,6 +73,18 @@ export class MyCouponComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.page = event.pageIndex + 1;
     this.limit = event.pageSize;
+    this.fetchData();
+  }
+
+  applyFilters(): void {
+    this.page = 1;
+    this.fetchData();
+  }
+
+  resetFilters(): void {
+    this.filterType = '';
+    this.filterStatus = '';
+    this.page = 1;
     this.fetchData();
   }
 

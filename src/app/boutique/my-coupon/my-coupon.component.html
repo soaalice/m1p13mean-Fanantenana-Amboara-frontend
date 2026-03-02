@@ -20,6 +20,25 @@
 		</ul>
 	</section>
 
+	<app-list-filters [showApply]="false" (reset)="resetFilters()">
+		<label class="filter-item">
+			<span>Type</span>
+			<select [(ngModel)]="filterType">
+				<option value="">Tous</option>
+				<option value="PACK">PACK</option>
+				<option value="SINGLE">SINGLE</option>
+			</select>
+		</label>
+		<label class="filter-item">
+			<span>Expiration</span>
+			<select [(ngModel)]="filterStatus">
+				<option value="">Tous</option>
+				<option value="active">Actif</option>
+				<option value="expired">Expiré</option>
+			</select>
+		</label>
+	</app-list-filters>
+
 	<app-loader *ngIf="isLoading" message="Chargement des coupons..." [inline]="true"></app-loader>
 	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
