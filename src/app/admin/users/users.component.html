@@ -2,60 +2,60 @@
 	<div class="header">
 		<div class="header-main">
 			<div>
-				<h1>Users</h1>
-				<p class="subtitle">Manage access and accounts</p>
+				<h1>Utilisateurs</h1>
+				<p class="subtitle">Gérez les accès et les comptes</p>
 			</div>
 			<div class="actions">
-				<button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
-				<button mat-raised-button color="primary" type="button" (click)="openUserModal()">Add User</button>
+				<button mat-stroked-button type="button" (click)="fetchData()">Actualiser</button>
+				<button mat-raised-button color="primary" type="button" (click)="openUserModal()">Ajouter un utilisateur</button>
 			</div>
 		</div>
 		<app-list-filters [showApply]="false" (reset)="resetFilters()">
 			<label class="filter-item">
-				<span>Status</span>
+				<span>Statut</span>
 				<select [(ngModel)]="statusFilter">
-					<option value="">All</option>
+					<option value="">Tous</option>
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
 			</label>
 
 			<label class="filter-item">
-				<span>Role</span>
+				<span>Rôle</span>
 				<select [(ngModel)]="roleFilter">
-					<option value="">All</option>
+					<option value="">Tous</option>
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
 			</label>
 		</app-list-filters>
 	</div>
 
-	<app-loader *ngIf="isLoading" message="Loading users…" [inline]="true"></app-loader>
+	<app-loader *ngIf="isLoading" message="Chargement des utilisateurs…" [inline]="true"></app-loader>
 	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
 	<div class="table-wrap" *ngIf="!isLoading && !loadError">
 		<table mat-table [dataSource]="users" class="users-table">
 			<ng-container matColumnDef="fullName">
-				<th mat-header-cell *matHeaderCellDef>Full name</th>
+				<th mat-header-cell *matHeaderCellDef>Nom complet</th>
 				<td mat-cell *matCellDef="let user">{{ user.profile.fullName || '-' }}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="role">
-				<th mat-header-cell *matHeaderCellDef>Role</th>
+				<th mat-header-cell *matHeaderCellDef>Rôle</th>
 				<td mat-cell *matCellDef="let user">{{ user.role }}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="login">
-				<th mat-header-cell *matHeaderCellDef>Login</th>
+				<th mat-header-cell *matHeaderCellDef>Identifiant</th>
 				<td mat-cell *matCellDef="let user">{{ user.login }}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="phone">
-				<th mat-header-cell *matHeaderCellDef>Phone</th>
+				<th mat-header-cell *matHeaderCellDef>Téléphone</th>
 				<td mat-cell *matCellDef="let user">{{ user.profile.tel || '-' }}</td>
 			</ng-container>
 
 			<ng-container matColumnDef="status">
-				<th mat-header-cell *matHeaderCellDef>Status</th>
+				<th mat-header-cell *matHeaderCellDef>Statut</th>
 				<td mat-cell *matCellDef="let user">
 					<span [class]="getStatusClass(user.status)">{{ user.status || 'UNKNOWN' }}</span>
 				</td>
@@ -65,7 +65,7 @@
 				<th mat-header-cell *matHeaderCellDef>Actions</th>
 				<td mat-cell *matCellDef="let user">
 					<button mat-stroked-button color="primary" type="button" (click)="openStatusModal(user)">
-						Change status
+						Changer le statut
 					</button>
 				</td>
 			</ng-container>
@@ -74,7 +74,7 @@
 			<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 		</table>
 
-		<div class="empty" *ngIf="users.length === 0">No users found.</div>
+		<div class="empty" *ngIf="users.length === 0">Aucun utilisateur trouvé.</div>
 
 		<mat-paginator
 			class="paginator"

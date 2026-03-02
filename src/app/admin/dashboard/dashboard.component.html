@@ -1,13 +1,13 @@
 <section class="admin-dashboard">
 	<header class="page-header">
 		<div class="heading-copy">
-			<h1>Dashboard</h1>
-			<p>Overview of key metrics and analytics</p>
+			<h1>Tableau de bord</h1>
+			<p>Vue d'ensemble des indicateurs clés et analyses</p>
 		</div>
 
 		<div class="header-actions">
 			<button mat-stroked-button type="button" (click)="fetchDashboard()" [disabled]="isLoading">
-				{{ isLoading ? 'Loading…' : 'Refresh' }}
+				{{ isLoading ? 'Chargement…' : 'Actualiser' }}
 			</button>
 		</div>
 	</header>
@@ -18,7 +18,7 @@
 	</div>
 
 	<ng-container *ngIf="isLoading && !data">
-		<app-loader message="Loading dashboard…"></app-loader>
+		<app-loader message="Chargement du tableau de bord…"></app-loader>
 	</ng-container>
 
 	<ng-container *ngIf="data as dashboard">
@@ -27,21 +27,21 @@
 		<div class="cards-grid">
 			<app-dashboard-card
 				icon="inventory_2"
-				title="Total boxes"
+				title="Total des boxes"
 				[text]="(dashboard.boxes.total | number) ?? '0'"
 				color="#3b82f6"
 			></app-dashboard-card>
 
 			<app-dashboard-card
 				icon="group"
-				title="Total users"
+				title="Total des utilisateurs"
 				[text]="(dashboard.users.total | number) ?? '0'"
 				color="#22c55e"
 			></app-dashboard-card>
 
 			<app-dashboard-card
 				icon="trending_up"
-				title="Net sales"
+			title="Ventes nettes"
 				[text]="(dashboard.netSales.total | number) ?? '0'"
 				color="#f59e0b"
 			></app-dashboard-card>
@@ -50,21 +50,21 @@
 		<section class="analytics-section">
 			<div class="section-header">
 				<div class="section-title">
-					<h2>Analytics</h2>
-					<p>Trends and evolution of key indicators</p>
+					<h2>Analytiques</h2>
+					<p>Tendances et évolution des indicateurs clés</p>
 				</div>
-				<span class="section-badge">{{ selectedNetSalesYear }} • {{ netSales.length }} periods</span>
+				<span class="section-badge">{{ selectedNetSalesYear }} • {{ netSales.length }} périodes</span>
 			</div>
 
 			<app-list-filters
 				class="net-sales-filter"
 				[showApply]="false"
 				[showReset]="true"
-				resetLabel="Current year"
+				resetLabel="Année en cours"
 				(reset)="resetNetSalesYear()"
 			>
 				<div class="filter-item">
-					<label for="net-sales-year">Year</label>
+					<label for="net-sales-year">Année</label>
 					<select
 						id="net-sales-year"
 						[value]="selectedNetSalesYear"
@@ -80,11 +80,11 @@
 				<div class="chart-card chart-card--wide">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#f59e0b"></span>
-						<span class="chart-card-label">Net sales</span>
-						<span class="chart-card-hint">{{ isNetSalesLoading ? 'Refreshing…' : 'Evolution by period' }}</span>
+				<span class="chart-card-label">Ventes nettes</span>
+					<span class="chart-card-hint">{{ isNetSalesLoading ? 'Actualisation…' : 'Évolution par période' }}</span>
 					</div>
 					<app-dashboard-graph
-						title="Net sales"
+					title="Ventes nettes"
 						[data]="netSales"
 						type="line"
 						color="#f59e0b"
@@ -94,11 +94,11 @@
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#3b82f6"></span>
-						<span class="chart-card-label">Boxes by state</span>
-						<span class="chart-card-hint">Current distribution</span>
-					</div>
-					<app-dashboard-graph
-						title="Boxes by state"
+				<span class="chart-card-label">Boxes par état</span>
+					<span class="chart-card-hint">Distribution actuelle</span>
+				</div>
+				<app-dashboard-graph
+					title="Boxes par état"
 						[data]="boxStates"
 						type="bar"
 						color="#3b82f6"
@@ -108,11 +108,11 @@
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#22c55e"></span>
-						<span class="chart-card-label">Users by role</span>
-						<span class="chart-card-hint">Current distribution</span>
-					</div>
-					<app-dashboard-graph
-						title="Users by role"
+				<span class="chart-card-label">Utilisateurs par rôle</span>
+					<span class="chart-card-hint">Distribution actuelle</span>
+				</div>
+				<app-dashboard-graph
+					title="Utilisateurs par rôle"
 						[data]="userRoles"
 						type="doughnut"
 						color="#22c55e"

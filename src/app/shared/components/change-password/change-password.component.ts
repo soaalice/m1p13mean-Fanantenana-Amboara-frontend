@@ -83,13 +83,29 @@ export class ChangePasswordComponent {
       next: (res) => {
         this.isLoading = false;
         this.toast.success(res.message || 'Mot de passe changé avec succès');
-        this.form.reset();
+        this.resetForm();
       },
       error: (err) => {
         this.isLoading = false;
-        const msg = err?.error?.message || 'Erreur lors du changement de mot de passe';
-        this.toast.error(msg);
+        const body = err?.error;
+        if (body?.errors?.length) {
+          body.errors.forEach((e: string) => this.toast.error(e));
+        } else {
+          this.toast.error(body?.message || 'Erreur lors du changement de mot de passe');
+        }
       }
     });
+  }
+
+  private resetForm(): void {
+    this.form.reset();
+    Object.values(this.form.controls).forEach(control => {
+      control.setErrors(null);
+      control.markAsPristine();
+      control.markAsUntouched();
+    });
+    this.form.setErrors(null);
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
   }
 }

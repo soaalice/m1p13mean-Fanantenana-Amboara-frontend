@@ -1,97 +1,116 @@
-<div class="home-page" *ngIf="user">
-	<section class="welcome-section">
-		<div class="welcome-content">
-			<span class="eyebrow">Buyer Dashboard</span>
-			<h1>Welcome, {{ user.profile.fullName || 'Acheteur' }}</h1>
-			<p class="subtitle">
-				Track your balance, manage your information, and quickly access essential actions.
-			</p>
+<div class="dashboard" *ngIf="user">
 
-			<div class="welcome-cta">
-				<button mat-stroked-button color="primary" type="button" routerLink="/acheteur/product">
+	<!-- ── Hero banner ── -->
+	<section class="hero">
+		<div class="hero__text">
+			<p class="hero__eyebrow">Tableau de bord</p>
+			<h1 class="hero__title">Bonjour, {{ user.profile.fullName || 'Acheteur' }}</h1>
+			<p class="hero__subtitle">Suivez votre solde, gérez vos informations et accédez rapidement aux actions essentielles.</p>
+			<div class="hero__actions">
+				<button mat-raised-button color="primary" type="button" routerLink="/acheteur/product">
 					<mat-icon>shopping_bag</mat-icon>
-					Browse products
+					Parcourir les produits
+				</button>
+				<button mat-stroked-button type="button" routerLink="/acheteur/change-password">
+					<mat-icon>lock</mat-icon>
+					Changer le mot de passe
 				</button>
 			</div>
 		</div>
+		<div class="hero__deco" aria-hidden="true"></div>
 	</section>
 
-	<section class="cards-grid">
-		<mat-card class="card balance-card">
-			<mat-card-header>
-				<mat-card-title>Your balance</mat-card-title>
-				<mat-card-subtitle>Quick and secure recharge</mat-card-subtitle>
-			</mat-card-header>
-			<mat-card-content>
-				<div class="balance-amount">
-					{{ (user.profile.solde || 0) | number:'1.0-0' }}
-					<span>MGA</span>
+	<!-- ── Main grid ── -->
+	<div class="main-grid">
+
+		<!-- Balance card -->
+		<mat-card class="balance-card">
+			<div class="balance-card__header">
+				<div class="balance-card__icon-wrap">
+					<mat-icon>account_balance_wallet</mat-icon>
 				</div>
-			</mat-card-content>
-            <mat-card-actions align="end">
-				<button mat-raised-button color="primary" type="button" (click)="openRechargeModal()">
-                    <mat-icon>add</mat-icon>
-                    Recharge
-                </button>
-            </mat-card-actions>
-		</mat-card>
-
-		<mat-card class="card profile-card">
-			<mat-card-header>
-				<mat-card-title>Profile Details</mat-card-title>
-				<mat-card-subtitle>Your main information</mat-card-subtitle>
-			</mat-card-header>
-			<mat-card-content>
-				<div class="details-grid">
-					<div class="detail-item">
-						<span class="label">Full Name</span>
-						<span class="value">{{ user.profile.fullName || '-' }}</span>
-					</div>
-					<div class="detail-item">
-						<span class="label">Phone</span>
-						<span class="value">{{ user.profile.tel || 'Not provided' }}</span>
-					</div>
-					<div class="detail-item">
-						<span class="label">Login</span>
-						<span class="value">{{ user.login || '-' }}</span>
-					</div>
-					<div class="detail-item">
-						<span class="label">Email</span>
-						<span class="value">{{ user.profile.email || '-' }}</span>
-					</div>
+				<div>
+					<p class="balance-card__label">Votre solde</p>
+					<p class="balance-card__sub">Rechargement rapide et sécurisé</p>
 				</div>
-			</mat-card-content>
+			</div>
+			<div class="balance-card__amount">
+				{{ (user.profile.solde || 0) | number:'1.0-0' }}
+				<span class="balance-card__currency">MGA</span>
+			</div>
+			<div class="balance-card__footer">
+				<button mat-raised-button type="button" class="recharge-btn" (click)="openRechargeModal()">
+					<mat-icon>add</mat-icon>
+					Recharger
+				</button>
+			</div>
 		</mat-card>
-	</section>
 
-	<section class="recent-transactions">
-		<mat-card class="card transactions-card">
-			<mat-card-header>
-				<mat-card-title>Latest transactions</mat-card-title>
-			</mat-card-header>
-			<mat-card-content>
-				<mat-list *ngIf="transactions?.length; else noTx">
-					<mat-list-item *ngFor="let t of transactions">
-						<div class="tx-main">
-							<div class="tx-left">
-								<span class="tx-type">{{ t.type }}</span>
-								<span class="tx-date">{{ t.date | date:'short' }}</span>
-							</div>
-							<div class="tx-right">
-								<span class="tx-amount">{{ t.total | number:'1.0-0' }} MGA</span>
-							</div>
-						</div>
-					</mat-list-item>
-				</mat-list>
-				<ng-template #noTx>
-					<div class="empty">No recent transactions.</div>
-				</ng-template>
-			</mat-card-content>
-			<mat-card-actions align="end">
-				<button mat-stroked-button color="primary" routerLink="/acheteur/transactions">View All</button>
-			</mat-card-actions>
+		<!-- Profile card -->
+		<mat-card class="profile-card">
+			<div class="profile-card__header">
+				<div class="profile-card__avatar">{{ (user.profile.fullName || user.login || '?')[0].toUpperCase() }}</div>
+				<div>
+					<p class="profile-card__name">{{ user.profile.fullName || user.login }}</p>
+					<p class="profile-card__role">Client</p>
+				</div>
+			</div>
+			<div class="profile-card__divider"></div>
+			<div class="profile-grid">
+				<div class="profile-info">
+					<span class="profile-info__label"><mat-icon>person</mat-icon>Nom complet</span>
+					<span class="profile-info__value">{{ user.profile.fullName || '—' }}</span>
+				</div>
+				<div class="profile-info">
+					<span class="profile-info__label"><mat-icon>phone</mat-icon>Téléphone</span>
+					<span class="profile-info__value">{{ user.profile.tel || '—' }}</span>
+				</div>
+				<div class="profile-info">
+					<span class="profile-info__label"><mat-icon>badge</mat-icon>Identifiant</span>
+					<span class="profile-info__value">{{ user.login || '—' }}</span>
+				</div>
+				<div class="profile-info">
+					<span class="profile-info__label"><mat-icon>email</mat-icon>Email</span>
+					<span class="profile-info__value">{{ user.profile.email || '—' }}</span>
+				</div>
+			</div>
 		</mat-card>
-	</section>
+
+	</div>
+
+	<!-- ── Transactions ── -->
+	<mat-card class="tx-card">
+		<div class="tx-card__header">
+			<div>
+				<p class="tx-card__title">Dernières transactions</p>
+				<p class="tx-card__sub">Historique récent de vos achats</p>
+			</div>
+			<button mat-stroked-button color="primary" type="button" routerLink="/acheteur/transactions">
+				Voir tout
+				<mat-icon>arrow_forward</mat-icon>
+			</button>
+		</div>
+
+		<div class="tx-list" *ngIf="transactions?.length; else noTx">
+			<div class="tx-item" *ngFor="let t of transactions">
+				<div class="tx-item__icon">
+					<mat-icon>receipt_long</mat-icon>
+				</div>
+				<div class="tx-item__info">
+					<span class="tx-item__type">{{ t.type }}</span>
+					<span class="tx-item__date">{{ t.date | date:'dd MMM yyyy, HH:mm' }}</span>
+				</div>
+				<span class="tx-item__amount">{{ t.total | number:'1.0-0' }} <small>MGA</small></span>
+			</div>
+		</div>
+		<ng-template #noTx>
+			<div class="tx-empty">
+				<mat-icon>receipt_long</mat-icon>
+				<p>Aucune transaction récente</p>
+			</div>
+		</ng-template>
+	</mat-card>
+
 </div>
 
 <app-recharge-modal

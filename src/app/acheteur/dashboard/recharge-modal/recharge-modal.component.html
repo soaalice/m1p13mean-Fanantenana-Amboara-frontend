@@ -1,18 +1,18 @@
-<app-modal-forms [isOpen]="isOpen" title="Recharge balance" (close)="emitClose()">
+<app-modal-forms [isOpen]="isOpen" title="Recharger le solde" (close)="emitClose()">
 	<form [formGroup]="rechargeForm" (ngSubmit)="submitRecharge()">
 		<div class="form-grid">
 			<label>
-				Amount
-				<input type="number" min="1" step="0.01" formControlName="amount" placeholder="0.0" />
+				Montant (MGA)
+				<input type="number" min="1" step="0.01" formControlName="amount" placeholder="0" />
 			</label>
 		</div>
 
 		<div class="form-error" *ngIf="error">{{ error }}</div>
 
 		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="emitClose()">Cancel</button>
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="emitClose()">Annuler</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="rechargeForm.invalid || isSubmitting">
-				{{ isSubmitting ? 'Recharging...' : 'Recharge' }}
+				{{ isSubmitting ? 'Rechargement...' : 'Recharger' }}
 			</button>
 		</div>
 	</form>
