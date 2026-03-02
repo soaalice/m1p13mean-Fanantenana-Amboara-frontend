@@ -1,0 +1,63 @@
+<section class="coupons-page">
+	<!-- Hero -->
+	<div class="coupons-hero">
+		<div class="hero-inner">
+			<p class="hero-eyebrow">Offres spéciales</p>
+			<h1 class="hero-title">Coupons actifs</h1>
+			<p class="hero-sub">Copiez un code et appliquez-le lors de votre prochain achat</p>
+		</div>
+	</div>
+
+	<!-- Body -->
+	<div class="coupons-body">
+		<app-loader *ngIf="isLoading" message="Chargement des coupons..." [inline]="true"></app-loader>
+		<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+		<ng-container *ngIf="!isLoading && !loadError">
+			<!-- Coupon type hints -->
+			<div class="coupon-hints" role="note" aria-label="Comment fonctionnent les coupons">
+				<div class="hint-item">
+					<mat-icon class="hint-icon">inventory_2</mat-icon>
+					<div class="hint-body">
+						<span class="hint-label">PACK</span>
+						<span class="hint-desc">Remise appliquée sur un ensemble de produits — ceux-ci doivent tous être présents dans votre panier.</span>
+					</div>
+				</div>
+				<div class="hint-item">
+					<mat-icon class="hint-icon">style</mat-icon>
+					<div class="hint-body">
+						<span class="hint-label">SINGLE</span>
+						<span class="hint-desc">Remise appliquée sur chaque article éligible, indépendamment des autres produits du panier.</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Grid -->
+			<div class="coupon-grid" *ngIf="coupons.length; else emptyState">
+				<app-coupon-card
+					*ngFor="let coupon of coupons"
+					[coupon]="coupon"
+					[copiedCode]="copiedCode"
+					(codeCopied)="copyCode($event)"
+				></app-coupon-card>
+			</div>
+
+			<ng-template #emptyState>
+				<div class="empty-state">
+					<mat-icon class="empty-icon">local_offer</mat-icon>
+					<p class="empty-title">Aucun coupon actif</p>
+					<p class="empty-sub">Revenez plus tard, de nouvelles offres arrivent régulièrement !</p>
+				</div>
+			</ng-template>
+
+			<!-- Infinite scroll: loading more -->
+			<div class="load-more-wrap" *ngIf="isLoadingMore">
+				<span class="load-more-spinner"></span>
+				<span class="load-more-text">Chargement…</span>
+			</div>
+
+			<!-- Sentinel observed by IntersectionObserver -->
+			<div #scrollSentinel class="scroll-sentinel"></div>
+		</ng-container>
+	</div>
+</section>

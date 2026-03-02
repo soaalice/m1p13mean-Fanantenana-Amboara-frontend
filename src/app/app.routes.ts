@@ -130,6 +130,14 @@ export const routes: Routes = [
       {
         path: 'product/:id',
         loadComponent: () => import('./acheteur/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+      },
+      {
+        path: 'coupons',
+        loadComponent: () => import('./acheteur/coupons/coupons.component').then(m => m.CouponsComponent)
+      },
+      {
+        path: 'coupons/:id',
+        loadComponent: () => import('./acheteur/coupon-detail/coupon-detail.component').then(m => m.CouponDetailComponent)
       }
     ]
   },

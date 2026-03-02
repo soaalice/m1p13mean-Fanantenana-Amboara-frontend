@@ -34,6 +34,7 @@ export const NAV_ITEMS: NavItem[] = [
   // ── Acheteur ──────────────────────────────────────────────────────────────
   { label: 'Accueil',          icon: 'home',           route: '/acheteur',                    exact: true,  roles: [UserRole.ACHETEUR] },
   { label: 'Produits',         icon: 'shopping_bag',   route: '/acheteur/product',            exact: false, roles: [UserRole.ACHETEUR] },
+  { label: 'Offres spéciales', icon: 'local_offer',    route: '/acheteur/coupons',            exact: false, roles: [UserRole.ACHETEUR] },
   { label: 'Transactions',     icon: 'receipt_long',   route: '/acheteur/transactions',       exact: false, roles: [UserRole.ACHETEUR] },
 ];
 

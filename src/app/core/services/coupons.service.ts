@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { Coupon, CreateCouponDto } from '../../shared/models/coupon';
+import { Coupon, CouponDetails, CreateCouponDto } from '../../shared/models/coupon';
 import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
 @Injectable({
@@ -22,6 +22,20 @@ export class CouponsService {
     };
 
     return this.http.get<PageResult<Coupon>>(`${this.apiUrl}/coupons/my-coupons`, { params });
+  }
+
+  getActiveCoupons(page = 1, limit = 10): Observable<PageResult<Coupon>> {
+    const params = {
+      page: page.toString(),
+      limit: limit.toString(),
+    };
+
+    return this.http.get<PageResult<Coupon>>(`${this.apiUrl}/coupons/active`, { params });
+  }
+
+  getDetails(couponId: string): Observable<CouponDetails> {
+    return this.http.get<ApiSingleResponse<CouponDetails>>(`${this.apiUrl}/coupons/${couponId}/details`)
+      .pipe(map(response => response.data));
   }
 
   createCoupon(payload: CreateCouponDto): Observable<Coupon> {
