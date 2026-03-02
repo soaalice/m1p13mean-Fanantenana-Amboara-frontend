@@ -22,6 +22,9 @@ export interface Panier {
   acheteurId?: string;
   items: PanierItemPayload[];
   total?: number;
+  totalBeforeDiscount?: number | null;
+  discount?: number;
+  couponId?: string | null;
   date?: string;
   etat?: string;
   createdAt?: string;
@@ -51,8 +54,12 @@ export class PanierService {
   }
 
   /** POST /api/paniers — create a VALIDATED panier (achat immédiat) */
-  createValidated(items: CartItem[]): Observable<ApiSingleResponse<Panier>> {
-    const payload = { items: items.map(i => this.toPayload(i)), etat: 'VALIDATED' };
+  createValidated(items: CartItem[], couponId?: string | null): Observable<ApiSingleResponse<Panier>> {
+    const payload = {
+      items: items.map(i => this.toPayload(i)),
+      etat: 'VALIDATED',
+      ...(couponId ? { couponId } : {}),
+    };
     return this.http.post<ApiSingleResponse<Panier>>(this.base, payload);
   }
 

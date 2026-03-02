@@ -1,0 +1,55 @@
+<div
+  class="coupon-card"
+  [class.coupon-card--urgent]="isExpiringSoon"
+>
+  <!-- Left: percentage badge -->
+  <div class="coupon-left">
+    <span class="coupon-pct">-{{ coupon.percentage }}%</span>
+    <span class="coupon-type-tag" [class.coupon-type-tag--pack]="coupon.type === 'PACK'">{{ coupon.type }}</span>
+  </div>
+
+  <!-- Perforated divider -->
+  <div class="coupon-divider">
+    <span class="punch punch--top"></span>
+    <span class="punch punch--bottom"></span>
+  </div>
+
+  <!-- Right: details -->
+  <div class="coupon-right">
+    <div class="coupon-header">
+      <span class="coupon-label">Code promo</span>
+      <span class="coupon-expiry" [class.coupon-expiry--urgent]="isExpiringSoon">
+        <mat-icon class="expiry-icon">schedule</mat-icon>
+        <ng-container *ngIf="daysLeft === 0">Expire aujourd'hui</ng-container>
+        <ng-container *ngIf="daysLeft === 1">Expire demain</ng-container>
+        <ng-container *ngIf="daysLeft > 1">{{ daysLeft }}j restants</ng-container>
+      </span>
+    </div>
+
+    <!-- Code + copy -->
+    <button class="coupon-code-btn" (click)="copyCode()" [title]="'Copier ' + coupon.code">
+      <span class="coupon-code-text">{{ coupon.code }}</span>
+      <span class="coupon-copy-icon">
+        <mat-icon *ngIf="!isCopied">content_copy</mat-icon>
+        <mat-icon *ngIf="isCopied" class="copied-check">check</mat-icon>
+      </span>
+    </button>
+    <span class="coupon-copied-toast" *ngIf="isCopied">Copié !</span>
+
+    <!-- Products chips -->
+    <div class="coupon-products" *ngIf="coupon.items?.length">
+      <span class="product-chip" *ngFor="let item of coupon.items | slice:0:3">{{ item.name }}</span>
+      <span class="product-chip product-chip--more" *ngIf="coupon.items.length > 3">+{{ coupon.items.length - 3 }}</span>
+    </div>
+
+    <!-- Detail link -->
+    <a
+      *ngIf="coupon._id"
+      class="coupon-detail-link"
+      [routerLink]="['/acheteur/coupons', coupon._id]"
+    >
+      Voir les produits
+      <mat-icon class="detail-link-icon">arrow_forward</mat-icon>
+    </a>
+  </div>
+</div>

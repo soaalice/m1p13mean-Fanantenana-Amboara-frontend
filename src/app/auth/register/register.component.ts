@@ -28,6 +28,7 @@ import { ToastService } from '../../core/services/toast.service';
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
+  isLoading = false;
   registerForm: FormGroup;
   errorMessage: string = '';
 
@@ -48,6 +49,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
+      this.isLoading = true;
       const user : User = {
         profile : {
           fullName: this.registerForm.value.fullName,
@@ -71,10 +73,14 @@ export class RegisterComponent {
           });
         },
         error: (error) => {
+          this.isLoading = false;
           console.error('Registration error:', error);
           const message = error.error?.message || 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer.';
           this.errorMessage = message;
           this.toast.error(message, { title: 'Échec de l\'inscription' });
+        },
+        complete: () => {
+          this.isLoading = false;
         }
       });
     }
