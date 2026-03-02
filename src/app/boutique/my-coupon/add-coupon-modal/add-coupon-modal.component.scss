@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.selection-summary {
+  margin: 8px 0 12px;
+  font-weight: 600;
+}
+
+.state {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--status-unknown-bg, #f1f5f9);
+  margin-bottom: 16px;
+}
+
+.state.error {
+  background: var(--status-error-bg, #fee2e2);
+  color: var(--status-error-text, #b91c1c);
+}
+
+.products-table {
+  width: 100%;
+}
+
+.products-table tr[mat-row].selectable-row {
+  cursor: pointer;
+}
+
+.products-table tr[mat-row].selectable-row.is-selected {
+  background: var(--status-info-bg, #e0f2fe);
+}
+
+.empty {
+  text-align: center;
+  padding: 24px 16px;
+  color: color-mix(in srgb, var(--text-primary, #0f172a) 60%, transparent);
+}
+
+.paginator {
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}

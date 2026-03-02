@@ -1,0 +1,26 @@
+<app-modal-forms [isOpen]="isOpen" title="Payer le loyer" (close)="onClose()">
+	<form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+		<div class="form-grid">
+			<label>
+				Mois
+				<select formControlName="month">
+					<option value="" disabled>Sélectionner un mois</option>
+					<option *ngFor="let month of monthOptions" [value]="month.value">{{ month.label }}</option>
+				</select>
+			</label>
+			<label>
+				Année
+				<input type="number" formControlName="year" min="2000" max="9999" />
+			</label>
+		</div>
+
+		<div class="form-error" *ngIf="error">{{ error }}</div>
+
+		<div class="modal-actions">
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Annuler</button>
+			<button mat-raised-button color="primary" type="submit" [disabled]="paymentForm.invalid || isSubmitting">
+				{{ isSubmitting ? 'Paiement…' : 'Payer' }}
+			</button>
+		</div>
+	</form>
+</app-modal-forms>

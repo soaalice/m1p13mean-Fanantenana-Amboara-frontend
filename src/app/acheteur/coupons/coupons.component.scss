@@ -1,0 +1,187 @@
+@use '../../shared/page' as p;
+
+// ── Page shell ───────────────────────────────────────────────────────────────
+.coupons-page {
+  min-height: 100vh;
+  background: var(--surface-3, #f1f5f9);
+  margin: -24px;
+}
+
+@include p.state-banner;
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
+.coupons-hero {
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 60%, #6366f1 100%);
+  color: #fff;
+  padding: 48px 24px 44px;
+  text-align: center;
+}
+
+.hero-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c7d2fe;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero-sub {
+  margin: 0;
+  color: #a5b4fc;
+  font-size: 0.95rem;
+}
+
+// ── Body ─────────────────────────────────────────────────────────────────────
+.coupons-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 40px;
+}
+
+// ── Coupon type hints ───────────────────────────────────────────────────────
+.coupon-hints {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.hint-item {
+  flex: 1 1 240px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #e0e7ff;
+  border-left: 4px solid #6366f1;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.hint-icon {
+  color: #6366f1;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.hint-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hint-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4338ca;
+}
+
+.hint-desc {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+// ── Coupon grid ──────────────────────────────────────────────────────────────
+.coupon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+// ── Empty state ──────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: #cbd5e1;
+}
+
+.empty-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.empty-sub {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+// ── Infinite scroll ──────────────────────────────────────────────────────────
+.scroll-sentinel {
+  height: 1px;
+  width: 100%;
+}
+
+.load-more-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px 0;
+  color: var(--text-muted, #64748b);
+}
+
+.load-more-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.load-more-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #4338ca;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .coupons-hero { padding: 36px 16px 32px; }
+  .coupons-body { padding: 20px 12px 32px; }
+
+  .coupon-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

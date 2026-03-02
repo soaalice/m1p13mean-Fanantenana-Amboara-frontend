@@ -5,25 +5,25 @@
   <form [formGroup]="productForm" (ngSubmit)="emitSubmit()">
       <div class="form-grid">
           <label>
-              Name
-              <span class="field-error" *ngIf="productForm.get('name')?.hasError('required')">Name is required</span>
+              Nom
+              <span class="field-error" *ngIf="productForm.get('name')?.hasError('required')">Le nom est requis</span>
               <input type="text" formControlName="name" placeholder="Tomates cerises" />
           </label>
           <label>
-              Price (Ar)
-              <span class="field-error" *ngIf="productForm.get('price')?.hasError('required')">Price is required</span>
+              Prix (Ar)
+              <span class="field-error" *ngIf="productForm.get('price')?.hasError('required')">Le prix est requis</span>
               <input type="number" formControlName="price" placeholder="2500" min="0" />
           </label>
           <label>
-              Product Type
-              <span class="field-error" *ngIf="productForm.get('productTypeId')?.hasError('required')">Product type is required</span>
+              Type de produit
+              <span class="field-error" *ngIf="productForm.get('productTypeId')?.hasError('required')">Le type de produit est requis</span>
               <select formControlName="productTypeId" (change)="emitProductTypeChange($any($event.target).value)">
-                  <option value="">Select a product type</option>
+                  <option value="">Sélectionner un type de produit</option>
                   <option *ngFor="let pt of productTypes" [value]="pt.id">{{ pt.label }}</option>
               </select>
           </label>
           <label>
-              Status
+              Statut
               <select formControlName="status">
                   <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
               </select>
@@ -31,7 +31,7 @@
       </div>
 
       <div class="image-upload-section">
-          <label class="image-upload-label">Product Image</label>
+          <label class="image-upload-label">Image du produit</label>
           
           <div class="image-upload-container" *ngIf="!imagePreview">
               <input 
@@ -46,9 +46,9 @@
                   class="upload-button"
                   (click)="fileInput.click()">
                   <mat-icon>add_photo_alternate</mat-icon>
-                  <span>Upload Image</span>
+                  <span>Télécharger une image</span>
               </button>
-              <p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+              <p class="upload-hint">PNG, JPG, WEBP (Max 5 Mo)</p>
           </div>
 
           <div class="image-preview-container" *ngIf="imagePreview">
@@ -64,7 +64,7 @@
       </div>
 
       <div class="attributes-section" *ngIf="selectedProductType && selectedProductType.attributes && selectedProductType.attributes.length > 0">
-          <h3>Product Attributes</h3>
+          <h3>Attributs du produit</h3>
 
           <div class="form-grid" [formGroup]="attributesForm" *ngIf="nonBooleanAttributes.length > 0">
               <ng-container *ngFor="let attr of nonBooleanAttributes">
@@ -89,7 +89,7 @@
                   <label *ngIf="attr.type === 'ENUM'">
                       {{ attr.code }}
                       <select [formControlName]="attr.code">
-                          <option value="">Select {{ attr.code }}</option>
+                          <option value="">Sélectionner {{ attr.code }}</option>
                           <option *ngFor="let val of attr.values" [value]="val">{{ val }}</option>
                       </select>
                   </label>
@@ -115,9 +115,9 @@
       <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
 
       <div class="modal-actions">
-          <button mat-stroked-button color="primary" type="button" class="ghost" (click)="emitClose()">Cancel</button>
+          <button mat-stroked-button color="primary" type="button" class="ghost" (click)="emitClose()">Annuler</button>
           <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid || isSubmitting">
-              {{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
+              {{ isSubmitting ? (isEditMode ? 'Mise à jour…' : 'Création…') : (isEditMode ? 'Mettre à jour' : 'Créer') }}
           </button>
       </div>
   </form>

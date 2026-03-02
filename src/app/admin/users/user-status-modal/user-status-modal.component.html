@@ -1,12 +1,12 @@
-<app-modal-forms [isOpen]="isOpen" title="Change status" (close)="onClose()">
+<app-modal-forms [isOpen]="isOpen" title="Changer le statut" (close)="onClose()">
 	<form [formGroup]="form" (ngSubmit)="onSubmit()">
 		<div class="form-grid">
 			<label>
-				User
+				Utilisateur
 				<input type="text" [value]="selectedUser?.profile?.fullName || selectedUser?.login || ''" disabled />
 			</label>
 			<label>
-				Status
+				Statut
 				<select formControlName="status">
 					<option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
 				</select>
@@ -16,9 +16,9 @@
 		<div class="form-error" *ngIf="error">{{ error }}</div>
 
 		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Cancel</button>
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Annuler</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting">
-				{{ isSubmitting ? 'Updating...' : 'Update' }}
+				{{ isSubmitting ? 'Mise à jour...' : 'Mettre à jour' }}
 			</button>
 		</div>
 	</form>

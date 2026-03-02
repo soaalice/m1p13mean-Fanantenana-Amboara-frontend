@@ -23,16 +23,20 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Boutiques',        icon: 'storefront',     route: '/admin/shops',                 exact: false, roles: [UserRole.ADMIN] },
   { label: 'Utilisateurs',     icon: 'people',         route: '/admin/users',                 exact: false, roles: [UserRole.ADMIN] },
   { label: 'Calendrier',       icon: 'calendar_month', route: '/admin/transactions-calendar', exact: false, roles: [UserRole.ADMIN] },
+  { label: 'Mot de passe',     icon: 'lock',           route: '/admin/change-password',       exact: false, roles: [UserRole.ADMIN] },
 
   // ── Boutique ──────────────────────────────────────────────────────────────
   { label: 'Tableau de bord',  icon: 'dashboard',      route: '/boutique/dashboard',          exact: true,  roles: [UserRole.BOUTIQUE] },
   { label: 'Ma boutique',      icon: 'storefront',     route: '/boutique/my-shop',            exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes produits',     icon: 'inventory_2',    route: '/boutique/my-product',         exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes commandes',    icon: 'receipt_long',   route: '/boutique/my-command',         exact: false, roles: [UserRole.BOUTIQUE] },
+  { label: 'Mes coupons',      icon: 'local_offer',    route: '/boutique/my-coupon',          exact: false, roles: [UserRole.BOUTIQUE] },
+  { label: 'Mot de passe',     icon: 'lock',           route: '/boutique/change-password',    exact: false, roles: [UserRole.BOUTIQUE] },
 
   // ── Acheteur ──────────────────────────────────────────────────────────────
   { label: 'Accueil',          icon: 'home',           route: '/acheteur',                    exact: true,  roles: [UserRole.ACHETEUR] },
   { label: 'Produits',         icon: 'shopping_bag',   route: '/acheteur/product',            exact: false, roles: [UserRole.ACHETEUR] },
+  { label: 'Offres spéciales', icon: 'local_offer',    route: '/acheteur/coupons',            exact: false, roles: [UserRole.ACHETEUR] },
   { label: 'Transactions',     icon: 'receipt_long',   route: '/acheteur/transactions',       exact: false, roles: [UserRole.ACHETEUR] },
 ];
 

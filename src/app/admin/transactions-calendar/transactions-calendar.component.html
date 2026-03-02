@@ -2,15 +2,15 @@
 
 	<div class="page-header">
 		<div>
-			<h1>Transactions Calendar</h1>
-			<p class="subtitle">Visualise all transactions by year, month or week.</p>
+			<h1>Calendrier des Loyers</h1>
+			<p class="subtitle">Visualisez les transactions LOYER par mois, semaine ou année.</p>
 		</div>
 		<button mat-stroked-button type="button" (click)="loadTransactions()">
-			Refresh
+			Actualiser
 		</button>
 	</div>
 
-	<app-loader *ngIf="isLoading" message="Loading transactions…" [inline]="true"></app-loader>
+	<app-loader *ngIf="isLoading" message="Chargement des transactions LOYER…" [inline]="true"></app-loader>
 
 	<div *ngIf="loadError && !isLoading" class="state error">
 		<mat-icon>error</mat-icon>

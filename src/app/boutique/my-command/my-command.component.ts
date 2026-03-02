@@ -92,4 +92,16 @@ export class MyCommandComponent implements OnInit {
   getItemSubtotal(item: CommandItem): number {
     return item.produit.price * item.produit.qte;
   }
+
+  getCommandTotalBeforeDiscount(command: Command): number {
+    return command.totalBeforeDiscount ?? command.totalAmount;
+  }
+
+  getCommandDiscount(command: Command): number {
+    return command.discount ?? 0;
+  }
+
+  getCommandFinalTotal(command: Command): number {
+    return command.totalAmount;
+  }
 }

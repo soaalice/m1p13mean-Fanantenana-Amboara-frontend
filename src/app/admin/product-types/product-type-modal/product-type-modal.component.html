@@ -1,18 +1,18 @@
 <app-modal-forms
 	[isOpen]="isOpen"
-	[title]="isEditMode ? 'Edit product type' : 'Add product type'"
+	[title]="isEditMode ? 'Modifier le type de produit' : 'Ajouter un type de produit'"
 	(close)="onClose()">
 	<form class="product-type-modal" [formGroup]="form" (ngSubmit)="onSubmit()">
 		<div class="form-grid">
 			<label>
-				Label
-				<span class="field-error" *ngIf="form.get('label')?.hasError('required')">Label is required</span>
+				Libellé
+				<span class="field-error" *ngIf="form.get('label')?.hasError('required')">Le libellé est requis</span>
 				<input type="text" formControlName="label" placeholder="Fresh vegetables" />
 			</label>
 		</div>
 
 		<div class="attributes-header">
-			<h3>Attributes</h3>
+			<h3>Attributs</h3>
 		</div>
 
 		<div class="attribute-list" formArrayName="attributes">
@@ -20,49 +20,49 @@
 				<div class="attribute-grid">
 					<label>
 						Code
-						<span class="field-error" *ngIf="attribute.get('code')?.hasError('required')">Code is required</span>
+						<span class="field-error" *ngIf="attribute.get('code')?.hasError('required')">Le code est requis</span>
 						<input type="text" formControlName="code" placeholder="COLOR" />
 					</label>
 
 					<label>
 						Type
-						<span class="field-error" *ngIf="attribute.get('type')?.hasError('required')">Type is required</span>
+						<span class="field-error" *ngIf="attribute.get('type')?.hasError('required')">Le type est requis</span>
 						<select formControlName="type">
 							<option *ngFor="let type of attributeTypes" [value]="type">{{ type }}</option>
 						</select>
 					</label>
 
 					<label class="attribute-wide" *ngIf="attribute.get('type')?.value === 'ENUM'">
-						Values (comma separated)
-						<span class="field-error" *ngIf="attribute.get('valuesText')?.hasError('required')">Values are required for ENUM</span>
+						Valeurs (séparées par des virgules)
+						<span class="field-error" *ngIf="attribute.get('valuesText')?.hasError('required')">Les valeurs sont requises pour ENUM</span>
 						<textarea rows="2" formControlName="valuesText" placeholder="RED, GREEN, BLUE"></textarea>
 					</label>
 
 					<label *ngIf="attribute.get('type')?.value === 'NUMBER'">
 						Min
-						<span class="field-error" *ngIf="attribute.get('min')?.hasError('required')">Min is required for NUMBER</span>
+						<span class="field-error" *ngIf="attribute.get('min')?.hasError('required')">Le min est requis pour NUMBER</span>
 						<input type="number" formControlName="min" placeholder="0" />
 					</label>
 
 					<label *ngIf="attribute.get('type')?.value === 'NUMBER'">
 						Max
-						<span class="field-error" *ngIf="attribute.get('max')?.hasError('required')">Max is required for NUMBER</span>
+						<span class="field-error" *ngIf="attribute.get('max')?.hasError('required')">Le max est requis pour NUMBER</span>
 						<input type="number" formControlName="max" placeholder="100" />
 					</label>
 				</div>
 
 				<button mat-stroked-button color="primary" type="button" class="remove-attr" (click)="onRemoveAttribute(i)">
-					Remove
+					Supprimer
 				</button>
 			</div>
 		</div>
 
 		<div class="form-error" *ngIf="submitError">{{ submitError }}</div>
-		<button mat-stroked-button type="button" (click)="onAddAttribute()">Add attribute</button>
+		<button mat-stroked-button type="button" (click)="onAddAttribute()">Ajouter un attribut</button>
 		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Cancel</button>
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Annuler</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting">
-				{{ isSubmitting ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update' : 'Create') }}
+				{{ isSubmitting ? (isEditMode ? 'Mise à jour...' : 'Création...') : (isEditMode ? 'Mettre à jour' : 'Créer') }}
 			</button>
 		</div>
 	</form>

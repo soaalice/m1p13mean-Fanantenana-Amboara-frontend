@@ -1,0 +1,109 @@
+<app-modal-forms [isOpen]="isOpen" title="Ajouter un coupon" (close)="onClose()">
+  <div class="form-grid">
+    <label>
+      Code
+      <input
+        type="text"
+        [ngModel]="code"
+        (ngModelChange)="code = $event"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="PROMO20" />
+    </label>
+
+    <label>
+      Date d'expiration
+      <input
+        type="date"
+        [ngModel]="expiresAt"
+        (ngModelChange)="expiresAt = $event"
+        [ngModelOptions]="{ standalone: true }" />
+    </label>
+
+    <label>
+      Pourcentage
+      <input
+        type="number"
+        min="1"
+        max="100"
+        [ngModel]="percentage"
+        (ngModelChange)="percentage = $event"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="10" />
+    </label>
+
+    <label>
+      Type
+      <select
+        [ngModel]="type"
+        (ngModelChange)="type = $event"
+        [ngModelOptions]="{ standalone: true }">
+        <option value="SINGLE">SINGLE</option>
+        <option value="PACK">PACK</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="selection-summary">Produits sélectionnés : {{ selectedCount }}</div>
+
+  <app-loader *ngIf="productsLoading" message="Chargement des produits..." [inline]="true" size="sm"></app-loader>
+  <div class="state error" *ngIf="!productsLoading && productsLoadError">{{ productsLoadError }}</div>
+
+  <div class="table-wrap" *ngIf="!productsLoading && !productsLoadError">
+    <table mat-table [dataSource]="products" class="products-table">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let product">
+          <input
+            type="checkbox"
+            [checked]="isSelected(product._id)"
+            (click)="$event.stopPropagation()"
+            (change)="toggleProduct(product)" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nom</th>
+        <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Prix</th>
+        <td mat-cell *matCellDef="let product">{{ product.price | number }} Ar</td>
+      </ng-container>
+
+      <ng-container matColumnDef="stock">
+        <th mat-header-cell *matHeaderCellDef>Stock</th>
+        <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="selectable-row"
+        [class.is-selected]="isSelected(row._id)"
+        (click)="toggleProduct(row)">
+      </tr>
+    </table>
+
+    <div class="empty" *ngIf="products.length === 0">Aucun produit trouvé.</div>
+
+    <mat-paginator
+      class="paginator"
+      [length]="productsTotal"
+      [pageIndex]="productsPage - 1"
+      [pageSize]="productsLimit"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onProductsPageChange($event)">
+    </mat-paginator>
+  </div>
+
+  <div class="form-error" *ngIf="submitError">{{ submitError }}</div>
+
+  <div class="modal-actions">
+    <button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Annuler</button>
+    <button mat-raised-button color="primary" type="button" [disabled]="!canSubmit" (click)="onSubmit()">
+      {{ isSubmitting ? 'Création...' : 'Créer' }}
+    </button>
+  </div>
+</app-modal-forms>

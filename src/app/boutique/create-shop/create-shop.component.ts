@@ -49,11 +49,11 @@ export class CreateShopComponent {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      this.imageError = 'Please select an image file.';
+      this.imageError = 'Veuillez sélectionner un fichier image.';
       return;
     }
     if (file.size > CreateShopComponent.MAX_PHOTO_SIZE) {
-      this.imageError = 'Image size should be less than 5 MB.';
+      this.imageError = 'La taille de l\'image doit être inférieure à 5 Mo.';
       return;
     }
 
@@ -86,7 +86,7 @@ export class CreateShopComponent {
         this.router.navigate(['/boutique/my-shop']);
       },
       error: () => {
-        this.submitError = 'Erreur lors de la creation de la boutique';
+        this.submitError = 'Erreur lors de la création de la boutique';
         this.isSubmitting = false;
       }
     });

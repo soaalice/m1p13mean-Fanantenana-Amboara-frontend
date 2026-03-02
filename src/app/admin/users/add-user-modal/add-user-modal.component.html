@@ -1,12 +1,12 @@
-<app-modal-forms [isOpen]="isOpen" title="Add user" (close)="onClose()">
+<app-modal-forms [isOpen]="isOpen" title="Ajouter un utilisateur" (close)="onClose()">
 	<form [formGroup]="form" (ngSubmit)="onSubmit()">
 		<div class="form-grid">
 			<label>
-				Full name
+				Nom complet
 				<input type="text" formControlName="fullName" placeholder="Jane Doe" />
 			</label>
 			<label>
-				Login
+				Identifiant
 				<input type="text" formControlName="login" placeholder="janedoe" />
 			</label>
 			<label>
@@ -14,15 +14,15 @@
 				<input type="email" formControlName="email" placeholder="jane.doe@example.com" />
 			</label>
 			<label>
-				Password
+				Mot de passe
 				<input type="password" formControlName="password" placeholder="******" />
 			</label>
 			<label>
-				Phone
+				Téléphone
 				<input type="text" formControlName="tel" placeholder="+221 77 000 00 00" />
 			</label>
 			<label>
-				Role
+				Rôle
 				<select formControlName="role">
 					<option *ngFor="let role of roles" [value]="role">{{ role }}</option>
 				</select>
@@ -32,9 +32,9 @@
 		<div class="form-error" *ngIf="error">{{ error }}</div>
 
 		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Cancel</button>
+			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="onClose()">Annuler</button>
 			<button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || isSubmitting">
-				{{ isSubmitting ? 'Creating...' : 'Create' }}
+				{{ isSubmitting ? 'Création...' : 'Créer' }}
 			</button>
 		</div>
 	</form>
