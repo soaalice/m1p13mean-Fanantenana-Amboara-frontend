@@ -79,6 +79,18 @@ export class TransactionsService {
     return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions`, { params });
   }
 
+  /** Récupère tous les LOYER pour une plage de dates (sans pagination exposée). */
+  getLoyerForCalendar(startDate: string, endDate: string): Observable<PageResult<Transaction>> {
+    const params = new HttpParams()
+      .set('type', 'LOYER')
+      .set('startDate', startDate)
+      .set('endDate', endDate)
+      .set('page', 1)
+      .set('limit', 10000);
+
+    return this.http.get<PageResult<Transaction>>(`${environment.apiUrl}/transactions`, { params });
+  }
+
   getTransactionById(transactionId: string): Observable<ApiSingleResponse<Transaction>> {
     return this.http.get<ApiSingleResponse<Transaction>>(`${environment.apiUrl}/transactions/${transactionId}`);
   }

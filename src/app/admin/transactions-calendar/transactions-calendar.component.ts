@@ -4,21 +4,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarOptions, EventInput } from '@fullcalendar/core';
+import { CalendarOptions, DatesSetArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import multiMonthPlugin from '@fullcalendar/multimonth';
 import interactionPlugin from '@fullcalendar/interaction';
-import { AuthService } from '../../core/services/auth.service';
 import { TransactionsService } from '../../core/services/transactions.service';
-import { Transaction, TransactionType } from '../../shared/models/transaction';
+import { Transaction } from '../../shared/models/transaction';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
-const TYPE_COLORS: Record<string, { bg: string; border: string }> = {
-  [TransactionType.RECHARGE]: { bg: '#dcfce7', border: '#16a34a' },
-  [TransactionType.PURCHASE]: { bg: '#dbeafe', border: '#2563eb' },
-  [TransactionType.RENT]:     { bg: '#fef3c7', border: '#d97706' },
-};
+const LOYER_COLOR = { bg: '#fef3c7', border: '#d97706' };
 
 @Component({
   selector: 'app-transactions-calendar',
@@ -38,10 +33,12 @@ export class TransactionsCalendarComponent implements OnInit {
   isLoading = false;
   loadError: string | null = null;
 
+  /** Currently visible date range tracked across navigation */
+  private currentRangeStart: Date = new Date();
+  private currentRangeEnd: Date = new Date();
+
   readonly legend = [
-    { type: TransactionType.RECHARGE, label: 'Recharge', ...TYPE_COLORS[TransactionType.RECHARGE] },
-    { type: TransactionType.PURCHASE, label: 'Purchase', ...TYPE_COLORS[TransactionType.PURCHASE] },
-    { type: TransactionType.RENT,     label: 'Rent',     ...TYPE_COLORS[TransactionType.RENT]     },
+    { label: 'Loyer', ...LOYER_COLOR },
   ];
 
   calendarOptions: CalendarOptions = {
@@ -54,75 +51,71 @@ export class TransactionsCalendarComponent implements OnInit {
     },
     views: {
       multiMonthYear: {
-        buttonText: 'Year',
+        buttonText: 'Année',
         multiMonthMaxColumns: 3,
         multiMonthMinWidth: 240,
       },
-      dayGridMonth:   { buttonText: 'Month' },
-      timeGridWeek:   { buttonText: 'Week' },
+      dayGridMonth: { buttonText: 'Mois' },
+      timeGridWeek: { buttonText: 'Semaine' },
     },
-    locale: 'en',
+    locale: 'fr',
     height: 'auto',
     eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false },
     eventDidMount: info => {
       info.el.title = info.event.extendedProps['tooltip'] ?? '';
     },
+    datesSet: (info: DatesSetArg) => this.onDatesSet(info),
     events: [],
   };
 
-  constructor(
-    private authService: AuthService,
-    private transactionsService: TransactionsService
-  ) {}
+  constructor(private transactionsService: TransactionsService) {}
 
   ngOnInit(): void {
-    this.loadTransactions();
+    // Initial load is triggered via datesSet on calendar render
   }
 
-  loadTransactions(): void {
-    const user = this.authService.getCurrentUser();
-    if (!user?._id) {
-      this.loadError = 'Unable to retrieve the user account.';
-      return;
-    }
+  /** Called by FullCalendar whenever the visible date range changes (navigation, view switch) */
+  private onDatesSet(info: DatesSetArg): void {
+    this.currentRangeStart = info.start;
+    this.currentRangeEnd   = info.end;
+    this.loadLoyerTransactions();
+  }
 
+  /** Public — called by the Refresh button */
+  loadTransactions(): void {
+    this.loadLoyerTransactions();
+  }
+
+  private loadLoyerTransactions(): void {
     this.isLoading = true;
     this.loadError = null;
 
-    this.transactionsService.getAllTransactions(1, 500).subscribe({
+    const startDate = this.currentRangeStart.toISOString();
+    const endDate   = this.currentRangeEnd.toISOString();
+
+    this.transactionsService.getLoyerForCalendar(startDate, endDate).subscribe({
       next: response => {
-        const events = this.toCalendarEvents(response.data);
-        this.calendarOptions = { ...this.calendarOptions, events };
+        this.calendarOptions = { ...this.calendarOptions, events: this.toCalendarEvents(response.data) };
         this.isLoading = false;
       },
       error: () => {
-        this.loadError = 'Error loading transactions.';
+        this.loadError = 'Erreur lors du chargement des transactions LOYER.';
         this.isLoading = false;
       },
     });
   }
 
-  getLabel(transaction: Transaction): string {
-    switch (transaction.type) {
-      case TransactionType.RENT:
-        return `${transaction.type} - ${transaction.periode}`;
-      default:
-        return `${transaction.type} - ${transaction.total} MGA`;
-    }
-  }
-
   private toCalendarEvents(transactions: Transaction[]): EventInput[] {
     return transactions.map(tx => {
-      const colors = TYPE_COLORS[tx.type] ?? { bg: '#f1f5f9', border: '#94a3b8' };
-      const label = this.getLabel(tx);
+      const label = `LOYER — ${tx.periode ?? ''} · ${tx.total.toLocaleString('fr-MG')} MGA`;
       return {
         id:              tx._id,
         title:           label,
         start:           tx.date ? new Date(tx.date) : new Date(),
         allDay:          false,
-        backgroundColor: colors.bg,
-        borderColor:     colors.border,
-        textColor:       colors.border,
+        backgroundColor: LOYER_COLOR.bg,
+        borderColor:     LOYER_COLOR.border,
+        textColor:       LOYER_COLOR.border,
         extendedProps:   { tooltip: label },
       } as EventInput;
     });
