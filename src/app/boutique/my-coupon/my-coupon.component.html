@@ -6,7 +6,7 @@
 				<p class="subtitle">Liste des coupons de la boutique</p>
 			</div>
 			<div class="actions">
-				<button mat-stroked-button type="button" (click)="fetchData()">Rafraîchir</button>
+				<button mat-stroked-button type="button" (click)="fetchData()">Actualiser</button>
 				<button mat-raised-button color="primary" type="button" (click)="openAddModal()">Ajouter un coupon</button>
 			</div>
 		</div>
@@ -30,7 +30,7 @@
 			</select>
 		</label>
 		<label class="filter-item">
-			<span>Status</span>
+			<span>Statut</span>
 			<select [(ngModel)]="filterStatus">
 				<option value="">Tous</option>
 				<option value="active">Actif</option>

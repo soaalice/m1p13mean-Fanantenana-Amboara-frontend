@@ -24,11 +24,11 @@ export class ErrorPageComponent {
   private getMessageForStatus(status?: number): string {
     switch (status) {
       case 403:
-        return "Access Denied: You don't have permission to access this page.";
+        return "Accès refusé : Vous n'avez pas la permission d'accéder à cette page.";
       case 404:
-        return 'Page Not Found: The page you are looking for does not exist.';
+        return 'Page non trouvée : La page que vous recherchez n’existe pas.';
       default:
-        return 'An unexpected error occurred.';
+        return 'Une erreur inattendue s’est produite.';
     }
   }
 }

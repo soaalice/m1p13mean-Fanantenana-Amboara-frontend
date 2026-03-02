@@ -183,32 +183,13 @@
 
 </section>
 
-<app-modal-forms [isOpen]="isPaymentModalOpen" title="Payer le loyer" (close)="closePaymentModal()">
-	<form [formGroup]="paymentForm" (ngSubmit)="submitRentPayment()">
-		<div class="form-grid">
-			<label>
-				Mois
-				<select formControlName="month">
-					<option value="" disabled>Sélectionner un mois</option>
-					<option *ngFor="let month of monthOptions" [value]="month.value">{{ month.label }}</option>
-				</select>
-			</label>
-			<label>
-				Année
-				<input type="number" formControlName="year" min="2000" max="9999" />
-			</label>
-		</div>
-
-		<div class="form-error" *ngIf="paymentError">{{ paymentError }}</div>
-
-		<div class="modal-actions">
-			<button mat-stroked-button color="primary" type="button" class="ghost" (click)="closePaymentModal()">Annuler</button>
-			<button mat-raised-button color="primary" type="submit" [disabled]="paymentForm.invalid || isPaymentSubmitting">
-				{{ isPaymentSubmitting ? 'Paiement…' : 'Payer' }}
-			</button>
-		</div>
-	</form>
-</app-modal-forms>
+<app-rent-payment-modal
+	[isOpen]="isPaymentModalOpen"
+	[isSubmitting]="isPaymentSubmitting"
+	[error]="paymentError"
+	(close)="closePaymentModal()"
+	(submitPayment)="submitRentPayment($event)">
+</app-rent-payment-modal>
 
 <app-update-shop-photo-modal
 	[isOpen]="isPhotoModalOpen"

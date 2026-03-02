@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -12,12 +12,12 @@ import { Shop } from '../../shared/models/shop';
 import { Transaction, TransactionType } from '../../shared/models/transaction';
 import { TransactionsService } from '../../core/services/transactions.service';
 import { ListFiltersComponent } from '../../shared/components/list-filters/list-filters.component';
-import { ModalFormsComponent } from '../../shared/components/modal-forms/modal-forms.component';
 import { RentsService } from '../../core/services/rents.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 import { RouterLink } from '@angular/router';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { UpdateShopPhotoModalComponent } from './update-shop-photo-modal/update-shop-photo-modal.component';
+import { RentPaymentModalComponent, RentPaymentPayload } from './rent-payment-modal/rent-payment-modal.component';
 
 interface ShopResponse {
   success: boolean;
@@ -30,17 +30,16 @@ interface ShopResponse {
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
     MatTableModule,
     MatPaginatorModule,
     ListFiltersComponent,
-    ModalFormsComponent,
     RouterLink,
     LoaderComponent,
-    UpdateShopPhotoModalComponent
+    UpdateShopPhotoModalComponent,
+    RentPaymentModalComponent
   ],
   templateUrl: './my-shop.component.html',
   styleUrl: './my-shop.component.scss'
@@ -66,30 +65,7 @@ export class MyShopComponent implements OnInit {
   isPaymentSubmitting = false;
   paymentError = '';
 
-  readonly monthOptions = [
-    { value: '01', label: 'January' },
-    { value: '02', label: 'February' },
-    { value: '03', label: 'March' },
-    { value: '04', label: 'April' },
-    { value: '05', label: 'May' },
-    { value: '06', label: 'June' },
-    { value: '07', label: 'July' },
-    { value: '08', label: 'August' },
-    { value: '09', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' }
-  ];
-
-  readonly currentYear = new Date().getFullYear();
-
-  paymentForm = this.fb.group({
-    month: ['', Validators.required],
-    year: [this.currentYear, [Validators.required, Validators.min(2000), Validators.max(9999)]]
-  });
-
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     private shopsService: ShopsService,
     private transactionsService: TransactionsService,
@@ -191,16 +167,9 @@ export class MyShopComponent implements OnInit {
   }
 
   openPaymentModal(): void {
-    if (!this.shop?.activeRent?._id) {
-      return;
-    }
-
+    if (!this.shop?.activeRent?._id) return;
     this.paymentError = '';
     this.isPaymentSubmitting = false;
-    this.paymentForm.reset({
-      month: '',
-      year: this.currentYear
-    });
     this.sidebarService.requestCloseSidebar();
     this.isPaymentModalOpen = true;
   }
@@ -211,18 +180,11 @@ export class MyShopComponent implements OnInit {
     this.paymentError = '';
   }
 
-  submitRentPayment(): void {
+  submitRentPayment(payload: RentPaymentPayload): void {
     const rentId = this.shop?.activeRent?._id;
-    if (!rentId || !this.currentUserId || this.paymentForm.invalid || this.isPaymentSubmitting) {
-      this.paymentForm.markAllAsTouched();
-      return;
-    }
+    if (!rentId || !this.currentUserId || this.isPaymentSubmitting) return;
 
-    const rawValue = this.paymentForm.getRawValue();
-    const month = `${rawValue.month ?? ''}`;
-    const year = `${rawValue.year ?? ''}`;
-    const periode = `${year}-${month}`;
-
+    const periode = `${payload.year}-${payload.month}`;
     this.isPaymentSubmitting = true;
     this.paymentError = '';
 

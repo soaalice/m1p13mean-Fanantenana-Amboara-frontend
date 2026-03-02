@@ -13,8 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class ListFiltersComponent {
   @Input() showApply = false;
   @Input() showReset = true;
-  @Input() applyLabel = 'Apply';
-  @Input() resetLabel = 'Reset';
+  @Input() applyLabel = 'Appliquer';
+  @Input() resetLabel = 'Réinitialiser';
 
   @Output() apply = new EventEmitter<void>();
   @Output() reset = new EventEmitter<void>();

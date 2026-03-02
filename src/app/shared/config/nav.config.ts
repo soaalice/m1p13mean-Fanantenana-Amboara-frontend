@@ -22,7 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Types de produit', icon: 'category',       route: '/admin/product-types',         exact: false, roles: [UserRole.ADMIN] },
   { label: 'Boutiques',        icon: 'storefront',     route: '/admin/shops',                 exact: false, roles: [UserRole.ADMIN] },
   { label: 'Utilisateurs',     icon: 'people',         route: '/admin/users',                 exact: false, roles: [UserRole.ADMIN] },
-  { label: 'Calendrier',       icon: 'calendar_month', route: '/admin/transactions-calendar', exact: false, roles: [UserRole.ADMIN] },
+  // { label: 'Calendrier',       icon: 'calendar_month', route: '/admin/transactions-calendar', exact: false, roles: [UserRole.ADMIN] },
   { label: 'Mot de passe',     icon: 'lock',           route: '/admin/change-password',       exact: false, roles: [UserRole.ADMIN] },
 
   // ── Boutique ──────────────────────────────────────────────────────────────
@@ -30,8 +30,8 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Ma boutique',      icon: 'storefront',     route: '/boutique/my-shop',            exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes produits',     icon: 'inventory_2',    route: '/boutique/my-product',         exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes commandes',    icon: 'receipt_long',   route: '/boutique/my-command',         exact: false, roles: [UserRole.BOUTIQUE] },
-  { label: 'Mot de passe',     icon: 'lock',           route: '/boutique/change-password',    exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes coupons',      icon: 'local_offer',    route: '/boutique/my-coupon',          exact: false, roles: [UserRole.BOUTIQUE] },
+  { label: 'Mot de passe',     icon: 'lock',           route: '/boutique/change-password',    exact: false, roles: [UserRole.BOUTIQUE] },
 
   // ── Acheteur ──────────────────────────────────────────────────────────────
   { label: 'Accueil',          icon: 'home',           route: '/acheteur',                    exact: true,  roles: [UserRole.ACHETEUR] },
