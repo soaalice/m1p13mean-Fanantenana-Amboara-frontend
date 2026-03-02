@@ -3,12 +3,12 @@
   <!-- Header -->
   <div class="page-header">
     <div>
-      <h1>My Commands</h1>
-      <p class="subtitle">List of orders received by your shop</p>
+      <h1>Mes commandes</h1>
+      <p class="subtitle">Liste des commandes reçues par votre boutique</p>
     </div>
     <button mat-stroked-button type="button" (click)="fetchData()">
       <mat-icon>refresh</mat-icon>
-      Refresh
+      Actualiser
     </button>
   </div>
 
@@ -24,7 +24,7 @@
   </app-list-filters>
 
   <!-- Loading -->
-  <app-loader *ngIf="isLoading" message="Loading orders…" [inline]="true"></app-loader>
+  <app-loader *ngIf="isLoading" message="Chargement des commandes…" [inline]="true"></app-loader>
 
   <!-- Error -->
   <div class="state error" *ngIf="!isLoading && loadError">
@@ -35,7 +35,7 @@
   <!-- Empty -->
   <div class="empty-state" *ngIf="!isLoading && !loadError && dataSource.length === 0">
     <mat-icon>inbox</mat-icon>
-    <p>No orders found for your shop.</p>
+    <p>Aucune commande trouvée pour votre boutique.</p>
   </div>
 
   <!-- Command Cards -->
@@ -69,7 +69,7 @@
             <span class="meta-value">{{ cmd.createdAt | date:'dd/MM/yyyy' }}</span>
           </div>
           <div class="meta-item">
-            <span class="meta-label">Items</span>
+            <span class="meta-label">Articles</span>
             <span class="badge-items">{{ cmd.totalItems }}</span>
           </div>
         </div>
@@ -78,7 +78,7 @@
           <span class="total-amount">{{ cmd.totalAmount | number }} Ar</span>
           <button
             mat-icon-button
-            [matTooltip]="expandedCommand?._id === cmd._id ? 'Collapse' : 'View details'"
+            [matTooltip]="expandedCommand?._id === cmd._id ? 'Réduire' : 'Voir les détails'"
             (click)="$event.stopPropagation(); toggleDetails(cmd)">
             <mat-icon>{{ expandedCommand?._id === cmd._id ? 'expand_less' : 'expand_more' }}</mat-icon>
           </button>
@@ -89,15 +89,15 @@
       <div class="card-detail" *ngIf="expandedCommand?._id === cmd._id">
         <p class="detail-title">
           <mat-icon>shopping_bag</mat-icon>
-          Order items
+          Articles commandés
         </p>
         <table class="items-table">
           <thead>
             <tr>
-              <th>Product</th>
-              <th>Unit price</th>
-              <th>Qty</th>
-              <th>Subtotal</th>
+              <th>Produit</th>
+              <th>Prix unitaire</th>
+              <th>Qtté</th>
+              <th>Sous-total</th>
             </tr>
           </thead>
           <tbody>

@@ -5,6 +5,12 @@ import { environment } from '../../../environments/environment';
 import { User } from '../../shared/models/user';
 import { ApiSingleResponse, PageResult } from '../../shared/models/shared.model';
 
+export interface ChangePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -47,5 +53,12 @@ export class UsersService {
       amount,
       type: 'RECHARGE'
     });
+  }
+
+  changePassword(payload: ChangePasswordPayload): Observable<{ success: boolean; message: string }> {
+    return this.http.patch<{ success: boolean; message: string }>(
+      `${environment.apiUrl}/users/me/change-password`,
+      payload
+    );
   }
 }

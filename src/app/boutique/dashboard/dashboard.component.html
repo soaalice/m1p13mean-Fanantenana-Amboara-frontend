@@ -1,13 +1,13 @@
 <section class="boutique-dashboard">
 	<header class="page-header">
 		<div class="heading-copy">
-			<h1>Boutique Dashboard</h1>
-			<p>Overview of customer activity and sales trends</p>
+			<h1>Tableau de bord boutique</h1>
+			<p>Aperçu de l'activité clients et des tendances de ventes</p>
 		</div>
 
 		<div class="header-actions">
 			<button mat-stroked-button type="button" (click)="fetchDashboard()" [disabled]="isLoading">
-				{{ isLoading ? 'Loading…' : 'Refresh' }}
+				{{ isLoading ? 'Chargement…' : 'Actualiser' }}
 			</button>
 		</div>
 	</header>
@@ -18,21 +18,21 @@
 	</div>
 
 	<ng-container *ngIf="isLoading && !data">
-		<app-loader message="Loading dashboard…"></app-loader>
+		<app-loader message="Chargement du tableau de bord…"></app-loader>
 	</ng-container>
 
 	<ng-container *ngIf="data as dashboard">
 		<div class="cards-grid">
 			<app-dashboard-card
 				icon="groups"
-				title="Total customers"
+				title="Total clients"
 				[text]="(dashboard.customers.total | number) ?? '0'"
 				color="#3b82f6"
 			></app-dashboard-card>
 
 			<app-dashboard-card
 				icon="trending_up"
-				title="Net sales"
+				title="Ventes nettes"
 				[text]="(dashboard.netSales.total | number) ?? '0'"
 				[description]="selectedYear + ' • MGA'"
 				color="#f59e0b"
@@ -42,8 +42,8 @@
 		<section class="analytics-section">
 			<div class="section-header">
 				<div class="section-title">
-					<h2>Analytics</h2>
-					<p>Track customer activity and sales trends over time.</p>
+					<h2>Analytique</h2>
+					<p>Suivez l'activité clients et les tendances de ventes au fil du temps.</p>
 				</div>
 				<span class="section-badge">{{ selectedYear }}</span>
 			</div>
@@ -52,11 +52,11 @@
 				class="year-filter"
 				[showApply]="false"
 				[showReset]="true"
-				resetLabel="Current year"
+				resetLabel="Année en cours"
 				(reset)="resetYear()"
 			>
 				<div class="filter-item">
-					<label for="dashboard-year">Year</label>
+					<label for="dashboard-year">Année</label>
 					<select
 						id="dashboard-year"
 						[value]="selectedYear"
@@ -72,13 +72,13 @@
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#3b82f6"></span>
-						<span class="chart-card-label">Customers by month</span>
-						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Current distribution' }}</span>
+						<span class="chart-card-label">Clients par mois</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Actualisation…' : 'Distribution actuelle' }}</span>
 					</div>
 
 					<app-dashboard-graph
 						*ngIf="customersByMonth.length > 0"
-						title="Customers by month"
+						title="Clients par mois"
 						[data]="customersByMonth"
 						type="line"
 						color="#3b82f6"
@@ -86,20 +86,20 @@
 
 					<div class="chart-empty" *ngIf="customersByMonth.length === 0">
 						<mat-icon>insights</mat-icon>
-						<p>No customer data available yet.</p>
+						<p>Aucune donnée client disponible.</p>
 					</div>
 				</div>
 
 				<div class="chart-card">
 					<div class="chart-card-header">
 						<span class="chart-dot" style="background:#f59e0b"></span>
-						<span class="chart-card-label">Net sales by month</span>
-						<span class="chart-card-hint">{{ isLoading ? 'Refreshing…' : 'Evolution in MGA' }}</span>
+						<span class="chart-card-label">Ventes nettes par mois</span>
+						<span class="chart-card-hint">{{ isLoading ? 'Actualisation…' : 'Évolution en MGA' }}</span>
 					</div>
 
 					<app-dashboard-graph
 						*ngIf="netSalesByMonth.length > 0"
-						title="Net sales by month"
+						title="Ventes nettes par mois"
 						[data]="netSalesByMonth"
 						type="line"
 						color="#f59e0b"
@@ -107,7 +107,7 @@
 
 					<div class="chart-empty" *ngIf="netSalesByMonth.length === 0">
 						<mat-icon>insights</mat-icon>
-						<p>No net sales data available yet.</p>
+						<p>Aucune donnée de ventes nettes disponible.</p>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 <app-modal-forms
   [isOpen]="isOpen"
-  [title]="'Update Product Photo'"
+  [title]="'Modifier la photo du produit'"
   (close)="onClose()">
   
   <div class="update-photo-content">
@@ -10,12 +10,12 @@
     </div>
 
     <div class="current-photo" *ngIf="product?.photoUrl && !selectedFile">
-      <label class="section-label">Current Photo</label>
+      <label class="section-label">Photo actuelle</label>
       <img [src]="product!.photoUrl" [alt]="product!.name" class="current-photo-img" />
     </div>
 
     <div class="image-upload-section">
-      <label class="section-label">{{ selectedFile ? 'New Photo Preview' : 'Upload New Photo' }}</label>
+      <label class="section-label">{{ selectedFile ? 'Aperçu de la nouvelle photo' : 'Télécharger une nouvelle photo' }}</label>
       
       <div class="image-upload-container" *ngIf="!imagePreview || (!selectedFile && !product?.photoUrl)">
         <input 
@@ -30,9 +30,9 @@
           class="upload-button"
           (click)="fileInput.click()">
           <mat-icon>add_photo_alternate</mat-icon>
-          <span>Choose Photo</span>
+          <span>Choisir une photo</span>
         </button>
-        <p class="upload-hint">PNG, JPG, WEBP (Max 5MB)</p>
+        <p class="upload-hint">PNG, JPG, WEBP (Max 5 Mo)</p>
       </div>
 
       <div class="image-preview-container" *ngIf="imagePreview">
@@ -43,7 +43,7 @@
             type="button" 
             (click)="fileInput.click()">
             <mat-icon>swap_horiz</mat-icon>
-            <span>Change Photo</span>
+            <span>Changer la photo</span>
           </button>
           <button 
             mat-stroked-button 
@@ -52,7 +52,7 @@
             (click)="removeImage()"
             *ngIf="selectedFile">
             <mat-icon>close</mat-icon>
-            <span>Cancel</span>
+            <span>Annuler</span>
           </button>
         </div>
         <input 
@@ -67,14 +67,14 @@
     <div class="form-error" *ngIf="error">{{ error }}</div>
 
     <div class="modal-actions">
-      <button mat-stroked-button type="button" (click)="onClose()">Cancel</button>
+      <button mat-stroked-button type="button" (click)="onClose()">Annuler</button>
       <button 
         mat-raised-button 
         color="primary" 
         type="button" 
         [disabled]="!selectedFile || isSubmitting"
         (click)="onSubmit()">
-        {{ isSubmitting ? 'Updating...' : 'Update Photo' }}
+        {{ isSubmitting ? 'Mise à jour…' : 'Mettre à jour la photo' }}
       </button>
     </div>
   </div>

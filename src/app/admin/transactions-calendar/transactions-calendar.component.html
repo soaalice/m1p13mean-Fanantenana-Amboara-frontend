@@ -10,7 +10,7 @@
 		</button>
 	</div>
 
-	<app-loader *ngIf="isLoading" message="Loading transactions…" [inline]="true"></app-loader>
+	<app-loader *ngIf="isLoading" message="Chargement des transactions…" [inline]="true"></app-loader>
 
 	<div *ngIf="loadError && !isLoading" class="state error">
 		<mat-icon>error</mat-icon>

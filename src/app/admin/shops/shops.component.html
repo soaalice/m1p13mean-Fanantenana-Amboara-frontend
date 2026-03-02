@@ -2,29 +2,29 @@
     <div class="header">
         <div class="header-main">
             <div>
-                <h1>Shops</h1>
-                <p class="subtitle">Manage shops and their details</p>
+                <h1>Boutiques</h1>
+                <p class="subtitle">Gérez les boutiques et leurs détails</p>
             </div>
             <div class="actions">
-                <button mat-stroked-button type="button" (click)="fetchData()">Refresh</button>
+                <button mat-stroked-button type="button" (click)="fetchData()">Actualiser</button>
             </div>
         </div>
         <app-list-filters [showApply]="false" (reset)="resetFilters()">
             <label class="filter-item">
-                <span>Status</span>
+                <span>Statut</span>
                 <select [(ngModel)]="statusFilter">
-                    <option value="">All</option>
+                    <option value="">Tous</option>
                     <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
                 </select>
             </label>
             <label class="filter-item">
-                <span>Owner Name</span>
-                <input type="text" [(ngModel)]="ownerNameFilter" placeholder="Search by owner name..." />
+                <span>Nom du propriétaire</span>
+                <input type="text" [(ngModel)]="ownerNameFilter" placeholder="Rechercher par nom du propriétaire..." />
             </label>
         </app-list-filters>
     </div>
 
-    <app-loader *ngIf="isLoading" message="Loading shops…" [inline]="true"></app-loader>
+    <app-loader *ngIf="isLoading" message="Chargement des boutiques…" [inline]="true"></app-loader>
     <div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
 
     <div class="table-wrap" *ngIf="!isLoading && !loadError">
@@ -40,24 +40,24 @@
             </ng-container>
 
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <th mat-header-cell *matHeaderCellDef>Nom</th>
                 <td mat-cell *matCellDef="let shop">{{ shop.name }}</td>
             </ng-container>
 
             <ng-container matColumnDef="ownerFullName">
-                <th mat-header-cell *matHeaderCellDef>Owner</th>
+                <th mat-header-cell *matHeaderCellDef>Propriétaire</th>
                 <td mat-cell *matCellDef="let shop">{{ getOwnerFullName(shop) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <th mat-header-cell *matHeaderCellDef>Statut</th>
                 <td mat-cell *matCellDef="let shop">
                     <span [class]="getStatusClass(shop.status)">{{ shop.status || 'UNKNOWN' }}</span>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="activeRent">
-                <th mat-header-cell *matHeaderCellDef>Active Rent</th>
+                <th mat-header-cell *matHeaderCellDef>Loyer actif</th>
                 <td mat-cell *matCellDef="let shop">
                     <ng-container *ngIf="shop.activeRent; else noRent">
                         <div class="rent-cell">
@@ -65,7 +65,7 @@
                             <div class="rent-deadline" [class.rent-overdue]="isRentOverdue(shop)">
                                 <mat-icon>{{ isRentOverdue(shop) ? 'warning' : 'event' }}</mat-icon>
                                 <span>{{ getRentDeadlineLabel(shop) }}</span>
-                                <span class="overdue-label" *ngIf="isRentOverdue(shop)">Overdue</span>
+                                <span class="overdue-label" *ngIf="isRentOverdue(shop)">En retard</span>
                             </div>
                         </div>
                     </ng-container>
@@ -74,7 +74,7 @@
             </ng-container>
 
             <ng-container matColumnDef="assignedBox">
-                <th mat-header-cell *matHeaderCellDef>Assigned Box</th>
+                <th mat-header-cell *matHeaderCellDef>Box assignée</th>
                 <td mat-cell *matCellDef="let shop">{{ getAssignedBoxName(shop) }}</td>
             </ng-container>
 
@@ -88,11 +88,11 @@
                     <mat-menu #shopMenu="matMenu">
                         <button mat-menu-item *ngIf="!shop.assignedBox && !shop.boxId" (click)="assignateShop(shop)">
                             <mat-icon>link_on</mat-icon>
-                            <span>Assignate to box</span>
+                            <span>Assigner à une box</span>
                         </button>
                         <button mat-menu-item *ngIf="shop.assignedBox || shop.boxId" (click)="unassignateShop(shop)">
                             <mat-icon>link_off</mat-icon>
-                            <span>Unassign box</span>
+                            <span>Désassigner la box</span>
                         </button>
                     </mat-menu>
                 </td>
@@ -102,7 +102,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     
-        <div class="empty" *ngIf="shops.length === 0">No shops found.</div>
+        <div class="empty" *ngIf="shops.length === 0">Aucune boutique trouvée.</div>
 
         <mat-paginator
             class="paginator"
