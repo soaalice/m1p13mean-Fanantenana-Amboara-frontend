@@ -22,7 +22,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Types de produit', icon: 'category',       route: '/admin/product-types',         exact: false, roles: [UserRole.ADMIN] },
   { label: 'Boutiques',        icon: 'storefront',     route: '/admin/shops',                 exact: false, roles: [UserRole.ADMIN] },
   { label: 'Utilisateurs',     icon: 'people',         route: '/admin/users',                 exact: false, roles: [UserRole.ADMIN] },
-  // { label: 'Calendrier',       icon: 'calendar_month', route: '/admin/transactions-calendar', exact: false, roles: [UserRole.ADMIN] },
+  { label: 'Calendrier',       icon: 'calendar_month', route: '/admin/transactions-calendar', exact: false, roles: [UserRole.ADMIN] },
   { label: 'Mot de passe',     icon: 'lock',           route: '/admin/change-password',       exact: false, roles: [UserRole.ADMIN] },
 
   // ── Boutique ──────────────────────────────────────────────────────────────
