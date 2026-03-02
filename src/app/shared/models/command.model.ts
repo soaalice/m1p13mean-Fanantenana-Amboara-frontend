@@ -14,6 +14,9 @@ export interface Command {
   transactionId: string;
   items: CommandItem[];
   totalAmount: number;
+  totalBeforeDiscount?: number | null;
+  discount?: number;
+  couponId?: string | null;
   totalItems: number;
   createdAt: string;
 }

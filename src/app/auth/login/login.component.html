@@ -9,7 +9,6 @@
     </mat-card-header>
 
     <mat-card-content>
-      <app-loader *ngIf="isLoading" message="Connexion en cours…" [inline]="true"></app-loader>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="fill">
@@ -31,7 +30,7 @@
         </mat-form-field>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
-          Se connecter
+          {{ isLoading ? 'Connexion...' : 'Se connecter' }}
         </button>
 
         <div class="auth-links">

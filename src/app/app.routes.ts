@@ -95,6 +95,10 @@ export const routes: Routes = [
         loadComponent: () => import('./boutique/my-command/my-command.component').then(m => m.MyCommandComponent)
       },
       {
+        path: 'my-coupon',
+        loadComponent: () => import('./boutique/my-coupon/my-coupon.component').then(m => m.MyCouponComponent)
+      },
+      {
         path: 'product-preview/:id',
         loadComponent: () => import('./boutique/product-preview/product-preview.component').then(m => m.BoutiqueProductPreviewComponent)
       }
@@ -126,6 +130,14 @@ export const routes: Routes = [
       {
         path: 'product/:id',
         loadComponent: () => import('./acheteur/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+      },
+      {
+        path: 'coupons',
+        loadComponent: () => import('./acheteur/coupons/coupons.component').then(m => m.CouponsComponent)
+      },
+      {
+        path: 'coupons/:id',
+        loadComponent: () => import('./acheteur/coupon-detail/coupon-detail.component').then(m => m.CouponDetailComponent)
       }
     ]
   },

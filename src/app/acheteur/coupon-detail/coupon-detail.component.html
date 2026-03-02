@@ -1,0 +1,138 @@
+<section class="cd-page">
+
+  <!-- ─── Breadcrumb ─────────────────────────────────────────────── -->
+  <nav class="cd-breadcrumb">
+    <button class="cd-breadcrumb-link" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Coupons</span>
+    </button>
+    <mat-icon class="cd-breadcrumb-sep">chevron_right</mat-icon>
+    <span class="cd-breadcrumb-current" *ngIf="coupon">{{ coupon.code }}</span>
+    <span class="cd-breadcrumb-current--loading" *ngIf="isLoading">Chargement…</span>
+  </nav>
+
+  <!-- ─── Skeleton ──────────────────────────────────────────────── -->
+  <ng-container *ngIf="isLoading">
+    <div class="cd-skeleton-hero"></div>
+    <div class="cd-skeleton-grid">
+      <div class="cd-skeleton-card" *ngFor="let n of [1,2,3,4]"></div>
+    </div>
+  </ng-container>
+
+  <!-- ─── Error ─────────────────────────────────────────────────── -->
+  <div class="cd-error" *ngIf="!isLoading && loadError">
+    <mat-icon>error_outline</mat-icon>
+    <div>
+      <strong>Oups, une erreur est survenue</strong>
+      <p>{{ loadError }}</p>
+    </div>
+    <button mat-stroked-button (click)="goBack()">Retour</button>
+  </div>
+
+  <!-- ─── Promo Content ─────────────────────────────────────────── -->
+  <ng-container *ngIf="!isLoading && !loadError && coupon">
+
+    <!-- ══ PROMO HERO BANNER ══ -->
+    <div class="cd-promo" [class.cd-promo--urgent]="isExpiringSoon">
+
+      <!-- Decorative background shapes -->
+      <span class="cd-blob cd-blob-1"></span>
+      <span class="cd-blob cd-blob-2"></span>
+      <span class="cd-blob cd-blob-3"></span>
+      <span class="cd-blob cd-blob-4"></span>
+
+      <!-- Top label strip -->
+      <div class="cd-promo-eyebrow">
+        <span class="cd-flash-badge">
+          <mat-icon class="cd-flash-icon">bolt</mat-icon>
+          OFFRE EXCLUSIVE
+        </span>
+        <span class="cd-type-pill" [class.cd-type-pill--pack]="coupon.type === 'PACK'">
+          <mat-icon>{{ coupon.type === 'PACK' ? 'inventory_2' : 'card_giftcard' }}</mat-icon>
+          {{ coupon.type === 'PACK' ? 'Pack' : 'Single' }}
+        </span>
+      </div>
+
+      <!-- Main content row -->
+      <div class="cd-promo-body">
+
+        <!-- Discount starburst -->
+        <div class="cd-starburst" [class.cd-starburst--urgent]="isExpiringSoon">
+          <span class="cd-starburst-pct">-{{ coupon.percentage }}%</span>
+          <span class="cd-starburst-sub">DE RÉDUCTION</span>
+        </div>
+
+        <!-- Info block -->
+        <div class="cd-promo-info">
+
+          <!-- Boutique -->
+          <div class="cd-promo-boutique">
+            <mat-icon>storefront</mat-icon>
+            <span>{{ coupon.items[0].shop.name }}</span>
+          </div>
+
+          <!-- Headline -->
+          <p class="cd-promo-headline">
+            Économisez <strong>{{ coupon.percentage }}%</strong> sur notre selection
+          </p>
+
+          <!-- Code block -->
+          <div class="cd-code-wrapper">
+            <p class="cd-code-hint">Code promo à copier :</p>
+            <button
+              class="cd-code-cta"
+              (click)="copyCode()"
+              [class.cd-code-cta--copied]="copiedCode"
+            >
+              <span class="cd-code-value">{{ coupon.code }}</span>
+              <span class="cd-code-pill">
+                <mat-icon>{{ copiedCode ? 'check_circle' : 'content_copy' }}</mat-icon>
+                {{ copiedCode ? 'Copié !' : 'Copier' }}
+              </span>
+            </button>
+          </div>
+
+          <!-- Expiry -->
+          <div class="cd-expiry-row" [class.cd-expiry-row--urgent]="isExpiringSoon">
+            <mat-icon class="cd-expiry-icon">{{ isExpiringSoon ? 'local_fire_department' : 'schedule' }}</mat-icon>
+            <span class="cd-expiry-text">{{ expiryLabel }}</span>
+            <span class="cd-expiry-urgency" *ngIf="isExpiringSoon">— Dépêchez-vous !</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ PRODUCTS SECTION ══ -->
+    <div class="cd-products-section">
+
+      <div class="cd-section-header">
+        <h2 class="cd-section-title">
+          <mat-icon>shopping_bag</mat-icon>
+          Produits inclus dans la promo
+          <span class="cd-count">{{ products.length }}</span>
+        </h2>
+        <p class="cd-section-sub">Appliquez le code <strong>{{ coupon.code }}</strong> pour obtenir votre réduction</p>
+      </div>
+
+      <div class="cd-products-grid" *ngIf="products.length; else emptyProducts">
+        <app-product-card
+          *ngFor="let p of products"
+          [product]="p"
+          [imageUrl]="p.photoUrl ?? ''"
+          detailBasePath="/acheteur/product"
+        ></app-product-card>
+      </div>
+
+      <ng-template #emptyProducts>
+        <div class="cd-empty">
+          <mat-icon>inbox</mat-icon>
+          <p>Aucun produit associé à ce coupon.</p>
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-container>
+
+</section>

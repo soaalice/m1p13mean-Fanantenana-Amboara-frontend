@@ -316,6 +316,12 @@
     background: var(--surface-2, #f8fafc);
   }
 
+  tfoot .total-row-discount td {
+    color: #15803d;
+    border-top: 1px solid #dcfce7;
+    background: #f0fdf4;
+  }
+
   .subtotal {
     font-weight: 700;
     color: #0f172a;

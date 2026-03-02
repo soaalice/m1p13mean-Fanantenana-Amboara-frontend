@@ -139,6 +139,20 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
     );
   }
 
+  get panierDiscount(): number {
+    return this.selectedPanier?.discount ?? 0;
+  }
+
+  get panierTotalBeforeDiscount(): number {
+    if (!this.selectedPanier) return 0;
+    return this.selectedPanier.totalBeforeDiscount ?? this.panierSubtotal;
+  }
+
+  get panierFinalTotal(): number {
+    if (!this.selectedPanier) return 0;
+    return this.selectedPanier.total ?? this.panierTotalBeforeDiscount - this.panierDiscount;
+  }
+
   get groupedPanierItems(): PanierShopGroup[] {
     if (!this.selectedPanier) return [];
     const map = new Map<string, PanierShopGroup>();
