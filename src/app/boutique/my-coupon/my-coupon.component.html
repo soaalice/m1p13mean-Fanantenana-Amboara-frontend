@@ -1,0 +1,77 @@
+<section class="my-coupons-page">
+	<div class="header">
+		<div class="header-main">
+			<div>
+				<h1>Mes coupons</h1>
+				<p class="subtitle">Liste des coupons de la boutique</p>
+			</div>
+			<div class="actions">
+				<button mat-stroked-button type="button" (click)="fetchData()">Rafraîchir</button>
+				<button mat-raised-button color="primary" type="button" (click)="openAddModal()">Ajouter un coupon</button>
+			</div>
+		</div>
+	</div>
+
+	<section class="coupon-types-notice" aria-label="Notice des types de coupons">
+		<h2>Notice — Types de coupons</h2>
+		<ul>
+			<li><strong>PACK</strong> : le coupon s'applique à la somme des produits sélectionnés, qui doivent être présents dans le panier.</li>
+			<li><strong>SINGLE</strong> : le coupon s'applique sur chaque article, indépendamment des autres produits.</li>
+		</ul>
+	</section>
+
+	<app-loader *ngIf="isLoading" message="Chargement des coupons..." [inline]="true"></app-loader>
+	<div class="state error" *ngIf="!isLoading && loadError">{{ loadError }}</div>
+
+	<div class="table-wrap" *ngIf="!isLoading && !loadError">
+		<table mat-table [dataSource]="coupons" class="coupons-table">
+
+			<ng-container matColumnDef="code">
+				<th mat-header-cell *matHeaderCellDef>Code</th>
+				<td mat-cell *matCellDef="let coupon">{{ coupon.code }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="percentage">
+				<th mat-header-cell *matHeaderCellDef>Remise</th>
+				<td mat-cell *matCellDef="let coupon">{{ coupon.percentage }}%</td>
+			</ng-container>
+
+			<ng-container matColumnDef="type">
+				<th mat-header-cell *matHeaderCellDef>Type</th>
+				<td mat-cell *matCellDef="let coupon">{{ coupon.type }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="expiresAt">
+				<th mat-header-cell *matHeaderCellDef>Expiration</th>
+				<td mat-cell *matCellDef="let coupon">{{ coupon.expiresAt | date:'dd/MM/yyyy' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="itemsCount">
+				<th mat-header-cell *matHeaderCellDef>Produits ciblés</th>
+				<td mat-cell *matCellDef="let coupon">{{ coupon.items?.length || 0 }}</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+		</table>
+
+		<div class="empty" *ngIf="coupons.length === 0">Aucun coupon trouvé.</div>
+
+		<mat-paginator
+			class="paginator"
+			[length]="total"
+			[pageIndex]="page - 1"
+			[pageSize]="limit"
+			[pageSizeOptions]="pageSizeOptions"
+			(page)="onPageChange($event)">
+		</mat-paginator>
+	</div>
+</section>
+
+<app-add-coupon-modal
+	[isOpen]="isAddModalOpen"
+	[isSubmitting]="isSubmitting"
+	[submitError]="submitError"
+	(close)="closeAddModal()"
+	(submitCoupon)="createCoupon($event)">
+</app-add-coupon-modal>

@@ -1,0 +1,39 @@
+@use '../../shared/page' as p;
+
+.my-coupons-page { @include p.page-shell; }
+@include p.page-header;
+@include p.state-banner;
+@include p.table-footer;
+
+.coupons-table {
+	width: 100%;
+}
+
+.table-wrap {
+	overflow-x: auto;
+}
+
+.coupon-types-notice {
+	margin: 0 0 16px;
+	padding: 14px 16px;
+	border-radius: var(--radius-md, 12px);
+	border: 1px solid var(--border-color, #e2e8f0);
+	background: var(--surface-2, #f8fafc);
+
+	h2 {
+		margin: 0 0 8px;
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--text-primary, #0f172a);
+	}
+
+	ul {
+		margin: 0;
+		padding-left: 18px;
+		display: grid;
+		gap: 6px;
+		color: var(--text-secondary, #334155);
+		font-size: 13px;
+		line-height: 1.45;
+	}
+}

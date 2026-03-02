@@ -95,6 +95,10 @@ export const routes: Routes = [
         loadComponent: () => import('./boutique/my-command/my-command.component').then(m => m.MyCommandComponent)
       },
       {
+        path: 'my-coupon',
+        loadComponent: () => import('./boutique/my-coupon/my-coupon.component').then(m => m.MyCouponComponent)
+      },
+      {
         path: 'product-preview/:id',
         loadComponent: () => import('./boutique/product-preview/product-preview.component').then(m => m.BoutiqueProductPreviewComponent)
       }

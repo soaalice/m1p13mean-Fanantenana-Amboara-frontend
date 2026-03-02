@@ -29,6 +29,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Ma boutique',      icon: 'storefront',     route: '/boutique/my-shop',            exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes produits',     icon: 'inventory_2',    route: '/boutique/my-product',         exact: false, roles: [UserRole.BOUTIQUE] },
   { label: 'Mes commandes',    icon: 'receipt_long',   route: '/boutique/my-command',         exact: false, roles: [UserRole.BOUTIQUE] },
+  { label: 'Mes coupons',      icon: 'local_offer',    route: '/boutique/my-coupon',          exact: false, roles: [UserRole.BOUTIQUE] },
 
   // ── Acheteur ──────────────────────────────────────────────────────────────
   { label: 'Accueil',          icon: 'home',           route: '/acheteur',                    exact: true,  roles: [UserRole.ACHETEUR] },
