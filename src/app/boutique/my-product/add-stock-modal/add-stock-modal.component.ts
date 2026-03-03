@@ -41,7 +41,7 @@ export class AddStockModalComponent {
 
   doAdd() {
     if (this.quantity == null || this.quantity <= 0) {
-      this.error = 'Please enter a positive quantity';
+      this.error = 'Veuillez saisir une quantité positive';
       return;
     }
     this.error = '';

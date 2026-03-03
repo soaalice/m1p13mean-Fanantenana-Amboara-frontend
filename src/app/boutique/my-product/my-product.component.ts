@@ -233,8 +233,8 @@ export class MyProductComponent implements OnInit {
         this.isStockSubmitting = false;
         this.closeStockModal();
       },
-      error: () => {
-        this.stockSubmitError = 'Failed to add stock. Please try again.';
+      error: (err) => {
+        this.stockSubmitError = err?.error?.message || 'Impossible d\'ajouter du stock. Veuillez réessayer.';
         this.isStockSubmitting = false;
       }
     });
