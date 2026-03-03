@@ -21,7 +21,7 @@
 		<!-- 403 : retour précédent + login -->
 		<div class="error-actions" *ngIf="status === 403">
 			<button class="btn ghost" (click)="goBack()">Retour</button>
-			<a routerLink="/login" class="btn primary">Retour au login</a>
+			<button class="btn primary" (click)="goToLogin()">Retour au login</button>
 		</div>
 	</div>
 </section>

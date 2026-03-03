@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Location, NgIf } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-error-page',
@@ -16,7 +17,12 @@ export class ErrorPageComponent {
   status?: number;
   message?: string;
 
-  constructor(private route: ActivatedRoute, private location: Location) {
+  constructor(
+    private route: ActivatedRoute,
+    private location: Location,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.route.data.subscribe(data => {
       this.status = data['status'];
       this.message = this.getMessageForStatus(this.status);
@@ -25,6 +31,11 @@ export class ErrorPageComponent {
 
   goBack(): void {
     this.location.back();
+  }
+
+  goToLogin(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   private getMessageForStatus(status?: number): string {
