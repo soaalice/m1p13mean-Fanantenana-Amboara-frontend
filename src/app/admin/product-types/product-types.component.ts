@@ -50,7 +50,7 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
 
   getAttributeBadges(productType: ProductType): Array<{ label: string; type: ProductTypeAttribute['type'] | 'NONE' }> {
     if (!productType.attributes || productType.attributes.length === 0) {
-      return [{ label: 'No attributes', type: 'NONE' }];
+      return [{ label: 'Aucun attribut', type: 'NONE' }];
     }
 
     return productType.attributes.map(attribute => {
@@ -103,8 +103,8 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
         this.applyResponse(response);
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Failed to load product types.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger les types de produits.';
         this.isLoading = false;
       }
     });
@@ -140,11 +140,12 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
         this.closeProductTypeModal();
         this.fetchData(1);
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting = false;
-        this.submitError = this.isEditMode
-          ? 'Failed to update product type.'
-          : 'Failed to create product type.';
+        this.submitError = err.error?.message || (this.isEditMode
+          ? 'Impossible de mettre à jour le type de produit.'
+          : 'Impossible de créer le type de produit.'
+        );
       }
     });
   }
@@ -284,7 +285,7 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
       return;
     }
 
-    const confirmed = window.confirm(`Delete product type "${productType.label || productType._id}"?`);
+    const confirmed = window.confirm(`Voulez-vous supprimer le type de produit "${productType.label || productType._id}"?`);
     if (!confirmed) {
       return;
     }
@@ -293,8 +294,8 @@ export class ProductTypesComponent extends PaginatedComponent<ProductType> {
       next: () => {
         this.fetchData(this.page);
       },
-      error: () => {
-        this.loadError = 'Failed to delete product type.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de supprimer le type de produit.';
       }
     });
   }

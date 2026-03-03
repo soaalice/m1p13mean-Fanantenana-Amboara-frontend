@@ -66,8 +66,8 @@ export class BoxesComponent extends PaginatedComponent<Box> {
         this.applyResponse(response);
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Failed to load boxes.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger les boîtes.';
         this.isLoading = false;
       }
     });
@@ -132,11 +132,11 @@ export class BoxesComponent extends PaginatedComponent<Box> {
         this.closeBoxModal();
         this.fetchData(1);
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting = false;
-        this.submitError = this.isEditMode
-          ? 'Failed to update box.'
-          : 'Failed to create box.';
+        this.submitError = err.error?.message || this.isEditMode
+          ? 'Impossible de mettre à jour la boîte.'
+          : 'Impossible de créer la boîte.';
       }
     });
   }
@@ -159,7 +159,7 @@ export class BoxesComponent extends PaginatedComponent<Box> {
       return;
     }
 
-    const confirmed = window.confirm(`Delete box "${box.label || box._id}"?`);
+    const confirmed = window.confirm(`Voulez-vous supprimer la box "${box.label || box._id}"?`);
     if (!confirmed) {
       return;
     }
@@ -168,8 +168,8 @@ export class BoxesComponent extends PaginatedComponent<Box> {
       next: () => {
         this.fetchData(this.page);
       },
-      error: () => {
-        this.loadError = 'Failed to delete box.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de supprimer la box.';
       }
     });
   }

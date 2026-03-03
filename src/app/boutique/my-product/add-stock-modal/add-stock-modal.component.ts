@@ -41,7 +41,7 @@ export class AddStockModalComponent {
 
   doAdd() {
     if (this.quantity == null || this.quantity <= 0) {
-      this.error = 'Veuillez saisir une quantité positive';
+      this.error = 'La quantité doit être un nombre entier positif.';
       return;
     }
     this.error = '';

@@ -84,8 +84,8 @@ export class UsersComponent extends PaginatedComponent<User> {
         this.applyResponse(response);
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Failed to load users.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger les utilisateurs.';
         this.isLoading = false;
       }
     });
@@ -146,9 +146,9 @@ export class UsersComponent extends PaginatedComponent<User> {
         this.closeUserModal();
         this.fetchData(1);
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting = false;
-        this.submitError = 'Failed to create user.';
+        this.submitError = err.error?.message || 'Impossible de créer l\'utilisateur.';
       }
     });
   }
@@ -188,9 +188,9 @@ export class UsersComponent extends PaginatedComponent<User> {
         this.closeStatusModal();
         this.fetchData(this.page);
       },
-      error: () => {
+      error: (err) => {
         this.isStatusSubmitting = false;
-        this.statusError = 'Failed to update status.';
+        this.statusError = err.error?.message || 'Impossible de mettre à jour le statut.';
       }
     });
   }
