@@ -12,5 +12,16 @@
 		<h1>Nous avons rencontré un problème.</h1>
 		<p class="message">{{ message }}</p>
 		<p class="hint">Essayez une autre route ou retournez à la page d'accueil.</p>
+
+		<!-- 404 : retour à la page précédente uniquement -->
+		<div class="error-actions" *ngIf="status === 404">
+			<button class="btn primary" (click)="goBack()">Retour</button>
+		</div>
+
+		<!-- 403 : retour précédent + login -->
+		<div class="error-actions" *ngIf="status === 403">
+			<button class="btn ghost" (click)="goBack()">Retour</button>
+			<a routerLink="/login" class="btn primary">Retour au login</a>
+		</div>
 	</div>
 </section>
