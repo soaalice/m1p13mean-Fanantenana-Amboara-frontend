@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from './core/guards/role.guard';
+import { guestGuard } from './core/guards/guest.guard';
 import { UserRole } from './shared/models/user';
 import { MainLayoutComponent } from './shared/components/main-layout/main-layout.component';
 
@@ -9,10 +10,12 @@ export const routes: Routes = [
   // AUTH ROUTES
   {
     path: 'login',
+    canActivate: [guestGuard],
     loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent)
   },
   // ERROR PAGE
