@@ -43,12 +43,12 @@ export class UpdateShopPhotoModalComponent {
       const file = input.files[0];
 
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        alert('Veuillez sélectionner un fichier image valide.');
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB');
+        alert('La taille de l\'image doit être inférieure à 5MB');
         return;
       }
 

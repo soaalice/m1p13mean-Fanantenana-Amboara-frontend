@@ -75,7 +75,7 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
     this.loadError = '';
 
     if (!this.userId) {
-      this.loadError = 'User not found.';
+      this.loadError = 'Utilisateur introuvable.';
       this.isLoading = false;
       return;
     }
@@ -89,8 +89,8 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
         this.applyResponse(response);
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Failed to load transactions.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger les transactions.';
         this.isLoading = false;
       }
     });
@@ -119,8 +119,8 @@ export class TransactionsComponent extends PaginatedComponent<Transaction> {
         this.selectedPanier = res.data;
         this.panierLoading = false;
       },
-      error: () => {
-        this.panierError = 'Aucun panier trouvé pour cette transaction.';
+      error: (err) => {
+        this.panierError = err.error?.message || 'Aucun panier trouvé pour cette transaction.';
         this.panierLoading = false;
       }
     });

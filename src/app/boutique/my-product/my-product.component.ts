@@ -157,7 +157,7 @@ export class MyProductComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.loadError = err.error?.message || 'Unable to load products from server.';
+        this.loadError = err.error?.message || 'Impossible de charger les produits.';
       }
     });
   }
@@ -170,7 +170,7 @@ export class MyProductComponent implements OnInit {
 
   getAttributeBadges(product: MyProduct): Array<{ label: string; key: string }> {
     if (!product.attributes || Object.keys(product.attributes).length === 0) {
-      return [{ label: 'No attributes', key: 'NONE' }];
+      return [{ label: 'Aucune attribut', key: 'NONE' }];
     }
     return Object.entries(product.attributes).map(([key, value]) => ({
       label: `${key}: ${value}`,
@@ -233,8 +233,8 @@ export class MyProductComponent implements OnInit {
         this.isStockSubmitting = false;
         this.closeStockModal();
       },
-      error: () => {
-        this.stockSubmitError = 'Failed to add stock. Please try again.';
+      error: (err) => {
+        this.stockSubmitError = err.error?.message || 'Impossible d\'ajouter le stock.';
         this.isStockSubmitting = false;
       }
     });
@@ -264,14 +264,14 @@ export class MyProductComponent implements OnInit {
   }
 
   onDelete(product: MyProduct): void {
-    if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+    if (confirm(`Vous êtes sûr de vouloir supprimer "${product.name}"?`)) {
       this.myProductService.deleteProduct(product._id).subscribe({
         next: () => {
           this.products = this.products.filter(p => p._id !== product._id);
           this.total--;
         },
-        error: () => {
-          this.loadError = 'Failed to delete product. Please try again.';
+        error: (err) => {
+          this.loadError = err.error?.message || 'Impossible de supprimer le produit.';
         }
       });
     }
@@ -304,8 +304,8 @@ export class MyProductComponent implements OnInit {
           this.isSubmitting = false;
           this.isModalOpen = false;
         },
-        error: () => {
-          this.submitError = 'Failed to update product. Please try again.';
+        error: (err) => {
+          this.submitError = err.error?.message || 'Impossible de mettre à jour le produit.';
           this.isSubmitting = false;
         }
       });
@@ -323,8 +323,8 @@ export class MyProductComponent implements OnInit {
           this.isModalOpen = false;
           this.isSubmitting = false;
         },
-        error: () => {
-          this.submitError = 'Failed to create product. Please try again.';
+        error: (err) => {
+          this.submitError = err.error?.message || 'Impossible de créer le produit.';
           this.isSubmitting = false;
         }
       });
@@ -368,8 +368,8 @@ export class MyProductComponent implements OnInit {
         this.isPhotoSubmitting = false;
         this.closePhotoModal();
       },
-      error: () => {
-        this.photoSubmitError = 'Failed to update photo. Please try again.';
+      error: (err) => {
+        this.photoSubmitError = err.error?.message || 'Impossible de mettre à jour la photo. Réessayez plus tard.';
         this.isPhotoSubmitting = false;
       }
     });
@@ -378,13 +378,13 @@ export class MyProductComponent implements OnInit {
   onRemovePhoto(product: MyProduct): void {
     if (!product.photoUrl) return;
 
-    if (confirm(`Are you sure you want to remove the photo for "${product.name}"?`)) {
+    if (confirm(`Vous êtes sûr de vouloir supprimer la photo pour "${product.name}"?`)) {
       this.myProductService.removePhoto(product._id).subscribe({
         next: () => {
           this.patchProductField(product._id, { photoUrl: null });
         },
-        error: () => {
-          this.loadError = 'Failed to remove photo. Please try again.';
+        error: (err) => {
+          this.loadError = err.error?.message || 'Impossible de supprimer la photo. Réessayez plus tard.';
         }
       });
     }

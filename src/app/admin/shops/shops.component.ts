@@ -138,9 +138,9 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
 
   getAssignedBoxName(shop: Shop): string {
     if (!shop.assignedBox) {
-      return 'Unassigned';
+      return 'Non assignée';
     }
-    return shop.assignedBox.label || 'Unnamed Box';
+    return shop.assignedBox.label || 'Box sans nom';
   }
 
   getOwnerFullName(shop: Shop): string {
@@ -186,8 +186,8 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
         this.boxesLimit = response.pagination.limit;
         this.boxesLoading = false;
       },
-      error: () => {
-        this.boxesLoadError = 'Error loading available boxes.';
+      error: (err) => {
+        this.boxesLoadError = err.error?.message || 'Impossible de charger les boxes disponibles.';
         this.boxesLoading = false;
       }
     });
@@ -220,8 +220,8 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
       next: () => {
         this.fetchData(this.page);
       },
-      error: () => {
-        this.loadError = 'Error unassigning the box.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de déassigner la box.';
       }
     });
   }
@@ -262,9 +262,9 @@ export class ShopsComponent extends PaginatedComponent<Shop> {
         this.closeAssignModal();
         this.fetchData(this.page);
       },
-      error: () => {
+      error: (err) => {
         this.isAssignSubmitting = false;
-        this.assignError = 'Error assigning the box.';
+        this.assignError = err.error?.message || 'Impossible d\'assigner la box.';
       }
     });
   }
