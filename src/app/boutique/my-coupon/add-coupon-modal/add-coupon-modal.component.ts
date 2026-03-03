@@ -110,7 +110,7 @@ export class AddCouponModalComponent implements OnChanges {
   get canSubmit(): boolean {
     const code = this.code.trim();
     const percentageIsValid = this.percentage >= 1 && this.percentage <= 100;
-    return !!code && !!this.expiresAt && percentageIsValid && !this.isSubmitting;
+    return !!code && !!this.expiresAt && percentageIsValid && !this.isSubmitting && this.selectedCount > 0;
   }
 
   onSubmit(): void {

@@ -61,7 +61,7 @@ export class MyCommandComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.loadError = err?.error?.message || 'Failed to load commands.';
+        this.loadError = err?.error?.message || 'Impossible de charger les commandes.';
         this.isLoading = false;
       }
     });

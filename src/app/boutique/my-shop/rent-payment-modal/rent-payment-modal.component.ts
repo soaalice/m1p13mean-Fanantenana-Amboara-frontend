@@ -30,6 +30,7 @@ export class RentPaymentModalComponent implements OnChanges {
   @Output() submitPayment = new EventEmitter<RentPaymentPayload>();
 
   readonly currentYear = new Date().getFullYear();
+  readonly currentMonth = ("0" + (new Date().getMonth() + 1)).slice(-2);
 
   readonly monthOptions = [
     { value: '01', label: 'Janvier' },
@@ -47,7 +48,7 @@ export class RentPaymentModalComponent implements OnChanges {
   ];
 
   paymentForm = this.fb.group({
-    month: ['', Validators.required],
+    month: [this.currentMonth, Validators.required],
     year: [this.currentYear, [Validators.required, Validators.min(2000), Validators.max(9999)]]
   });
 
@@ -55,7 +56,7 @@ export class RentPaymentModalComponent implements OnChanges {
 
   ngOnChanges(): void {
     if (this.isOpen) {
-      this.paymentForm.reset({ month: '', year: this.currentYear });
+      this.paymentForm.reset({ month: this.currentMonth, year: this.currentYear });
     }
   }
 

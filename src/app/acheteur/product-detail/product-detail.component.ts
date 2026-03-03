@@ -60,8 +60,8 @@ export class ProductDetailComponent implements OnInit {
         this.product = product;
         this.isLoading = false;
       },
-      error: () => {
-        this.loadError = 'Impossible de charger ce produit.';
+      error: (err) => {
+        this.loadError = err.error?.message || 'Impossible de charger ce produit.';
         this.isLoading = false;
       }
     });
